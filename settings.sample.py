@@ -389,7 +389,7 @@ account_schema = {
     }
 }
 
-document_schema = {
+documents_schema = {
   'title': {
     'type': 'string',
   },  
@@ -689,7 +689,7 @@ postcategories = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': True,
-    'schema': postcategories_schema.
+    'schema': postcategories_schema,
 }
 
 account = {
