@@ -346,6 +346,28 @@ member_schema = {
   }
 }
 
+postcategories_schema = {
+    'name': {
+      'type': 'string',
+    },
+    'type': {
+      'type': 'string',
+      'allowed': ['articles', 'file', 'link']
+    },
+    'file': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'document',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
+    'link': {
+      'type': 'string',
+    }
+}
+
+
 account_schema = {
     'username': {
        'type': 'string',
@@ -365,6 +387,49 @@ account_schema = {
         'type': 'string',
         'required': True,
     }
+}
+
+document_schema = {
+  'title': {
+    'type': 'string',
+  },  
+  'description': {
+    'type': 'string',
+  },
+  'document': {
+    'type': 'dict',
+    'schema': {
+        'filetype': {
+          'type': 'string',
+        },
+        'filename': {
+          'type': 'string',
+        },
+        'originalname': {
+          'type': 'string',
+        },
+        'path': {
+          'type': 'string',
+        },
+        'projectId': {
+          'type': 'string',
+        },
+        'size': {
+          'type': 'string',
+        },
+        'url': {
+          'type': 'string',
+        },
+    },
+  },  
+  'coverPhoto': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
 }
 
 audios_schema = {
@@ -624,11 +689,7 @@ postcategories = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': True,
-    'schema': {
-      'name': {
-        'type': 'string',
-      }
-    }
+    'schema': postcategories_schema.
 }
 
 account = {
@@ -648,6 +709,13 @@ images = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'schema': image_schema,
+}
+
+documents = {
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'schema': documents_schema,
 }
 
 audios = {
@@ -670,6 +738,7 @@ DOMAIN = {
     'account': account,
     'images': images,
     'audios': audios,
+    'documents': documents,
     }
 
 XML = False
