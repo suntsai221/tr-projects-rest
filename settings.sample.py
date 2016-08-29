@@ -93,7 +93,7 @@ post_schema = {
   'state': {
     'type': 'string',
   },
-  'writters': {
+  'writers': {
     'type': 'list',
     'schema': {
         'type': 'objectid',
@@ -140,12 +140,12 @@ post_schema = {
   'publishedDate': {
     'type': 'string',
   },
-  'section': {
+  'sections': {
     'type': 'list',
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'section',
+            'resource': 'sections',
             'field': '_id',
             'embeddable': True
          },
@@ -357,7 +357,7 @@ member_schema = {
   }
 }
 
-section_schema = {
+sections_schema = {
     'name': {
       'type': 'string',
     },
@@ -708,8 +708,8 @@ tags = {
     }
 }
 
-section = {
-    'item_title': 'section',
+sections = {
+    'item_title': 'sections',
     'additional_lookup': {
         'url': 'regex(".+")',
         'field': 'name'
@@ -718,7 +718,7 @@ section = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': True,
-    'schema': section_schema,
+    'schema': sections_schema,
 }
 
 postcategories = {
@@ -776,7 +776,7 @@ DOMAIN = {
     'contacts': contacts,
     'tags': tags,
     'topics': topics,
-    'section': section,
+    'sections': sections,
     'postcategories': postcategories,
     'account': account,
     'images': images,
