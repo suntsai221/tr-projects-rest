@@ -140,6 +140,17 @@ post_schema = {
   'publishedDate': {
     'type': 'string',
   },
+  'section': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'section',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'categories': {
     'type': 'list',
     'schema': {
@@ -344,6 +355,24 @@ member_schema = {
   'create_date': {
     'type': 'datetime',
   }
+}
+
+section_schema = {
+    'name': {
+      'type': 'string',
+    },
+    'style': {
+      'type': 'string',
+      'allowed': ['feature', 'listing', 'tile']
+    },
+    'image': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'images',
+        'field': '_id',
+        'embeddable': True
+      },
+    }
 }
 
 postcategories_schema = {
@@ -679,6 +708,19 @@ tags = {
     }
 }
 
+section = {
+    'item_title': 'section',
+    'additional_lookup': {
+        'url': 'regex(".+")',
+        'field': 'name'
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'allow_unknown': True,
+    'schema': section_schema,
+}
+
 postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
@@ -734,6 +776,7 @@ DOMAIN = {
     'contacts': contacts,
     'tags': tags,
     'topics': topics,
+    'section': section,
     'postcategories': postcategories,
     'account': account,
     'images': images,
