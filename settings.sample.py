@@ -93,6 +93,25 @@ post_schema = {
   'state': {
     'type': 'string',
   },
+  'section': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'sections',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'section_display': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'writers': {
     'type': 'list',
     'schema': {
@@ -139,17 +158,6 @@ post_schema = {
   },
   'publishedDate': {
     'type': 'string',
-  },
-  'sections': {
-    'type': 'list',
-    'schema': {
-        'type': 'objectid',
-        'data_relation': {
-            'resource': 'sections',
-            'field': '_id',
-            'embeddable': True
-         },
-     },
   },
   'categories': {
     'type': 'list',
@@ -355,24 +363,6 @@ member_schema = {
   'create_date': {
     'type': 'datetime',
   }
-}
-
-sections_schema = {
-    'name': {
-      'type': 'string',
-    },
-    'style': {
-      'type': 'string',
-      'allowed': ['feature', 'listing', 'tile']
-    },
-    'image': {
-      'type': 'objectid',
-      'data_relation': {
-        'resource': 'images',
-        'field': '_id',
-        'embeddable': True
-      },
-    }
 }
 
 postcategories_schema = {
@@ -597,7 +587,7 @@ posts = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writters','photographers','designers','engineers','heroImage', 'topics'],
+    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'topics', 'section', 'categories'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
@@ -615,7 +605,7 @@ meta = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage','topics','categories'],
+    'embedded_fields': ['heroImage','writers', 'topics','section', 'categories'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
@@ -708,19 +698,6 @@ tags = {
     }
 }
 
-sections = {
-    'item_title': 'sections',
-    'additional_lookup': {
-        'url': 'regex(".+")',
-        'field': 'name'
-    },
-    'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
-    'allow_unknown': True,
-    'schema': sections_schema,
-}
-
 postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
@@ -776,7 +753,6 @@ DOMAIN = {
     'contacts': contacts,
     'tags': tags,
     'topics': topics,
-    'sections': sections,
     'postcategories': postcategories,
     'account': account,
     'images': images,
