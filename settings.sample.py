@@ -31,7 +31,7 @@ meta_schema = {
   'section': {
     'type': 'objectid',
     'data_relation': {
-      'resource': 'sections',
+      'resource': 'section',
       'field': '_id',
       'embeddable': True
     },
@@ -105,14 +105,6 @@ post_schema = {
     'type': 'string',
   },
   'section': {
-    'type': 'objectid',
-    'data_relation': {
-      'resource': 'sections',
-      'field': '_id',
-      'embeddable': True
-    },
-  },
-  'section_display': {
     'type': 'list',
     'schema': {
         'type': 'objectid',
@@ -245,9 +237,6 @@ post_schema = {
      }, 
   },
   'extend_byline': {
-    'type': 'string',
-  },
-  'copyright': {
     'type': 'string',
   },
   'og_title': {
@@ -385,21 +374,45 @@ postcategories_schema = {
     },
     'type': {
       'type': 'string',
-      'allowed': ['articles', 'file', 'link']
-    },
-    'file': {
-      'type': 'objectid',
-      'data_relation': {
-        'resource': 'document',
-        'field': '_id',
-        'embeddable': True
-      },
+      'allowed': ['articles', 'link']
     },
     'link': {
       'type': 'string',
     }
 }
 
+
+sections_schema = {
+    'name': {
+      'type': 'string',
+    },
+    'type': {
+      'type': 'string',
+      'allowed': ['articles', 'file', 'link']
+    },
+    'image': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'images',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
+    'categories': {
+      'type': 'list',
+      'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+       },
+    },
+    'style': {
+      'type': 'string',
+    }
+}
 
 account_schema = {
     'username': {
@@ -420,49 +433,6 @@ account_schema = {
         'type': 'string',
         'required': True,
     }
-}
-
-documents_schema = {
-  'title': {
-    'type': 'string',
-  },  
-  'description': {
-    'type': 'string',
-  },
-  'document': {
-    'type': 'dict',
-    'schema': {
-        'filetype': {
-          'type': 'string',
-        },
-        'filename': {
-          'type': 'string',
-        },
-        'originalname': {
-          'type': 'string',
-        },
-        'path': {
-          'type': 'string',
-        },
-        'projectId': {
-          'type': 'string',
-        },
-        'size': {
-          'type': 'string',
-        },
-        'url': {
-          'type': 'string',
-        },
-    },
-  },  
-  'coverPhoto': {
-    'type': 'objectid',
-    'data_relation': {
-      'resource': 'images',
-      'field': '_id',
-      'embeddable': True
-    },
-  },
 }
 
 audios_schema = {
@@ -674,7 +644,7 @@ contacts = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
-    'allow_unknown': True,
+    'allow_unknown': False,
     'embedded_fields': ['image'],
     'schema': contact_schema
 }
@@ -688,7 +658,7 @@ topics = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
-    'allow_unknown': True,
+    'allow_unknown': False,
     'schema': topics_schema
 }
 
@@ -701,7 +671,7 @@ tags = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
-    'allow_unknown': True,
+    'allow_unknown': False,
     'schema': {
       'name': {
         'type': 'string',
@@ -718,8 +688,21 @@ postcategories = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
-    'allow_unknown': True,
+    'allow_unknown': False,
     'schema': postcategories_schema,
+}
+
+sections = {
+    'item_title': 'section',
+    'additional_lookup': {
+        'url': 'regex(".+")',
+        'field': 'name'
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'allow_unknown': False,
+    'schema': sections_schema,
 }
 
 account = {
@@ -739,13 +722,6 @@ images = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'schema': image_schema,
-}
-
-documents = {
-    'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
-    'schema': documents_schema,
 }
 
 audios = {
@@ -768,7 +744,7 @@ DOMAIN = {
     'account': account,
     'images': images,
     'audios': audios,
-    'documents': documents,
+    'sections': sections,
     }
 
 XML = False
