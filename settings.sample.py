@@ -28,6 +28,14 @@ meta_schema = {
       },
     },
   },
+  'section': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'sections',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
   'topics': {
     'type': 'list',
     'schema': {
@@ -59,6 +67,9 @@ meta_schema = {
      },
   },
   'isFeatured': {
+    'type': 'boolean',
+  },
+  'isAdvertised': {
     'type': 'boolean',
   },
   'publishedDate': {
@@ -243,6 +254,9 @@ post_schema = {
     'type': 'string',
   },
   'isFeatured': {
+    'type': 'boolean',
+  },
+  'isAdvertised': {
     'type': 'boolean',
   },
   'og_description': {
@@ -530,9 +544,6 @@ image_schema = {
   },
   'sale': {
     'type': 'Boolean',
-  },
-  'copyright': {
-    'type': 'string',
   },
   'tags': {
     'type': 'list',
