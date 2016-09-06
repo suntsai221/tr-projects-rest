@@ -31,7 +31,7 @@ meta_schema = {
   'section': {
     'type': 'objectid',
     'data_relation': {
-      'resource': 'section',
+      'resource': 'sections',
       'field': '_id',
       'embeddable': True
     },
