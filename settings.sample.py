@@ -500,6 +500,23 @@ topics_schema = {
   }
 }
 
+choices_schema = {
+  'pickDate': {
+    'type': 'string',
+  },
+  'choices': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
+}
+
 image_schema = {
   'photographer': {
     'type': 'objectid',
@@ -649,6 +666,16 @@ contacts = {
     'schema': contact_schema
 }
 
+choices = {
+    'item_title': 'choice',
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'embedded_fields': ['choices'],
+    'cache_expires': 300,
+    'allow_unknown': False,
+    'schema': choices_schema
+}
+
 topics = {
     'item_title': 'topic',
     'additional_lookup': {
@@ -740,6 +767,7 @@ DOMAIN = {
     'members': members,
     'contacts': contacts,
     'tags': tags,
+    'choices': choices,
     'topics': topics,
     'postcategories': postcategories,
     'account': account,
