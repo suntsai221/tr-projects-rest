@@ -60,7 +60,7 @@ meta_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'categories',
+            'resource': 'postcategories',
             'field': '_id',
             'embeddable': True
          },
@@ -167,7 +167,7 @@ post_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'categories',
+            'resource': 'postcategories',
             'field': '_id',
             'embeddable': True
          },
@@ -368,7 +368,7 @@ member_schema = {
   }
 }
 
-categories_schema = {
+postcategories_schema = {
     'name': {
       'type': 'string',
     },
@@ -403,7 +403,7 @@ sections_schema = {
       'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'categories',
+            'resource': 'postcategories',
             'field': '_id',
             'embeddable': True
          },
@@ -706,7 +706,7 @@ tags = {
     }
 }
 
-categories = {
+postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
         'url': 'regex(".+")',
@@ -716,7 +716,7 @@ categories = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
-    'schema': categories_schema,
+    'schema': postcategories_schema,
 }
 
 sections = {
@@ -769,7 +769,7 @@ DOMAIN = {
     'tags': tags,
     'choices': choices,
     'topics': topics,
-    'categories': categories,
+    'postcategories': postcategories,
     'account': account,
     'images': images,
     'audios': audios,
