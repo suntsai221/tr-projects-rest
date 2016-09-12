@@ -390,6 +390,9 @@ sections_schema = {
       'type': 'string',
       'allowed': ['articles', 'file', 'link']
     },
+    'description': {
+      'type': 'string',
+    },
     'image': {
       'type': 'objectid',
       'data_relation': {
