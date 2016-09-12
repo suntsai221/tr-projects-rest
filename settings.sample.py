@@ -383,6 +383,9 @@ postcategories_schema = {
 
 
 sections_schema = {
+    'sid': {
+      'type': 'string',
+    },
     'name': {
       'type': 'string',
     },
@@ -726,7 +729,7 @@ sections = {
     'item_title': 'section',
     'additional_lookup': {
         'url': 'regex(".+")',
-        'field': 'name'
+        'field': 'sid'
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['categories', 'image'],
