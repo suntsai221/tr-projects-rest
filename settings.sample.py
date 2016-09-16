@@ -372,18 +372,14 @@ postcategories_schema = {
     'name': {
       'type': 'string',
     },
-    'type': {
-      'type': 'string',
-      'allowed': ['articles', 'link']
-    },
-    'link': {
+    'title': {
       'type': 'string',
     }
 }
 
 
 sections_schema = {
-    'sid': {
+    'title': {
       'type': 'string',
     },
     'name': {
@@ -591,7 +587,7 @@ posts = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'topics', 'section', 'categories'],
+    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'topics', 'section', 'categories', 'tags'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
@@ -729,7 +725,7 @@ sections = {
     'item_title': 'section',
     'additional_lookup': {
         'url': 'regex(".+")',
-        'field': 'sid'
+        'field': 'name'
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['categories', 'image'],
