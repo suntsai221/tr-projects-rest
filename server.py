@@ -23,18 +23,23 @@ def add_token(documents):
         document["token"] = (''.join(random.choice(string.ascii_uppercase)
                                     for x in range(10)))
 
+def get_full_relateds(item):
+    if 'relateds' in item and item['relateds']:
+        headers = dict(request.headers)
+        tc = app.test_client()
+        all_relateds =  ",".join(map(lambda x: '"' + str(x) + '"',item['relateds']))
+        resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
+        resp_data = json.loads(resp.data)
+        item['relateds'] = resp_data['_items']
+    return item
+
 def before_returning_posts(response):
-    items = response['_items']
-    for item in items:
-        full_relateds = []
-        if 'relateds' in item and item['relateds']:
-            headers = dict(request.headers)
-            tc = app.test_client()
-            for i in item['relateds']:
-                resp = tc.get('posts/' + str(i), headers=headers)
-                resp_data = json.loads(resp.data)
-                full_relateds.append(resp_data)
-                item['relateds'] = full_relateds
+    related = request.args.get('related')
+    if related == 'full':
+        items = response['_items']
+        all_related = ''
+        for item in items:
+            item = get_full_relateds(item)
     return response
 
 #app = Eve(auth=RolesAuth)
