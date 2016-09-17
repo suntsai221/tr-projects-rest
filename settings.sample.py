@@ -28,7 +28,7 @@ meta_schema = {
       },
     },
   },
-  'section': {
+  'sections': {
     'type': 'objectid',
     'data_relation': {
       'resource': 'sections',
@@ -104,7 +104,7 @@ post_schema = {
   'state': {
     'type': 'string',
   },
-  'section': {
+  'sections': {
     'type': 'list',
     'schema': {
         'type': 'objectid',
@@ -587,7 +587,7 @@ posts = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'topics', 'section', 'categories', 'tags'],
+    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'topics', 'sections', 'categories', 'tags'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
@@ -605,7 +605,7 @@ meta = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage','writers', 'topics','section', 'categories'],
+    'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
