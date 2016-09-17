@@ -22,14 +22,14 @@ def add_token(documents):
         document["token"] = (''.join(random.choice(string.ascii_uppercase)
                                     for x in range(10)))
 
-def get_full_relateds(item):
-    if 'relateds' in item and item['relateds']:
+def get_full_relateds(item, key):
+    if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
-        all_relateds =  ",".join(map(lambda x: '"' + str(x) + '"',item['relateds']))
+        all_relateds =  ",".join(map(lambda x: '"' + str(x) + '"',item[key]))
         resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data)
-        item['relateds'] = resp_data['_items']
+        item[key] = resp_data['_items']
     return item
 
 def before_returning_posts(response):
@@ -38,7 +38,12 @@ def before_returning_posts(response):
         items = response['_items']
         all_related = ''
         for item in items:
-            item = get_full_relateds(item)
+            item = get_full_relateds(item, 'relateds')
+    return response
+
+def before_returning_choices(response):
+    for item in response['_items']:
+        item = get_full_relateds(item, 'choices')
     return response
 
 def remove_extra_fields(item):
@@ -53,6 +58,7 @@ app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
+app.on_fetched_resource_choices += before_returning_choices
 
 
 if __name__ == '__main__':

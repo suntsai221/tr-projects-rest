@@ -672,7 +672,6 @@ choices = {
     'item_title': 'choice',
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
-    'embedded_fields': ['choices'],
     'cache_expires': 300,
     'allow_unknown': False,
     'schema': choices_schema
