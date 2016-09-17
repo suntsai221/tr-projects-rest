@@ -17,7 +17,6 @@ class RolesAuth(TokenAuth):
         account = accounts.find_one(lookup)
         return account
 
-
 def add_token(documents):
     for document in documents:
         document["token"] = (''.join(random.choice(string.ascii_uppercase)
@@ -42,6 +41,12 @@ def before_returning_posts(response):
             item = get_full_relateds(item)
     return response
 
+def remove_extra_fields(item):
+  accepted_fields = schema.keys()
+  for field in item.keys():
+    if field not in accepted_fields and field != '_id':
+      del item[field]
+
 #app = Eve(auth=RolesAuth)
 app = Eve()
 app.on_replace_article += lambda item, original: remove_extra_fields(item)
@@ -49,11 +54,6 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 
-def remove_extra_fields(item):
-  accepted_fields = schema.keys()
-  for field in item.keys():
-    if field not in accepted_fields and field != '_id':
-      del item[field]
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
