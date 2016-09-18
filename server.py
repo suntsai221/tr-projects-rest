@@ -81,6 +81,24 @@ def get_sections_latest():
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
+@app.route("/combo", methods=['GET'])
+def handle_combo():
+    endpoints = {'posts': '/posts', 'sections': '/sections-latest', 'choices': '/choices?max_results=1&sort=-pickDate'}
+    response = { "_endpoints": {}, 
+                 "_links": { 
+                            "self": { "href":"sections-latest", "title": "sections latest"}, 
+                            "parent":{ "parend": "/", "title": "Home" } } }
+    headers = dict(request.headers)
+    tc = app.test_client()
+    req = request.args.getlist('endpoint')
+    for action in req:
+        if action in endpoints:
+            print endpoints[action]
+            action_resp = tc.get(endpoints[action], headers=headers)
+            action_data = json.loads(action_resp.data)
+            if "_error" not in action_data:
+                response["_endpoints"][action] = action_data["_items"]    
+    return Response(json.dumps(response), headers=headers)        
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
