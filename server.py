@@ -83,7 +83,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts', 'sections': '/sections-features', 'choices': '/choices?max_results=1&sort=-pickDate'}
+    endpoints = {'posts': '/posts', 'sections': '/sections-featured', 'choices': '/choices?max_results=1&sort=-pickDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
@@ -93,11 +93,14 @@ def handle_combo():
     req = request.args.getlist('endpoint')
     for action in req:
         if action in endpoints:
-            print endpoints[action]
             action_resp = tc.get(endpoints[action], headers=headers)
             action_data = json.loads(action_resp.data)
             if "_error" not in action_data:
-                response["_endpoints"][action] = action_data["_items"]    
+                if action == 'posts' or action == 'sections':
+                    response["_endpoints"][action] = action_data    
+                if action == 'choices':
+                    response["_endpoints"][action] = {}
+                    response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET'])
