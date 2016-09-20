@@ -102,7 +102,7 @@ def handle_combo():
 
 @app.route("/posts-alias", methods=['GET'])
 def get_posts_byname():
-    allow_collections = ['sections', 'categories', 'tags']
+    allow_collections = ['sections', 'categories', 'tags', 'topics']
     headers = dict(request.headers)
     tc = app.test_client()
     collection = request.args.get('collection')
