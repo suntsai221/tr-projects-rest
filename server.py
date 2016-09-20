@@ -60,7 +60,7 @@ app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_choices += before_returning_choices
 
-@app.route("/sections-latest", methods=['GET'])
+@app.route("/sections-featured", methods=['GET'])
 def get_sections_latest():
     response = { "_items": {}, 
                  "_links": { 
@@ -74,7 +74,7 @@ def get_sections_latest():
     resp_data = json.loads(resp.data)
     if ("_error" not in resp_data and "_items" in resp_data):
         for item in resp_data["_items"]:
-            sec_resp = tc.get('/posts?where={"sections":"' + item['_id'] + '"}&max_results=5', headers=headers)
+            sec_resp = tc.get('/posts?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5', headers=headers)
             sec_items = json.loads(sec_resp.data)
             if '_error' not in sec_items and "_items" in sec_items:
                 #response[item['name']] = sec_items['_items']
@@ -83,7 +83,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts', 'sections': '/sections-latest', 'choices': '/choices?max_results=1&sort=-pickDate'}
+    endpoints = {'posts': '/posts', 'sections': '/sections-features', 'choices': '/choices?max_results=1&sort=-pickDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
@@ -99,6 +99,27 @@ def handle_combo():
             if "_error" not in action_data:
                 response["_endpoints"][action] = action_data["_items"]    
     return Response(json.dumps(response), headers=headers)        
+
+@app.route("/posts-alias", methods=['GET'])
+def get_posts_byname():
+    allow_collections = ['sections', 'categories', 'tags']
+    headers = dict(request.headers)
+    tc = app.test_client()
+    collection = request.args.get('collection')
+    name = request.args.get('name')
+    if collection in allow_collections:
+        r = tc.get("/" + collection + "/" + name)
+        rs_data = json.loads(r.data)
+        if "_error" not in rs_data and "_id" in rs_data:
+            collection_id = rs_data['_id']
+            req = '/posts?where={"' + collection + '":"' + collection_id + '"}'
+            resp = tc.get(req)
+            return resp
+        else:
+            return r
+    else:
+        r = tc.get("/posts")
+    return rs
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
