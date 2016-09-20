@@ -113,6 +113,9 @@ def get_posts_byname():
         if "_error" not in rs_data and "_id" in rs_data:
             collection_id = rs_data['_id']
             req = '/posts?where={"' + collection + '":"' + collection_id + '"}'
+            for key in dict(request.args):
+                if key != 'collection' and key != 'name':
+                    req += '&' + key + '=' + request.args.get(key)
             resp = tc.get(req)
             return resp
         else:
