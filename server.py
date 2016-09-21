@@ -41,6 +41,14 @@ def before_returning_posts(response):
             item = get_full_relateds(item, 'relateds')
     return response
 
+def before_returning_meta(response):
+    items = response['_items']
+    for item in items:
+        if 'brief' in item:
+            del item['brief']['draft']
+            del item['brief']['apiData']
+    return response
+
 def before_returning_choices(response):
     for item in response['_items']:
         item = get_full_relateds(item, 'choices')
@@ -58,6 +66,7 @@ app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
+app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_choices += before_returning_choices
 
 @app.route("/sections-featured", methods=['GET'])
@@ -72,9 +81,14 @@ def get_sections_latest():
     resp_header = dict(resp.headers)
     del headers['Content-Length']
     resp_data = json.loads(resp.data)
+    content = request.args.get('content') or 'posts'
     if ("_error" not in resp_data and "_items" in resp_data):
         for item in resp_data["_items"]:
-            sec_resp = tc.get('/posts?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5', headers=headers)
+            if (content == 'meta'):
+                endpoint = 'meta'
+            else:
+                endpoint = 'posts'
+            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5', headers=headers)
             sec_items = json.loads(sec_resp.data)
             if '_error' not in sec_items and "_items" in sec_items:
                 #response[item['name']] = sec_items['_items']
@@ -83,7 +97,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts', 'sections': '/sections-featured', 'choices': '/choices?max_results=1&sort=-pickDate'}
+    endpoints = {'posts': '/posts', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
@@ -96,11 +110,12 @@ def handle_combo():
             action_resp = tc.get(endpoints[action], headers=headers)
             action_data = json.loads(action_resp.data)
             if "_error" not in action_data:
-                if action == 'posts' or action == 'sections':
-                    response["_endpoints"][action] = action_data    
                 if action == 'choices':
                     response["_endpoints"][action] = {}
                     response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
+                else:
+                    response["_endpoints"][action] = action_data    
+
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET'])
