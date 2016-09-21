@@ -124,8 +124,6 @@ def get_posts_byname():
     headers = dict(request.headers)
     tc = app.test_client()
     collection = request.args.get('collection')
-    if collection == 'categories':
-        collection = 'postcategories'
     name = request.args.get('name')
     content = request.args.get('content')
     if content == 'meta':
@@ -133,7 +131,9 @@ def get_posts_byname():
     else: 
         endpoint = 'posts'
     if collection in allow_collections:
-        r = tc.get("/" + collection + "/" + name)
+        if collection == 'categories':
+            table = 'postcategories'
+        r = tc.get("/" + table + "/" + name)
         rs_data = json.loads(r.data)
         if "_error" not in rs_data and "_id" in rs_data:
             collection_id = rs_data['_id']
