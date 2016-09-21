@@ -69,7 +69,7 @@ app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_choices += before_returning_choices
 
-@app.route("/sections-featured", methods=['GET'])
+@app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
     response = { "_items": {}, 
                  "_links": { 
@@ -95,7 +95,7 @@ def get_sections_latest():
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
-@app.route("/combo", methods=['GET'])
+@app.route("/combo", methods=['GET', 'POST'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate'}
     response = { "_endpoints": {}, 
@@ -118,7 +118,7 @@ def handle_combo():
 
     return Response(json.dumps(response), headers=headers)        
 
-@app.route("/posts-alias", methods=['GET'])
+@app.route("/posts-alias", methods=['GET', 'POST'])
 def get_posts_byname():
     allow_collections = ['sections', 'categories', 'tags', 'topics']
     headers = dict(request.headers)
@@ -127,12 +127,17 @@ def get_posts_byname():
     if collection == 'categories':
         collection = 'postcategories'
     name = request.args.get('name')
+    content = request.args.get('content')
+    if content == 'meta':
+        endpoint = 'meta'
+    else: 
+        endpoint = 'posts'
     if collection in allow_collections:
         r = tc.get("/" + collection + "/" + name)
         rs_data = json.loads(r.data)
         if "_error" not in rs_data and "_id" in rs_data:
             collection_id = rs_data['_id']
-            req = '/posts?where={"' + collection + '":"' + collection_id + '"}'
+            req = '/'+ endpoint + '?where={"' + collection + '":"' + collection_id + '"}'
             for key in dict(request.args):
                 if key != 'collection' and key != 'name':
                     req += '&' + key + '=' + request.args.get(key)
