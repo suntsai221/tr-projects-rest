@@ -124,6 +124,8 @@ def get_posts_byname():
     headers = dict(request.headers)
     tc = app.test_client()
     collection = request.args.get('collection')
+    if collection == 'categories':
+        collection = 'postcategories'
     name = request.args.get('name')
     if collection in allow_collections:
         r = tc.get("/" + collection + "/" + name)
@@ -140,7 +142,7 @@ def get_posts_byname():
             return r
     else:
         r = tc.get("/posts")
-    return rs
+    return r
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
