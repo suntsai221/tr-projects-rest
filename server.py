@@ -88,7 +88,7 @@ def get_sections_latest():
                 endpoint = 'meta'
             else:
                 endpoint = 'posts'
-            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5', headers=headers)
+            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
             sec_items = json.loads(sec_resp.data)
             if '_error' not in sec_items and "_items" in sec_items:
                 #response[item['name']] = sec_items['_items']
@@ -97,7 +97,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta'}
+    endpoints = {'posts': '/posts?sort=-publishedDate', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
