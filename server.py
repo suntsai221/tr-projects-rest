@@ -133,6 +133,8 @@ def get_posts_byname():
     if collection in allow_collections:
         if collection == 'categories':
             table = 'postcategories'
+        else:
+            table = collection
         r = tc.get("/" + table + "/" + name)
         rs_data = json.loads(r.data)
         if "_error" not in rs_data and "_id" in rs_data:
