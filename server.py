@@ -97,7 +97,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts?sort=-publishedDate', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate'}
+    endpoints = {'posts': '/posts?sort=-publishedDate', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate', 'sections': '/sections'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
