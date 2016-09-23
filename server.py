@@ -95,7 +95,7 @@ def get_sections_latest():
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
-@app.route("/combo", methods=['GET', 'POST'])
+@app.route("/combo", methods=['GET'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate', 'sections': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate'}
     response = { "_endpoints": {}, 
@@ -108,6 +108,7 @@ def handle_combo():
     for action in req:
         if action in endpoints:
             action_resp = tc.get(endpoints[action], headers=headers)
+            headers = action_resp.headers
             action_data = json.loads(action_resp.data)
             if "_error" not in action_data:
                 if action == 'choices':
