@@ -136,15 +136,16 @@ def get_posts_byname():
             table = 'postcategories'
         else:
             table = collection
-        r = tc.get("/" + table + "/" + name)
+        r = tc.get("/" + table + "/" + name, headers=headers)
         rs_data = json.loads(r.data)
         if "_error" not in rs_data and "_id" in rs_data:
+            response = { "body": {} }
             collection_id = rs_data['_id']
             req = '/'+ endpoint + '?where={"' + collection + '":"' + collection_id + '"}'
             for key in dict(request.args):
                 if key != 'collection' and key != 'name':
                     req += '&' + key + '=' + request.args.get(key)
-            resp = tc.get(req)
+            resp = tc.get(req, headers=headers)
             return resp
         else:
             return r
