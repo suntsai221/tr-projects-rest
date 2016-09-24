@@ -437,6 +437,49 @@ account_schema = {
     }
 }
 
+videos_schema = {
+  'description': {
+    'type': 'string',
+  },
+  'video': {
+    'type': 'dict',
+    'schema': {
+        'filetype': {
+          'type': 'string',
+        },
+        'filename': {
+          'type': 'string',
+        },
+        'originalname': {
+          'type': 'string',
+        },
+        'path': {
+          'type': 'string',
+        },
+        'projectId': {
+          'type': 'string',
+        },
+        'size': {
+          'type': 'string',
+        },
+        'url': {
+          'type': 'string',
+        },
+    },
+  },  
+  'tags': {
+    'type': 'list',
+    'schema': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'tags',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
+  },
+}
+
 audios_schema = {
   'description': {
     'type': 'string',
@@ -484,14 +527,6 @@ audios_schema = {
         'field': '_id',
         'embeddable': True
       },
-    },
-  },
-  'photographer': {
-    'type': 'objectid',
-    'data_relation': {
-      'resource': 'contacts',
-      'field': '_id',
-      'embeddable': True
     },
   },
 }
@@ -760,6 +795,13 @@ audios = {
     'schema': audios_schema,
 }
 
+videos = {
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'schema': videos_schema,
+}
+
 DOMAIN = {
     'posts': posts,
     'drafts': drafts,
@@ -774,6 +816,7 @@ DOMAIN = {
     'account': account,
     'images': images,
     'audios': audios,
+    'videos': videos,
     'sections': sections,
     }
 
