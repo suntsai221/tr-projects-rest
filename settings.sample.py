@@ -2,6 +2,8 @@
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
 MONGO_DBNAME = 'keystone-test'
+ASSETS_URL = 'http://stage.mirrormedia.mg/assets/'
+GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
 
 # ALLOW ACTIONS
 DEBUG = False

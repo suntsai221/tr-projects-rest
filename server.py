@@ -1,7 +1,7 @@
 from eve import Eve
 from eve.auth import TokenAuth
 from flask import redirect, request, Response
-from settings import posts, users
+from settings import posts, users, ASSETS_URL, GCS_URL
 import json
 import random
 import string
@@ -32,12 +32,25 @@ def get_full_relateds(item, key):
         item[key] = resp_data['_items']
     return item
 
+def replace_imageurl(obj):
+    for key in [ 'brief', 'content' ]:
+        if key in obj:
+            obj_str = json.dumps(obj[key])
+            obj_str.replace(GCS_URL, ASSETS_URL)
+            obj[key] = json.loads(obj_str)
+    if 'heroImage' in obj:
+        image_str = json.dumps(obj['heroImage']['image'])
+        image_str = image_str.replace(GCS_URL, ASSETS_URL)
+        obj['heroImage']['image'] = json.loads(image_str)
+    return obj
+
 def before_returning_posts(response):
     related = request.args.get('related')
-    if related == 'full':
-        items = response['_items']
-        all_related = ''
-        for item in items:
+    items = response['_items']
+    all_related = ''
+    for item in items:
+        replace_imageurl(item)
+        if related == 'full':
             item = get_full_relateds(item, 'relateds')
     return response
 
@@ -47,6 +60,7 @@ def before_returning_meta(response):
         if 'brief' in item:
             del item['brief']['draft']
             del item['brief']['apiData']
+        replace_imageurl(item)
     return response
 
 def before_returning_choices(response):
