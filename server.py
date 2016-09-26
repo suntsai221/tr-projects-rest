@@ -106,6 +106,8 @@ def get_sections_latest():
             sec_items = json.loads(sec_resp.data)
             if '_error' not in sec_items and "_items" in sec_items:
                 #response[item['name']] = sec_items['_items']
+                for sec_item in sec_items:
+                    replace_imageurl(sec_item)
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
@@ -130,7 +132,8 @@ def handle_combo():
                     response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
                 else:
                     response["_endpoints"][action] = action_data    
-
+                for item in response["_endpoints"][action]["_items"]:
+                    replace_imageurl(item)
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
@@ -160,6 +163,8 @@ def get_posts_byname():
                 if key != 'collection' and key != 'name':
                     req += '&' + key + '=' + request.args.get(key)
             resp = tc.get(req, headers=headers)
+            for item in resp["_items"]:
+                replace_imageurl(item)
             return resp
         else:
             return r
