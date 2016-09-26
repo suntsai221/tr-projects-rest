@@ -153,7 +153,6 @@ def get_posts_byname():
             table = 'postcategories'
         else:
             table = collection
-        print "/" + table + "/" + name
         r = tc.get("/" + table + "/" + name, headers=headers)
         rs_data = json.loads(r.data)
         if "_error" not in rs_data and "_id" in rs_data:
@@ -167,7 +166,7 @@ def get_posts_byname():
             resp_data = json.loads(resp.data)
             for i in resp_data['_items']:
                 replace_imageurl(i)
-            return Response(json.dumps(resp_data), headers=headers)  
+            return Response(json.dumps(resp_data), headers=resp.headers)  
         else:
             return r
     else:
