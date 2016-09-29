@@ -36,7 +36,7 @@ def replace_imageurl(obj):
     for key in [ 'brief', 'content' ]:
         if key in obj:
             obj_str = json.dumps(obj[key])
-            obj_str.replace(GCS_URL, ASSETS_URL)
+            obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
             obj[key] = json.loads(obj_str)
     if 'heroImage' in obj:
         image_str = json.dumps(obj['heroImage']['image'])
