@@ -415,6 +415,9 @@ sections_schema = {
     },
     'style': {
       'type': 'string',
+    },
+    'sortOrder': {
+      'typr': 'integer',
     }
 }
 
