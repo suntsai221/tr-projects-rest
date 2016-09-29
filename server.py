@@ -90,14 +90,16 @@ def get_sections_latest():
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
                             "parent":{ "parend": "/", "title": "Home" } } }
     headers = dict(request.headers)
+    content = request.args.get('content') or 'posts'
     tc = app.test_client()
     resp = tc.get('/sections', headers=headers)
     resp_header = dict(resp.headers)
     del headers['Content-Length']
     resp_data = json.loads(resp.data)
-    content = request.args.get('content') or 'posts'
+    section_items = resp_data["_items"]
+    section_items = sorted(section_items, key = lambda x: x["sortOrder"])
     if ("_error" not in resp_data and "_items" in resp_data):
-        for item in resp_data["_items"]:
+        for item in section_items:
             if (content == 'meta'):
                 endpoint = 'meta'
             else:
