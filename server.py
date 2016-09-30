@@ -68,6 +68,10 @@ def before_returning_choices(response):
         item = get_full_relateds(item, 'choices')
     return response
 
+def before_returning_sections(response):
+    sortedResponse = sorted(response['_items'], key = lambda x: x["sortOrder"])
+    return sortedResponse
+
 def remove_extra_fields(item):
   accepted_fields = schema.keys()
   for field in item.keys():
@@ -82,6 +86,7 @@ app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_choices += before_returning_choices
+app.on_fetched_resource_sections += before_returning_sections
 
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
