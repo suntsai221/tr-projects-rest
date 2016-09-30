@@ -69,8 +69,10 @@ def before_returning_choices(response):
     return response
 
 def before_returning_sections(response):
-    sortedResponse = sorted(response['_items'], key = lambda x: x["sortOrder"])
-    return sortedResponse
+    items = response['_items']
+    sortedItems = sorted(items, key = lambda x: x["sortOrder"])
+    response['_items'] = sortedItems
+    return response
 
 def remove_extra_fields(item):
   accepted_fields = schema.keys()
