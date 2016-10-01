@@ -102,7 +102,7 @@ def get_sections_latest():
     resp = tc.get('/sections', headers=headers)
     resp_header = dict(resp.headers)
     del headers['Content-Length']
-    resp_data = json.loads(resp.data)
+    resp_data = json.loads(str(resp.data))
     section_items = resp_data["_items"]
     section_items = sorted(section_items, key = lambda x: x["sortOrder"])
     if ("_error" not in resp_data and "_items" in resp_data):
@@ -135,7 +135,7 @@ def handle_combo():
             action_resp = tc.get(endpoints[action], headers=headers)
             headers = action_resp.headers
             action_data = json.loads(action_resp.data)
-            if "_error" not in action_data:
+            if "_error" not in action_data and "_items" in action_data and len(action_data["_items"]) > 0:
                 if action == 'choices':
                     response["_endpoints"][action] = {}
                     response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
