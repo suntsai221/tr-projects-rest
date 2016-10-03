@@ -1,21 +1,18 @@
 from eve import Eve
 from eve.auth import TokenAuth
 from flask import redirect, request, Response
-from settings import posts, users, ASSETS_URL, GCS_URL
+from settings import posts, users, ASSETS_URL, GCS_URL, ENV
+from werkzeug.security import check_password_hash
 import json
 import random
 import string
+import sys, getopt
 
-class RolesAuth(TokenAuth):
-    def check_auth(self, token,  allowed_roles, resource, method):
+class TokenAuth(TokenAuth):
+    def check_auth(self, token, allowed_roles, resource, method):
     # use Eve's own db driver; no additional connections/resources are used
         accounts = app.data.driver.db['accounts']
-        lookup = {'token': token}
-        if allowed_roles:
-            # only retrieve a user if his roles match ``allowed_roles``
-            lookup['roles'] = {'$in': allowed_roles}
-        account = accounts.find_one(lookup)
-        return account
+        return accounts.find_one({'token': token})
 
 def add_token(documents):
     for document in documents:
@@ -81,7 +78,11 @@ def remove_extra_fields(item):
       del item[field]
 
 #app = Eve(auth=RolesAuth)
-app = Eve()
+
+if ENV == 'prod':
+    app = Eve(auth=TokenAuth)
+else:
+    app = Eve()
 app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
