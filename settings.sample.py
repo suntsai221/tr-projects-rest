@@ -4,6 +4,7 @@ MONGO_PORT = 27017
 MONGO_DBNAME = 'keystone-test'
 ASSETS_URL = 'http://stage.mirrormedia.mg/'
 GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
+ENV = 'dev'
 
 # ALLOW ACTIONS
 DEBUG = False
@@ -80,6 +81,14 @@ meta_schema = {
   'og_description': {
     'type': 'string',
   },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  }
 }
 
 post_schema = {
