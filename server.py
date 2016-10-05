@@ -53,6 +53,12 @@ def before_returning_posts(response):
     items = response['_items']
     all_related = ''
     for item in items:
+        if 'brief' in item:
+            del item['brief']['draft']
+            del item['brief']['apiData']
+        if 'content' in item:
+            del item['content']['draft']
+            del item['content']['apiData']
         replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
