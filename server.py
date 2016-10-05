@@ -26,7 +26,14 @@ def get_full_relateds(item, key):
         all_relateds =  ",".join(map(lambda x: '"' + str(x) + '"',item[key]))
         resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data)
-        item[key] = resp_data['_items']
+        result = []
+        for i in item[key]: 
+            for j in resp_data['_items']:
+                if j['_id'] == str(i):
+                    result.append(j)
+                    continue
+        item[key] = result
+        # item[key] = resp_data['_items']
     return item
 
 def replace_imageurl(obj):
