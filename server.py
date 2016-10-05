@@ -50,15 +50,17 @@ def replace_imageurl(obj):
 
 def before_returning_posts(response):
     related = request.args.get('related')
+    clean = request.args.get('clean')
     items = response['_items']
     all_related = ''
     for item in items:
-        if 'brief' in item:
-            del item['brief']['draft']
-            del item['brief']['apiData']
-        if 'content' in item:
-            del item['content']['draft']
-            del item['content']['apiData']
+        if clean == 'content':
+            if 'brief' in item:
+                del item['brief']['draft']
+                del item['brief']['apiData']
+            if 'content' in item:
+                del item['content']['draft']
+                del item['content']['apiData']
         replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
@@ -136,7 +138,7 @@ def get_sections_latest():
         
 @app.route("/combo", methods=['GET'])
 def handle_combo():
-    endpoints = {'posts': '/posts?sort=-publishedDate', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate', 'sections': '/sections'}
+    endpoints = {'posts': '/posts?sort=-publishedDate&clean=content', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate', 'meta': '/meta?sort=-publishedDate&clean=content', 'sections': '/sections'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
