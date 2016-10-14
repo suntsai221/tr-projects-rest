@@ -565,6 +565,9 @@ choices_schema = {
   'pickDate': {
     'type': 'string',
   },
+  'isPublished': {
+    'type': 'boolean',
+  },
   'choices': {
     'type': 'list',
     'schema': {
