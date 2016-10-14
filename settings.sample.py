@@ -1,4 +1,5 @@
 # MONGO DATABASE SETTINGS
+DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
 MONGO_DBNAME = 'keystone-test'
@@ -9,6 +10,12 @@ ENV = 'dev'
 # ALLOW ACTIONS
 DEBUG = False
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']
+
+slug_schema = {
+  'slug': {
+    'type': 'string',
+  }
+}
 
 meta_schema = {
   'name': {
@@ -21,6 +28,9 @@ meta_schema = {
     'type': 'string',
   },
   'subtitle': {
+    'type': 'string',
+  },
+  'style': {
     'type': 'string',
   },
   'brief': {
@@ -76,7 +86,7 @@ meta_schema = {
     'type': 'boolean',
   },
   'publishedDate': {
-    'type': 'string',
+    'type': 'datetime',
   },
   'og_description': {
     'type': 'string',
@@ -171,7 +181,7 @@ post_schema = {
     },
   },
   'publishedDate': {
-    'type': 'string',
+    'type': 'datetime',
   },
   'categories': {
     'type': 'list',
@@ -643,8 +653,21 @@ posts = {
     'schema': post_schema
 }
 
+slug = {
+    'item_title': 'slug',
+    'datasource': {
+        'source': 'posts',
+        'filter': {'state': 'published'},
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'allow_unknown': False,
+    'schema': slug_schema
+}
+
 meta = {
-    'item_title': 'draft',
+    'item_title': 'meta',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
         'field': 'slug'
@@ -660,6 +683,7 @@ meta = {
     'allow_unknown': False,
     'schema': meta_schema
 }
+
 drafts = {
     'item_title': 'draft',
     'additional_lookup': {
@@ -820,14 +844,12 @@ DOMAIN = {
     'posts': posts,
     'drafts': drafts,
     'meta': meta,
-    'users': users,
-    'members': members,
+    'slug': slug,
     'contacts': contacts,
     'tags': tags,
     'choices': choices,
     'topics': topics,
     'postcategories': postcategories,
-    'account': account,
     'images': images,
     'audios': audios,
     'videos': videos,
