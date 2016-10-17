@@ -68,6 +68,14 @@ meta_schema = {
       'embeddable': True
     },
   },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
   'categories': {
     'type': 'list',
     'schema': {
@@ -113,6 +121,14 @@ post_schema = {
   },
   'subtitle': {
     'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
   },
   'heroImage': {
     'type': 'objectid',
