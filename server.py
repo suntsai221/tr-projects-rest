@@ -67,12 +67,14 @@ def before_returning_posts(response):
     return response
 
 def before_returning_meta(response):
+    replace = request.args.get('replace')
     items = response['_items']
-    for item in items:
-        if 'brief' in item:
-            del item['brief']['draft']
-            del item['brief']['apiData']
-        replace_imageurl(item)
+    if replace != 'false'
+        for item in items:
+            if 'brief' in item:
+                del item['brief']['draft']
+                del item['brief']['apiData']
+            replace_imageurl(item)
     return response
 
 def before_returning_choices(response):
