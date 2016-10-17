@@ -69,7 +69,7 @@ def before_returning_posts(response):
 def before_returning_meta(response):
     replace = request.args.get('replace')
     items = response['_items']
-    if replace != 'false'
+    if replace != 'false':
         for item in items:
             if 'brief' in item:
                 del item['brief']['draft']
