@@ -174,6 +174,17 @@ post_schema = {
         },
     },
   },
+  'camera_man': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'designers': {
     'type': 'list',
     'schema': {
@@ -665,7 +676,7 @@ posts = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
