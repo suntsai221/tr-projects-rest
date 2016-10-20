@@ -65,6 +65,11 @@ def before_returning_posts(response):
             if 'content' in item:
                 del item['content']['draft']
                 del item['content']['apiData']
+        if item["style"] == 'script':
+            script_parsing = item['content']['html']
+            scenes = script_parsing.split("<code>page</code>")
+            page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes)) 
+            item['content']['html'] = page_div
         replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
