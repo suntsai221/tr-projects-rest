@@ -67,7 +67,7 @@ def before_returning_posts(response):
                 del item['content']['apiData']
         if item["style"] == 'script':
             script_parsing = item['content']['html']
-            scenes = script_parsing.split("<code>page</code>")
+            scenes = script_parsing.split("<p><code>page</code></p>")
             page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes)) 
             item['content']['html'] = page_div
         replace_imageurl(item)
