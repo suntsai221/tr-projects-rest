@@ -48,7 +48,7 @@ def replace_imageurl(obj):
         obj['heroImage']['image'] = json.loads(image_str)
     if 'heroVideo' in obj:
         video_str = json.dumps(obj['heroVideo']['video'])
-        video_str = image_str.replace(GCS_URL, ASSETS_URL)
+        video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['heroVideo']['video'] = json.loads(video_str)
     return obj
 
