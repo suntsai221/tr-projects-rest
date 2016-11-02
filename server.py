@@ -1,7 +1,7 @@
 from eve import Eve
 from eve.auth import TokenAuth
 from flask import redirect, request, Response
-from settings import posts, users, ASSETS_URL, GCS_URL, ENV
+from settings import posts, ASSETS_URL, GCS_URL, ENV
 from werkzeug.security import check_password_hash
 import json
 import random

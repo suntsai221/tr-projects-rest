@@ -309,123 +309,6 @@ post_schema = {
   }
 }
 
-user_schema = {
-  'name': {
-    'type': 'string',
-  },
-  'email': {
-    'type': 'string',
-    'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-  },
-  'role': {
-    'type': 'string',
-  },
-  'company': {
-    'type': 'string',
-  },
-  'address': {
-    'type': 'string',
-  }
-}
-
-contact_schema = {
-  'name': {
-    'type': 'string',
-  },
-  'email': {
-    'type': 'string',
-    'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-  },
-  'homepage': {
-    'type': 'string',
-  },
-  'facebook': {
-    'type': 'string',
-  },
-  'twitter': {
-    'type': 'string',
-  },
-  'instantgram': {
-    'type': 'string',
-  },
-  'bio': {
-    'type': 'string',
-  },
-  'image': {
-    'type': 'objectid',
-    'data_relation': {
-      'resource': 'images',
-      'field': '_id',
-      'embeddable': True
-    },
-  },
-}
-
-member_schema = {
-  'member_id': {
-    'type': 'string',
-    'required': True,
-  },
-  'email': {
-    'type': 'string',
-    'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-  },
-  'password': {
-    'type': 'string',
-    'required': True,
-  },
-  'country': {
-    'type': 'string',
-  },
-  'city': {
-    'type': 'string',
-  },
-  'address': {
-    'type': 'string',
-  },
-  'zip': {
-    'type': 'interger',
-  },
-  'gender': {
-    'type': 'string',
-  },
-  'state': {
-      'type': 'dict',
-      'schema': {
-          'bookmark': {
-            'type': 'list',
-            'schema': {
-              'type': 'objectid',
-              'data_relation': {
-                'resource': 'posts',
-                'field': '_id',
-                'embeddabole': True
-              },
-            },
-          },
-          'bookmark_count': {
-            'type': 'integer',
-          },
-          'position': {
-            'type': 'string',
-          }
-      },
-  },
-  'create_date': {
-    'type': 'datetime',
-  }
-}
-
-postcategories_schema = {
-    'name': {
-      'type': 'string',
-    },
-    'title': {
-      'type': 'string',
-    }
-}
-
-
 sections_schema = {
     'title': {
       'type': 'string',
@@ -464,27 +347,6 @@ sections_schema = {
     },
     'sortOrder': {
       'typr': 'integer',
-    }
-}
-
-account_schema = {
-    'username': {
-       'type': 'string',
-       'required': True,
-       'unique': True,
-    },
-    'password': {
-       'type': 'string',
-       'required': True,
-    },
-    'roles': {
-        'type': 'list',
-        'allowed': ['user', 'superuser', 'admin'],
-        'required': True,
-    },
-    'token': {
-        'type': 'string',
-        'required': True,
     }
 }
 
@@ -529,6 +391,56 @@ videos_schema = {
       },
     },
   },
+}
+
+postcategories_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  }
 }
 
 audios_schema = {
@@ -585,6 +497,39 @@ audios_schema = {
 topics_schema = {
   'name': {
     'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
   }
 }
 
@@ -732,46 +677,6 @@ drafts = {
     'schema': post_schema
 }
 
-users = {
-    'item_title': 'user',
-    'additional_lookup': {
-        'url': 'regex(".+")',
-        'field': 'name'
-    },
-    'resource_methods': ['GET'],
-    'cache_control': 'max-age=60,must-revalidate',
-    'cache_expires': 60,
-    'allow_unknown': False,
-    'schema': user_schema
-}
-
-members = {
-    'item_title': 'member',
-    'additional_lookup': {
-        'url': 'regex("\w+")',
-        'field': 'member_id'
-    },
-    'resource_methods': ['GET', 'POST'],
-    'cache_control': 'max-age=60,must-revalidate',
-    'cache_expires': 60,
-    'allow_unknown': False,
-    'schema': member_schema
-}
-
-contacts = {
-    'item_title': 'contact',
-    'additional_lookup': {
-        'url': 'regex(".+")',
-        'field': 'name'
-    },
-    'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
-    'allow_unknown': False,
-    'embedded_fields': ['image'],
-    'schema': contact_schema
-}
-
 choices = {
     'item_title': 'choice',
     'datasource': {
@@ -842,18 +747,6 @@ sections = {
     'schema': sections_schema,
 }
 
-account = {
-    'additional_lookup': {
-        'url': 'regex("[\w]+")',
-        'field': 'username',
-    },
-    'resource_methods': ['GET', 'POST'],
-    'allowed_roles': ['superuser', 'admin'],
-    'cache_control': '',
-    'cache_expires': 0,
-    'schema': account_schema,
-}
-
 images = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
@@ -880,7 +773,6 @@ DOMAIN = {
     'drafts': drafts,
     'meta': meta,
     'slug': slug,
-    'contacts': contacts,
     'tags': tags,
     'choices': choices,
     'topics': topics,
