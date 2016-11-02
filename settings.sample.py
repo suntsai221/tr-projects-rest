@@ -109,6 +109,39 @@ meta_schema = {
   }
 }
 
+contact_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'email': {
+    'type': 'string',
+    'regex': '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+  },
+  'homepage': {
+    'type': 'string',
+  },
+  'facebook': {
+    'type': 'string',
+  },
+  'twitter': {
+    'type': 'string',
+  },
+  'instantgram': {
+    'type': 'string',
+  },
+  'bio': {
+    'type': 'string',
+  },
+  'image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+}
+
 post_schema = {
   'name': {
     'type': 'string',
@@ -720,6 +753,20 @@ tags = {
     }
 }
 
+contacts = {
+  'item_title': 'contact',
+  'additional_lookup': {
+    'url': 'regex(".+")',
+    'field': 'name'
+  },
+  'resource_methods': ['GET'],
+  'cache_control': 'max-age=300,must-revalidate',
+  'cache_expires': 300,
+  'allow_unknown': False,
+  'embedded_fields': ['image'],
+  'schema': contact_schema
+}
+
 postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
@@ -775,6 +822,7 @@ DOMAIN = {
     'slug': slug,
     'tags': tags,
     'choices': choices,
+    'contacts': contacts,
     'topics': topics,
     'postcategories': postcategories,
     'images': images,
