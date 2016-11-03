@@ -375,6 +375,17 @@ sections_schema = {
          },
        },
     },
+    'extend_cats': {
+      'type': 'list',
+      'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+       },
+    },
     'style': {
       'type': 'string',
     },
@@ -787,7 +798,7 @@ sections = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['categories', 'image'],
+    'embedded_fields': ['categories', 'image', 'extend_cats'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
