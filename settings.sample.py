@@ -574,6 +574,12 @@ topics_schema = {
       'field': '_id',
       'embeddable': True
     },
+  },
+  'style': {
+    'type': 'string'.
+  },
+  'javascript': {
+    'type': 'string'.
   }
 }
 
