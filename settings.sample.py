@@ -356,6 +356,9 @@ sections_schema = {
     'description': {
       'type': 'string',
     },
+    'isFeatured': {
+      'type': 'boolean',
+    },
     'image': {
       'type': 'objectid',
       'data_relation': {
