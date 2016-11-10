@@ -579,10 +579,10 @@ topics_schema = {
     },
   },
   'style': {
-    'type': 'string'.
+    'type': 'string',
   },
   'javascript': {
-    'type': 'string'.
+    'type': 'string',
   }
 }
 
