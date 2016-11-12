@@ -621,6 +621,17 @@ image_schema = {
   'sale': {
     'type': 'Boolean',
   },
+  'topics': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'topics',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'tags': {
     'type': 'list',
     'schema': {
