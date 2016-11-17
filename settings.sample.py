@@ -675,6 +675,9 @@ image_schema = {
       }
     },
   },
+  'createTime': {
+    'type': 'datetime',
+  },
 }
 
 posts = {
@@ -831,6 +834,7 @@ sections = {
 
 images = {
     'resource_methods': ['GET'],
+    'datasource': {'default_sort': [('createTime', -1)]}
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'schema': image_schema,
