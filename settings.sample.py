@@ -761,6 +761,7 @@ event = {
     'datasource': {
         'source': 'events',
         'filter': {'state': 'published'},
+        'default_sort': [('startDate', -1)],
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['image','sections', 'video'],
