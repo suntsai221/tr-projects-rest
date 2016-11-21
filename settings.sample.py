@@ -152,6 +152,12 @@ event_schema = {
   'eventType': {
     'type': 'string',
   },
+  'startDate': {
+    'type': 'datetime',
+  },
+  'endDate': {
+    'type': 'datetime',
+  },
   'embed': {
     'type': 'string',
   },
