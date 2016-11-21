@@ -142,6 +142,51 @@ contact_schema = {
   },
 }
 
+event_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'state': {
+    'type': 'string',
+  },
+  'eventType': {
+    'type': 'string',
+  },
+  'embed': {
+    'type': 'string',
+  },
+  'video': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+}
+
 post_schema = {
   'name': {
     'type': 'string',
@@ -711,6 +756,20 @@ slug = {
     'schema': slug_schema
 }
 
+event = {
+    'item_title': 'event',
+    'datasource': {
+        'source': 'events',
+        'filter': {'state': 'published'},
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['image','sections', 'video'],
+    'cache_control': 'max-age=300,must-revalidate',
+    'cache_expires': 300,
+    'allow_unknown': False,
+    'schema': event_schema
+}
+
 meta = {
     'item_title': 'meta',
     'additional_lookup': {
@@ -867,6 +926,7 @@ DOMAIN = {
     'images': images,
     'audios': audios,
     'videos': videos,
+    'event': event,
     'sections': sections,
     }
 
