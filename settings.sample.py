@@ -542,6 +542,9 @@ postcategories_schema = {
 }
 
 audios_schema = {
+  'title': {
+    'type': 'string',
+  },
   'description': {
     'type': 'string',
   },
@@ -571,7 +574,7 @@ audios_schema = {
         },
     },
   },  
-  'heroImage': {
+  'coverPhoto': {
     'type': 'objectid',
     'data_relation': {
       'resource': 'images',
