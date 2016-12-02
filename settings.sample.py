@@ -912,6 +912,7 @@ images = {
 audios = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
+    'embedded_fields': ['coverPhoto'],
     'cache_expires': 300,
     'schema': audios_schema,
 }
