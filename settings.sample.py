@@ -836,7 +836,7 @@ topics = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'heroVideo'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'og_image'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
