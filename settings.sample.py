@@ -640,6 +640,9 @@ topics_schema = {
   },
   'javascript': {
     'type': 'string',
+  },
+  'sortOrder': {
+    'typr': 'integer',
   }
 }
 
@@ -834,6 +837,10 @@ topics = {
     'additional_lookup': {
         'url': 'regex(".+")',
         'field': 'name'
+    },
+    'datasource': {
+        'source': 'topics',
+        'default_sort': [('sortOrder', 1)],
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage', 'heroVideo', 'og_image'],
