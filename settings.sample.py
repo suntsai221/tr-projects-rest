@@ -443,6 +443,26 @@ sections_schema = {
     'style': {
       'type': 'string',
     },
+    'og_title': {
+      'type': 'string',
+    },
+    'og_description': {
+      'type': 'string',
+    },
+    'og_image': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'images',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
+    'css': {
+      'type': 'string',
+    },
+    'javascript': {
+      'type': 'string',
+    },
     'sortOrder': {
       'typr': 'integer',
     }
