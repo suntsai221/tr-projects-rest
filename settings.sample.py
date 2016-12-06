@@ -615,6 +615,60 @@ audios_schema = {
   },
 }
 
+tags_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'leading': {
+    'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'style': {
+    'type': 'string',
+  },
+  'css': {
+    'type': 'string',
+  },
+  'javascript': {
+    'type': 'string',
+  },
+  'sortOrder': {
+    'typr': 'integer',
+  }
+}
+
 topics_schema = {
   'name': {
     'type': 'string',
@@ -880,11 +934,7 @@ tags = {
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
-    'schema': {
-      'name': {
-        'type': 'string',
-      }
-    }
+    'schema': tags_schema
 }
 
 contacts = {
