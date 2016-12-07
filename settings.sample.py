@@ -558,6 +558,18 @@ postcategories_schema = {
       'field': '_id',
       'embeddable': True
     },
+  },
+  'style': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'css': {
+    'type': 'string',
+  },
+  'javascript': {
+    'type': 'string',
   }
 }
 
