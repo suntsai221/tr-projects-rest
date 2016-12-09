@@ -96,6 +96,9 @@ meta_schema = {
   'publishedDate': {
     'type': 'datetime',
   },
+  'dfp': {
+    'type': 'string',
+  },
   'og_description': {
     'type': 'string',
   },
