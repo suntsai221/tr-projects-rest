@@ -53,7 +53,7 @@ def replace_imageurl(obj):
     return obj
 
 def before_returning_posts(response):
-    related = request.args.get('relateds')
+    related = request.args.get('related')
     clean = request.args.get('clean')
     items = response['_items']
     all_related = ''
