@@ -29,7 +29,7 @@ def get_full_relateds(item, key):
         result = []
         for i in item[key]: 
             for j in resp_data['_items']:
-                if str(j['_id']) == str(i['_id']):
+                if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
                     result.append(j)
                     continue
         item[key] = result
