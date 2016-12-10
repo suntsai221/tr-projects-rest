@@ -60,6 +60,17 @@ meta_schema = {
          },
      },
   },
+  'writers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'heroImage': {
     'type': 'objectid',
     'data_relation': {
@@ -87,6 +98,17 @@ meta_schema = {
          },
      },
   },
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'isFeatured': {
     'type': 'boolean',
   },
@@ -95,9 +117,6 @@ meta_schema = {
   },
   'publishedDate': {
     'type': 'datetime',
-  },
-  'dfp': {
-    'type': 'string',
   },
   'og_description': {
     'type': 'string',
@@ -319,17 +338,17 @@ post_schema = {
          },
      },
   },
-  #'topics_ref': {
-  #  'type': 'list',
-  #  'schema': {
-  #      'type': 'objectid',
-  #      'data_relation': {
-  #          'resource': 'meta',
-  #          'field': 'topics',
-  #          'embeddable': True
-  #       },
-  #   },
-  #},
+  'topics_ref': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': 'topics',
+            'embeddable': True
+         },
+     },
+  },
   'tags': {
     'type': 'list',
     'schema': {
@@ -730,6 +749,9 @@ topics_schema = {
   'javascript': {
     'type': 'string',
   },
+  'dfp': {
+    'type': 'string',
+  },
   'sortOrder': {
     'typr': 'integer',
   }
@@ -837,7 +859,7 @@ posts = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
@@ -883,7 +905,7 @@ meta = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo'],
+    'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo', 'relateds'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
