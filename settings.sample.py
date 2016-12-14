@@ -485,6 +485,9 @@ sections_schema = {
     'javascript': {
       'type': 'string',
     },
+    'twitter': {
+      'type': 'string',
+    },
     'sortOrder': {
       'typr': 'integer',
     }
