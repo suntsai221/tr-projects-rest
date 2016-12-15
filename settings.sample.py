@@ -755,6 +755,9 @@ topics_schema = {
   'dfp': {
     'type': 'string',
   },
+  'mobile_dfp': {
+    'type': 'string',
+  },
   'sortOrder': {
     'typr': 'integer',
   }
