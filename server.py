@@ -56,7 +56,6 @@ def before_returning_posts(response):
     related = request.args.get('related')
     clean = request.args.get('clean')
     items = response['_items']
-    all_related = ''
     for item in items:
         if clean == 'content':
             if 'brief' in item:
@@ -76,14 +75,17 @@ def before_returning_posts(response):
     return response
 
 def before_returning_meta(response):
+    related = request.args.get('related')
     replace = request.args.get('replace')
     items = response['_items']
-    if replace != 'false':
-        for item in items:
+    for item in items:
+        if replace != 'false':
             if 'brief' in item:
                 del item['brief']['draft']
                 del item['brief']['apiData']
             replace_imageurl(item)
+        if related == 'full':
+            item = get_full_relateds(item, 'relateds')
     return response
 
 def before_returning_choices(response):
