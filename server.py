@@ -23,7 +23,8 @@ def get_full_relateds(item, key):
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
-        all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+        item_slice = item[0,1]
+        all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item_slice[key]))
         resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data)
         result = []
