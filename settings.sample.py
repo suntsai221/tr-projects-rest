@@ -713,6 +713,9 @@ topics_schema = {
   'leading': {
     'type': 'string',
   },
+  'type': {
+    'type': 'string',
+  },
   'heroVideo': {
     'type': 'objectid',
     'data_relation': {
