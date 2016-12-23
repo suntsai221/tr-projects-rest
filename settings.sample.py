@@ -858,6 +858,7 @@ posts = {
     'item_title': 'post',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
         'field': 'slug'
     },
     'datasource': {
@@ -904,6 +905,7 @@ meta = {
     'item_title': 'meta',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
         'field': 'slug'
     },
     'datasource': {
@@ -922,6 +924,7 @@ drafts = {
     'item_title': 'draft',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
         'field': 'slug'
     },
     'datasource': {
