@@ -412,7 +412,13 @@ post_schema = {
       'field': '_id',
       'embeddable': True
     },
-  }
+  },
+  'device': {
+    'type': 'string',
+  },
+  'isCampaign': {
+    'type': 'boolean',
+  },
 }
 
 sections_schema = {
@@ -595,6 +601,9 @@ postcategories_schema = {
   },
   'javascript': {
     'type': 'string',
+  },
+  'isCampaign':{
+    'type': 'boolean',
   }
 }
 

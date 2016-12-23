@@ -67,7 +67,7 @@ def before_returning_posts(response):
         if item["style"] == 'script':
             script_parsing = item['content']['html']
             scenes = script_parsing.split("<p><code>page</code></p>")
-            page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes)) 
+            page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
             item['content']['html'] = page_div
         replace_imageurl(item)
         if related == 'full':
@@ -105,6 +105,17 @@ def remove_extra_fields(item):
     if field not in accepted_fields and field != '_id':
       del item[field]
 
+def pre_GET(resource, request, lookup):
+    isCampaign = request.args.get('isCampaign')
+    if resource == 'posts' or resource == 'meta':
+        if isCampaign:
+            if isCampaign == 'true':
+                lookup.update({"isCampaign": True})
+            elif isCampaign == 'false':
+                lookup.update({"isCampaign": False})
+        elif isCampaign is None:
+            lookup.update({"isCampaign": False})
+
 #app = Eve(auth=RolesAuth)
 
 if ENV == 'prod':
@@ -118,10 +129,11 @@ app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_sections += before_returning_sections
+app.on_pre_GET += pre_GET
 
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
-    response = { "_items": {}, 
+    response = { "_items": {},
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
                             "parent":{ "parend": "/", "title": "Home" } } }
