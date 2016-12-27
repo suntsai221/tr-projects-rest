@@ -712,7 +712,18 @@ tags_schema = {
   },
   'sortOrder': {
     'typr': 'integer',
-  }
+  },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },  
 }
 
 topics_schema = {
@@ -983,6 +994,7 @@ tags = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
+    'embedded_fields':['sections','heroImage'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
