@@ -14,7 +14,10 @@ ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']
 slug_schema = {
   'slug': {
     'type': 'string',
-  }
+  },
+  'isCampaign': {
+    'type': 'boolean',
+  },
 }
 
 meta_schema = {
@@ -120,6 +123,9 @@ meta_schema = {
   },
   'og_description': {
     'type': 'string',
+  },
+  'isCampaign': {
+    'type': 'boolean',
   },
   'og_image': {
     'type': 'objectid',
@@ -412,7 +418,13 @@ post_schema = {
       'field': '_id',
       'embeddable': True
     },
-  }
+  },
+  'device': {
+    'type': 'string',
+  },
+  'isCampaign': {
+    'type': 'boolean',
+  },
 }
 
 sections_schema = {
@@ -583,6 +595,9 @@ postcategories_schema = {
       'field': '_id',
       'embeddable': True
     },
+  },
+  'isCampaign': {
+    'type': 'boolean',
   },
   'style': {
     'type': 'string',
