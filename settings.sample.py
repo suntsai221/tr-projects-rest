@@ -250,6 +250,9 @@ post_schema = {
       'embeddable': True
     },
   },
+  'heroCaption': {
+    'type': 'string',
+  },
   'state': {
     'type': 'string',
   },
