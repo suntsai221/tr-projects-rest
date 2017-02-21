@@ -455,6 +455,14 @@ sections_schema = {
         'embeddable': True
       },
     },
+    'heroImage': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'images',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
     'categories': {
       'type': 'list',
       'schema': {
@@ -476,6 +484,17 @@ sections_schema = {
             'embeddable': True
          },
        },
+    },
+    'topics': {
+      'type': 'list',
+      'schema': {
+          'type': 'objectid',
+          'data_relation': {
+              'resource': 'topics',
+              'field': '_id',
+              'embeddable': True
+           },
+       }, 
     },
     'style': {
       'type': 'string',
@@ -1050,7 +1069,7 @@ sections = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['categories', 'image', 'extend_cats'],
+    'embedded_fields': ['categories', 'heroImage', 'image', 'extend_cats', 'topics'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
     'allow_unknown': False,
