@@ -325,6 +325,9 @@ post_schema = {
   'publishedDate': {
     'type': 'datetime',
   },
+  'createTime': {
+    'type': 'datetime',
+  },
   'categories': {
     'type': 'list',
     'schema': {
@@ -531,6 +534,28 @@ videos_schema = {
   'description': {
     'type': 'string',
   },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'video': {
     'type': 'dict',
     'schema': {
@@ -557,6 +582,9 @@ videos_schema = {
         },
     },
   },  
+  'createTime': {
+    'type': 'datetime',
+  },
   'tags': {
     'type': 'list',
     'schema': {
