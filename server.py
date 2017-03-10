@@ -42,11 +42,11 @@ def replace_imageurl(obj):
             obj_str = json.dumps(obj[key])
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
             obj[key] = json.loads(obj_str)
-    if 'heroImage' in obj and type(obj['heroImage']) is 'object' and  'image' in obj['heroImage']:
+    if 'heroImage' in obj and type(obj['heroImage']) is 'dict' and  'image' in obj['heroImage']:
         image_str = json.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['heroImage']['image'] = json.loads(image_str)
-    if 'heroVideo' in obj and type(obj['heroVideo']) is 'object' and  'video' in obj['heroVideo']:
+    if 'heroVideo' in obj and type(obj['heroVideo']) is 'dict' and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['heroVideo']['video'] = json.loads(video_str)
