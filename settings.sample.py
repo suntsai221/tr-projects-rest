@@ -531,6 +531,9 @@ sections_schema = {
 }
 
 videos_schema = {
+  'title': {
+    'type': 'string',
+  },
   'description': {
     'type': 'string',
   },
@@ -1124,6 +1127,7 @@ videos = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
+    'embedded_fields': ['categories', 'sections', 'tags'],
     'schema': videos_schema,
 }
 
