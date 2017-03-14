@@ -593,7 +593,7 @@ videos_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'meta',
+            'resource': 'videos',
             'field': '_id',
             'embeddable': True
          },
