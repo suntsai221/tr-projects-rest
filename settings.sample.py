@@ -1138,7 +1138,7 @@ videos = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,
-    'embedded_fields': ['categories', 'sections', 'tags'],
+    'embedded_fields': ['categories', 'sections', 'tags', 'related'],
     'schema': videos_schema,
 }
 
