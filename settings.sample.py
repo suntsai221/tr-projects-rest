@@ -69,7 +69,7 @@ meta_schema = {
         'type': 'objectid',
         'data_relation': {
             'resource': 'contacts',
-            'field': '_id',
+            'field': 'name',
             'embeddable': True
         },
     },
