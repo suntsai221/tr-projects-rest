@@ -588,6 +588,17 @@ videos_schema = {
   'createTime': {
     'type': 'datetime',
   },
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'tags': {
     'type': 'list',
     'schema': {
