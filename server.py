@@ -86,6 +86,9 @@ def before_returning_meta(response):
             replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
+        else:
+            if related == 'false' and 'relateds' in item:
+                del item['relateds']
     return response
 
 def before_returning_choices(response):
@@ -164,7 +167,7 @@ def get_sections_latest():
 @app.route("/combo", methods=['GET'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder', 'posts-vue': '/meta?sort=-publishedDate&clean=content&max_results=20', 'projects': 'posts?where={"style":"projects"}&sort=-publishedDate'}
+     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder', 'posts-vue': '/meta?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'posts?where={"style":"projects"}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
