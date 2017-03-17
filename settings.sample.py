@@ -1038,6 +1038,7 @@ choices = {
         'source': 'choices',
         'filter': {'isPublished': True},
     },
+    'embedded_fields': ['choices'],
     'resource_methods': ['GET'],
     'cache_control': 'max-age=300,must-revalidate',
     'cache_expires': 300,

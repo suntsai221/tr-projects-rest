@@ -94,6 +94,18 @@ def before_returning_meta(response):
 def before_returning_choices(response):
     for item in response['_items']:
         item = get_full_relateds(item, 'choices')
+        if 'content' in item:
+            del item['content']
+        if 'relateds' in item:
+            del item['relateds']
+        if 'brief' in item:
+            if 'apiData' in item['brief']:
+                del item['brief']['apiData']
+        if 'brief' in item:
+            if 'draft' in item['brief']:
+                del item['brief']['draft']
+        if 'tags' in item:
+            del item['tags']
     return response
 
 def before_returning_sections(response):
