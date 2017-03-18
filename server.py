@@ -91,6 +91,18 @@ def before_returning_meta(response):
                 del item['relateds']
     return response
 
+def before_returning_listing(response):
+    for item in response['_items']:
+        if 'brief' in item:
+            if 'apiData' in item['brief']:
+                del item['brief']['apiData']
+        if 'brief' in item:
+            if 'draft' in item['brief']:
+                del item['brief']['draft']
+        if 'writers' in item:
+            del item['writers']
+    return response
+
 def before_returning_choices(response):
     for item in response['_items']:
         item = get_full_relateds(item, 'choices')
@@ -151,6 +163,7 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_meta += before_returning_meta
+app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_sections += before_returning_sections
 app.on_pre_GET += pre_GET
