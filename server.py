@@ -99,8 +99,22 @@ def before_returning_listing(response):
         if 'brief' in item:
             if 'draft' in item['brief']:
                 del item['brief']['draft']
+        if '_updated' in item:
+            del item['_updated']
+        if '_created' in item:
+            del item['_created']
+        if '_links' in item:
+            del item['_links']
         if 'writers' in item:
             del item['writers']
+        if 'sections' in item:
+            if 'javascript' in item['sections']:
+                del item['sections']['javascript']
+            if 'css' in item['sections']:
+                del item['sections']['css']
+            if 'categories' in item['sections']:
+                del item['sections']['categories']
+
     return response
 
 def before_returning_choices(response):
