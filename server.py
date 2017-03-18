@@ -112,7 +112,7 @@ def before_returning_listing(response):
                 if 'javascript' in i:
                     del i['javascript']
                 if 'css' in i:
-                    del i
+                    del i['css']
                 if 'categories' in i:
                     del i['categories']
 
