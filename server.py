@@ -108,12 +108,13 @@ def before_returning_listing(response):
         if 'writers' in item:
             del item['writers']
         if 'sections' in item:
-            if 'javascript' in item['sections']:
-                del item['sections']['javascript']
-            if 'css' in item['sections']:
-                del item['sections']['css']
-            if 'categories' in item['sections']:
-                del item['sections']['categories']
+            for i in item:
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i
+                if 'categories' in i:
+                    del i['categories']
 
     return response
 
