@@ -68,12 +68,13 @@ def clean_item(item):
                 clean_item(r)
     if 'sections' in item:
         for i in item['sections']:
-            if 'javascript' in i:
-                del i['javascript']
-            if 'css' in i:
-                del i['css']
-            if 'categories' in i:
-                del i['categories']
+            if isinstance(i, dict):
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i['css']
+                if 'categories' in i:
+                    del i['categories']
     return item
 
 def before_returning_posts(response):
