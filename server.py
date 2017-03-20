@@ -59,12 +59,13 @@ def clean_item(item):
         del item['_created']
     if 'relateds' in item:
         for r in item['relateds']:
-            if 'brief' in r:
-                if 'draft' in r['brief']:
-                    del r['brief']['draft']
-                if 'apiData' in r['brief']:
-                    del r['brief']['apiData']
-            clean_item(r)
+            if isinstance(r, dict):
+                if 'brief' in r:
+                    if 'draft' in r['brief']:
+                        del r['brief']['draft']
+                    if 'apiData' in r['brief']:
+                        del r['brief']['apiData']
+                clean_item(r)
     if 'sections' in item:
         for i in item['sections']:
             if 'javascript' in i:
