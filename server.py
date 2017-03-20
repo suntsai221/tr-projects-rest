@@ -52,27 +52,35 @@ def replace_imageurl(obj):
         obj['heroVideo']['video'] = json.loads(video_str)
     return obj
 
+def clean_item(item):
+    if '_updated' in item:
+        del item['_updated']
+    if '_created' in item:
+        del item['_created']
+    if 'relateds' in item:
+        for r in item['relateds']:
+            if 'brief' in r:
+                if 'draft' in r['brief']:
+                    del r['brief']['draft']
+                if 'apiData' in r['brief']:
+                    del r['brief']['apiData']
+            clean_item(r)
+    if 'sections' in item:
+        for i in item['sections']:
+            if 'javascript' in i:
+                del i['javascript']
+            if 'css' in i:
+                del i['css']
+            if 'categories' in i:
+                del i['categories']
+    return item
+
 def before_returning_posts(response):
     related = request.args.get('related')
     clean = request.args.get('clean')
     items = response['_items']
     for item in items:
-        if '_updated' in item:
-            del item['_updated']
-        if '_created' in item:
-            del item['_created']
-        if '_links' in item:
-            del item['_links']
-        if 'writers' in item:
-            del item['writers']
-        if 'sections' in item:
-            for i in item['sections']:
-                if 'javascript' in i:
-                    del i['javascript']
-                if 'css' in i:
-                    del i['css']
-                if 'categories' in i:
-                    del i['categories']
+        item = clean_item(item)
         if clean == 'content':
             if 'brief' in item:
                 del item['brief']['draft']
@@ -95,6 +103,7 @@ def before_returning_meta(response):
     replace = request.args.get('replace')
     items = response['_items']
     for item in items:
+        item = clean_item(item)
         if 'brief' in item:
             del item['brief']['draft']
             del item['brief']['apiData']
@@ -105,22 +114,6 @@ def before_returning_meta(response):
         else:
             if related == 'false' and 'relateds' in item:
                 del item['relateds']
-        if '_updated' in item:
-            del item['_updated']
-        if '_created' in item:
-            del item['_created']
-        if '_links' in item:
-            del item['_links']
-        if 'writers' in item:
-            del item['writers']
-        if 'sections' in item:
-            for i in item['sections']:
-                if 'javascript' in i:
-                    del i['javascript']
-                if 'css' in i:
-                    del i['css']
-                if 'categories' in i:
-                    del i['categories']
     return response
 
 def before_returning_listing(response):
@@ -130,23 +123,6 @@ def before_returning_listing(response):
                 del item['brief']['apiData']
             if 'draft' in item['brief']:
                 del item['brief']['draft']
-        if '_updated' in item:
-            del item['_updated']
-        if '_created' in item:
-            del item['_created']
-        if '_links' in item:
-            del item['_links']
-        if 'writers' in item:
-            del item['writers']
-        if 'sections' in item:
-            for i in item['sections']:
-                if 'javascript' in i:
-                    del i['javascript']
-                if 'css' in i:
-                    del i['css']
-                if 'categories' in i:
-                    del i['categories']
-
     return response
 
 def before_returning_choices(response):
