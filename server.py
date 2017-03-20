@@ -57,6 +57,22 @@ def before_returning_posts(response):
     clean = request.args.get('clean')
     items = response['_items']
     for item in items:
+        if '_updated' in item:
+            del item['_updated']
+        if '_created' in item:
+            del item['_created']
+        if '_links' in item:
+            del item['_links']
+        if 'writers' in item:
+            del item['writers']
+        if 'sections' in item:
+            for i in item['sections']:
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i['css']
+                if 'categories' in i:
+                    del i['categories']
         if clean == 'content':
             if 'brief' in item:
                 del item['brief']['draft']
@@ -79,16 +95,32 @@ def before_returning_meta(response):
     replace = request.args.get('replace')
     items = response['_items']
     for item in items:
+        if 'brief' in item:
+            del item['brief']['draft']
+            del item['brief']['apiData']
         if replace != 'false':
-            if 'brief' in item:
-                del item['brief']['draft']
-                del item['brief']['apiData']
             replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
         else:
             if related == 'false' and 'relateds' in item:
                 del item['relateds']
+        if '_updated' in item:
+            del item['_updated']
+        if '_created' in item:
+            del item['_created']
+        if '_links' in item:
+            del item['_links']
+        if 'writers' in item:
+            del item['writers']
+        if 'sections' in item:
+            for i in item['sections']:
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i['css']
+                if 'categories' in i:
+                    del i['categories']
     return response
 
 def before_returning_listing(response):
@@ -96,7 +128,6 @@ def before_returning_listing(response):
         if 'brief' in item:
             if 'apiData' in item['brief']:
                 del item['brief']['apiData']
-        if 'brief' in item:
             if 'draft' in item['brief']:
                 del item['brief']['draft']
         if '_updated' in item:
