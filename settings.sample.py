@@ -669,6 +669,12 @@ videos_schema = {
          },
      }, 
   },
+  'state': {
+    'type': 'string',
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
   'tags': {
     'type': 'list',
     'schema': {
@@ -1226,6 +1232,13 @@ audios = {
 
 videos = {
     'resource_methods': ['GET'],
+    'additional_lookup': {
+        'default_sort': [('publishedDate', -1)],
+    },
+    'datasource': {
+        'source': 'videos',
+        'filter': {'state': 'published'},
+    },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'embedded_fields': ['categories', 'sections', 'tags', 'relateds'],
