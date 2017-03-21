@@ -1232,12 +1232,10 @@ audios = {
 
 videos = {
     'resource_methods': ['GET'],
-    'additional_lookup': {
-        'default_sort': [('publishedDate', -1)],
-    },
     'datasource': {
         'source': 'videos',
         'filter': {'state': 'published'},
+        'default_sort': [('startDate', -1)],
     },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
