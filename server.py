@@ -81,7 +81,7 @@ def clean_item(item):
                     del i['css']
                 if 'categories' in i:
                     del i['categories']
-    if 'heroImage' in item and 'image' in item['heroImage']:
+    if isinstance(item['heroImage'], dict) and 'heroImage' in item and 'image' in item['heroImage']:
         if 'iptc' in item['heroImage']['image']:
             del item['heroImage']['image']['iptc']
         if 'gcsDir' in item['heroImage']['image']:
@@ -97,10 +97,10 @@ def before_returning_posts(response):
     for item in items:
         item = clean_item(item)
         if clean == 'content':
-            if 'brief' in item:
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
                 del item['brief']['draft']
                 del item['brief']['apiData']
-            if 'content' in item:
+            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and 'apiData' in item['content']:
                 del item['content']['draft']
                 del item['content']['apiData']
         if item["style"] == 'script':
@@ -119,7 +119,7 @@ def before_returning_meta(response):
     items = response['_items']
     for item in items:
         item = clean_item(item)
-        if 'brief' in item:
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
             del item['brief']['draft']
             del item['brief']['apiData']
         if replace != 'false':
@@ -134,11 +134,9 @@ def before_returning_meta(response):
 def before_returning_listing(response):
     for item in response['_items']:
         item = clean_item(item)
-        if 'brief' in item:
-            if 'apiData' in item['brief']:
-                del item['brief']['apiData']
-            if 'draft' in item['brief']:
-                del item['brief']['draft']
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+            del item['brief']['draft']
+            del item['brief']['apiData']
     return response
 
 def before_returning_choices(response):
