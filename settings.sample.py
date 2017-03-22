@@ -52,6 +52,17 @@ listing_schema = {
       'embeddable': True
     },
   },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'heroImage': {
     'type': 'objectid',
     'data_relation': {

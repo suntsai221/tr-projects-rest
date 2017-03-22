@@ -69,6 +69,12 @@ def clean_item(item):
     if 'sections' in item:
         for i in item['sections']:
             if isinstance(i, dict):
+                if 'extend_cats' in i:
+                    del i['extend_cats']
+                if 'style' in i:
+                    del i['style']
+                if 'og_title' in i:
+                    del i['og_title']
                 if 'javascript' in i:
                     del i['javascript']
                 if 'css' in i:
