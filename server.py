@@ -126,6 +126,7 @@ def before_returning_meta(response):
 
 def before_returning_listing(response):
     for item in response['_items']:
+        item = clean_item(item)
         if 'brief' in item:
             if 'apiData' in item['brief']:
                 del item['brief']['apiData']

@@ -1093,7 +1093,7 @@ listing = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo'],
+    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo', 'categories'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
