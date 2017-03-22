@@ -82,11 +82,11 @@ def clean_item(item):
                 if 'categories' in i:
                     del i['categories']
     if 'heroImage' in item and 'image' in item['heroImage']:
-        if 'iptc' in item['heroImaghe']['image']:
+        if 'iptc' in item['heroImage']['image']:
             del item['heroImage']['images']['iptc']
-        if 'gcsDir' in item['heroImaghe']['image']:
+        if 'gcsDir' in item['heroImage']['image']:
             del item['heroImage']['images']['gcsDir']
-        if 'gcsBucket' in item['heroImaghe']['image']:
+        if 'gcsBucket' in item['heroImage']['image']:
             del item['heroImage']['images']['gcsBucket']
     return item
 
