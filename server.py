@@ -83,11 +83,11 @@ def clean_item(item):
                     del i['categories']
     if 'heroImage' in item and 'image' in item['heroImage']:
         if 'iptc' in item['heroImage']['image']:
-            del item['heroImage']['images']['iptc']
+            del item['heroImage']['image']['iptc']
         if 'gcsDir' in item['heroImage']['image']:
-            del item['heroImage']['images']['gcsDir']
+            del item['heroImage']['image']['gcsDir']
         if 'gcsBucket' in item['heroImage']['image']:
-            del item['heroImage']['images']['gcsBucket']
+            del item['heroImage']['image']['gcsBucket']
     return item
 
 def before_returning_posts(response):
