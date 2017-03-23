@@ -81,7 +81,7 @@ def clean_item(item):
                     del i['css']
                 if 'categories' in i:
                     del i['categories']
-    if isinstance(item['heroImage'], dict) and 'heroImage' in item and 'image' in item['heroImage']:
+    if 'heroImage' in item and isinstance(item['heroImage'], dict) and 'image' in item['heroImage']:
         if 'iptc' in item['heroImage']['image']:
             del item['heroImage']['image']['iptc']
         if 'gcsDir' in item['heroImage']['image']:
