@@ -42,26 +42,70 @@ def replace_imageurl(obj):
             obj_str = json.dumps(obj[key])
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
             obj[key] = json.loads(obj_str)
-    if 'heroImage' in obj and type(obj['heroImage']) is 'object' and  'image' in obj['heroImage']:
+    if 'heroImage' in obj and isinstance(obj['heroImage'], dict) and  'image' in obj['heroImage']:
         image_str = json.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['heroImage']['image'] = json.loads(image_str)
-    if 'heroVideo' in obj and type(obj['heroVideo']) is 'object' and  'video' in obj['heroVideo']:
+    if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['heroVideo']['video'] = json.loads(video_str)
     return obj
+
+def clean_item(item):
+    if '_updated' in item:
+        del item['_updated']
+    if '_created' in item:
+        del item['_created']
+    if 'relateds' in item:
+        for r in item['relateds']:
+            if isinstance(r, dict):
+                if 'brief' in r:
+                    if 'draft' in r['brief']:
+                        del r['brief']['draft']
+                    if 'apiData' in r['brief']:
+                        del r['brief']['apiData']
+                clean_item(r)
+    if 'sections' in item:
+        for i in item['sections']:
+            if isinstance(i, dict):
+                if 'extend_cats' in i:
+                    del i['extend_cats']
+                if 'style' in i:
+                    del i['style']
+                if 'og_title' in i:
+                    del i['og_title']
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i['css']
+                if 'categories' in i:
+                    del i['categories']
+    if 'heroImage' in item and isinstance(item['heroImage'], dict) and 'image' in item['heroImage']:
+        if 'iptc' in item['heroImage']['image']:
+            del item['heroImage']['image']['iptc']
+        if 'gcsDir' in item['heroImage']['image']:
+            del item['heroImage']['image']['gcsDir']
+        if 'gcsBucket' in item['heroImage']['image']:
+            del item['heroImage']['image']['gcsBucket']
+    if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'video' in item['heroVideo']:
+        if 'gcsDir' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsDir']
+        if 'gcsBucket' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsBucket']
+    return item
 
 def before_returning_posts(response):
     related = request.args.get('related')
     clean = request.args.get('clean')
     items = response['_items']
     for item in items:
+        item = clean_item(item)
         if clean == 'content':
-            if 'brief' in item:
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
                 del item['brief']['draft']
                 del item['brief']['apiData']
-            if 'content' in item:
+            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and 'apiData' in item['content']:
                 del item['content']['draft']
                 del item['content']['apiData']
         if item["style"] == 'script':
@@ -79,18 +123,51 @@ def before_returning_meta(response):
     replace = request.args.get('replace')
     items = response['_items']
     for item in items:
+        item = clean_item(item)
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+            del item['brief']['draft']
+            del item['brief']['apiData']
         if replace != 'false':
-            if 'brief' in item:
-                del item['brief']['draft']
-                del item['brief']['apiData']
             replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
+        else:
+            if related == 'false' and 'relateds' in item:
+                del item['relateds']
+    return response
+
+def before_returning_listing(response):
+    for item in response['_items']:
+        item = clean_item(item)
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+            del item['brief']['draft']
+            del item['brief']['apiData']
     return response
 
 def before_returning_choices(response):
     for item in response['_items']:
         item = get_full_relateds(item, 'choices')
+        for i in item['choices']:
+            if 'content' in i:
+                del i['content']
+            if 'relateds' in i:
+                del i['relateds']
+            if 'brief' in i:
+                if 'apiData' in i['brief']:
+                    del i['brief']['apiData']
+            if 'brief' in i:
+                if 'draft' in i['brief']:
+                    del i['brief']['draft']
+            if 'writers' in i:
+                del i['writers']
+            if 'photographers' in i:
+                del i['photographers']
+            if 'camera_man' in i:
+                del i['camera_man']
+            if 'categories' in i:
+                del i['categories']
+            if 'tags' in i:
+                del i['tags']
     return response
 
 def before_returning_sections(response):
@@ -127,6 +204,7 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_meta += before_returning_meta
+app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_sections += before_returning_sections
 app.on_pre_GET += pre_GET
@@ -164,7 +242,7 @@ def get_sections_latest():
 @app.route("/combo", methods=['GET'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder', 'posts-vue': '/meta?sort=-publishedDate&clean=content&max_results=20', 'projects': 'posts?where={"style":"projects"}&sort=-publishedDate'}
+     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":"projects"}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 

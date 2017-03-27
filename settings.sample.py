@@ -20,6 +20,87 @@ slug_schema = {
   },
 }
 
+listing_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'slug': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'subtitle': {
+    'type': 'string',
+  },
+  'style': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'sections': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'sections',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'isAdvertised': {
+    'type': 'boolean',
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
+  'isCampaign': {
+    'type': 'boolean',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  }
+}
+
 meta_schema = {
   'name': {
     'type': 'string',
@@ -69,7 +150,7 @@ meta_schema = {
         'type': 'objectid',
         'data_relation': {
             'resource': 'contacts',
-            'field': '_id',
+            'field': 'name',
             'embeddable': True
         },
     },
@@ -325,6 +406,9 @@ post_schema = {
   'publishedDate': {
     'type': 'datetime',
   },
+  'createTime': {
+    'type': 'datetime',
+  },
   'categories': {
     'type': 'list',
     'schema': {
@@ -528,8 +612,33 @@ sections_schema = {
 }
 
 videos_schema = {
+  'title': {
+    'type': 'string',
+  },
   'description': {
     'type': 'string',
+  },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
   },
   'video': {
     'type': 'dict',
@@ -557,6 +666,26 @@ videos_schema = {
         },
     },
   },  
+  'createTime': {
+    'type': 'datetime',
+  },
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
+  'state': {
+    'type': 'string',
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
   'tags': {
     'type': 'list',
     'schema': {
@@ -918,8 +1047,8 @@ posts = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': post_schema
 }
@@ -931,8 +1060,8 @@ slug = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': slug_schema
 }
@@ -946,10 +1075,29 @@ event = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['image','sections', 'video'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': event_schema
+}
+
+listing = {
+    'item_title': 'listing',
+    'additional_lookup': {
+        'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
+        'field': 'slug'
+    },
+    'datasource': {
+        'source': 'posts',
+        'filter': {'state': 'published'},
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo', 'categories'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': listing_schema
 }
 
 meta = {
@@ -965,8 +1113,8 @@ meta = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo', 'relateds'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': meta_schema
 }
@@ -984,8 +1132,8 @@ drafts = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': post_schema
 }
@@ -996,9 +1144,10 @@ choices = {
         'source': 'choices',
         'filter': {'isPublished': True},
     },
+    'embedded_fields': ['choices'],
     'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': choices_schema
 }
@@ -1015,8 +1164,8 @@ topics = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage', 'heroVideo', 'og_image'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': topics_schema
 }
@@ -1029,8 +1178,8 @@ tags = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage', 'heroVideo', 'og_image', 'sections'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': tags_schema
 }
@@ -1042,8 +1191,8 @@ contacts = {
     'field': 'name'
   },
   'resource_methods': ['GET'],
-  'cache_control': 'max-age=300,must-revalidate',
-  'cache_expires': 300,
+  'cache_control': 'max-age=1500,must-revalidate',
+  'cache_expires': 1500,
   'allow_unknown': False,
   'embedded_fields': ['image'],
   'schema': contact_schema
@@ -1056,8 +1205,8 @@ postcategories = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': postcategories_schema,
 }
@@ -1070,8 +1219,8 @@ sections = {
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['categories', 'heroImage', 'image', 'extend_cats', 'topics'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'allow_unknown': False,
     'schema': sections_schema,
 }
@@ -1079,23 +1228,29 @@ sections = {
 images = {
     'resource_methods': ['GET'],
     'datasource': {'default_sort': [('createTime', -1)]},
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
     'schema': image_schema,
 }
 
 audios = {
     'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
+    'cache_control': 'max-age=1500,must-revalidate',
     'embedded_fields': ['coverPhoto'],
-    'cache_expires': 300,
+    'cache_expires': 1500,
     'schema': audios_schema,
 }
 
 videos = {
     'resource_methods': ['GET'],
-    'cache_control': 'max-age=300,must-revalidate',
-    'cache_expires': 300,
+    'datasource': {
+        'source': 'videos',
+        'filter': {'state': 'published'},
+        'default_sort': [('startDate', -1)],
+    },
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'embedded_fields': ['categories', 'sections', 'tags', 'relateds'],
     'schema': videos_schema,
 }
 
@@ -1103,6 +1258,7 @@ DOMAIN = {
     'posts': posts,
     'drafts': drafts,
     'meta': meta,
+    'listing': listing,
     'slug': slug,
     'tags': tags,
     'choices': choices,
