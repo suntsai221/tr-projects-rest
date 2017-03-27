@@ -88,6 +88,11 @@ def clean_item(item):
             del item['heroImage']['image']['gcsDir']
         if 'gcsBucket' in item['heroImage']['image']:
             del item['heroImage']['image']['gcsBucket']
+    if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'video' in item['heroVideo']:
+        if 'gcsDir' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsDir']
+        if 'gcsBucket' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsBucket']
     return item
 
 def before_returning_posts(response):
