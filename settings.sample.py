@@ -686,6 +686,9 @@ videos_schema = {
   'publishedDate': {
     'type': 'datetime',
   },
+  'feed': {
+    'type': 'boolean',
+  },
   'tags': {
     'type': 'list',
     'schema': {
