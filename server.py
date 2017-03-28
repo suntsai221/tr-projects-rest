@@ -88,6 +88,11 @@ def clean_item(item):
             del item['heroImage']['image']['gcsDir']
         if 'gcsBucket' in item['heroImage']['image']:
             del item['heroImage']['image']['gcsBucket']
+    if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'video' in item['heroVideo']:
+        if 'gcsDir' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsDir']
+        if 'gcsBucket' in item['heroVideo']['video']:
+            del item['heroVideo']['video']['gcsBucket']
     return item
 
 def before_returning_posts(response):
@@ -237,7 +242,7 @@ def get_sections_latest():
 @app.route("/combo", methods=['GET'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":"projects"}&sort=-publishedDate'}
+     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections', 'topics':'/topics?sort=sortOrder&max_results=12', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":"projects"}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
