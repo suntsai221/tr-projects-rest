@@ -896,6 +896,9 @@ topics_schema = {
   'type': {
     'type': 'string',
   },
+  'topic_style': {
+    'type': 'string',
+  },
   'heroVideo': {
     'type': 'objectid',
     'data_relation': {
