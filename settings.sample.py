@@ -945,7 +945,7 @@ topics_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   }
 }
 
