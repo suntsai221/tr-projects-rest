@@ -946,6 +946,9 @@ topics_schema = {
   },
   'sortOrder': {
     'type': 'integer',
+  },
+  'title_style': {
+    'type': 'string',
   }
 }
 
