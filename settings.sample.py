@@ -945,7 +945,10 @@ topics_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
+  },
+  'title_style': {
+    'type': 'string',
   }
 }
 
