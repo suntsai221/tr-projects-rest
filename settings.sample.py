@@ -52,17 +52,6 @@ listing_schema = {
       'embeddable': True
     },
   },
-  'categories': {
-    'type': 'list',
-    'schema': {
-        'type': 'objectid',
-        'data_relation': {
-            'resource': 'postcategories',
-            'field': '_id',
-            'embeddable': True
-         },
-     },
-  },
   'heroImage': {
     'type': 'objectid',
     'data_relation': {
@@ -680,15 +669,6 @@ videos_schema = {
          },
      }, 
   },
-  'state': {
-    'type': 'string',
-  },
-  'publishedDate': {
-    'type': 'datetime',
-  },
-  'feed': {
-    'type': 'boolean',
-  },
   'tags': {
     'type': 'list',
     'schema': {
@@ -896,9 +876,6 @@ topics_schema = {
   'type': {
     'type': 'string',
   },
-  'topic_style': {
-    'type': 'string',
-  },
   'heroVideo': {
     'type': 'objectid',
     'data_relation': {
@@ -945,10 +922,7 @@ topics_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'type': 'integer',
-  },
-  'title_style': {
-    'type': 'string',
+    'typr': 'integer',
   }
 }
 
@@ -1102,7 +1076,7 @@ listing = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo', 'categories'],
+    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
@@ -1252,11 +1226,6 @@ audios = {
 
 videos = {
     'resource_methods': ['GET'],
-    'datasource': {
-        'source': 'videos',
-        'filter': {'state': 'published'},
-        'default_sort': [('startDate', -1)],
-    },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'embedded_fields': ['categories', 'sections', 'tags', 'relateds'],
@@ -1274,6 +1243,7 @@ DOMAIN = {
     'contacts': contacts,
     'topics': topics,
     'postcategories': postcategories,
+    'cache_expires': 1500,
     'images': images,
     'audios': audios,
     'videos': videos,
