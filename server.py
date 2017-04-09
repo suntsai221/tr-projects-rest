@@ -106,9 +106,9 @@ def before_returning_posts(response):
         if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
             del item['content']['draft']
         if clean == 'content':
-            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'thml' in item['brief']:
+            if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                 del item['brief']['html']
-            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and 'html' in item['content']:
+            if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
                 del item['content']['html']
         if item["style"] == 'script':
             script_parsing = item['content']['html']
