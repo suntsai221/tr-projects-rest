@@ -101,13 +101,15 @@ def before_returning_posts(response):
     items = response['_items']
     for item in items:
         item = clean_item(item)
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
+            del item['brief']['draft']
+        if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
+            del item['content']['draft']
         if clean == 'content':
-            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
-                del item['brief']['draft']
-                del item['brief']['apiData']
-            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and 'apiData' in item['content']:
-                del item['content']['draft']
-                del item['content']['apiData']
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'thml' in item['brief']:
+                del item['brief']['html']
+            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and 'html' in item['content']:
+                del item['content']['html']
         if item["style"] == 'script':
             script_parsing = item['content']['html']
             scenes = script_parsing.split("<p><code>page</code></p>")
