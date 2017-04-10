@@ -1243,7 +1243,6 @@ DOMAIN = {
     'contacts': contacts,
     'topics': topics,
     'postcategories': postcategories,
-    'cache_expires': 1500,
     'images': images,
     'audios': audios,
     'videos': videos,
