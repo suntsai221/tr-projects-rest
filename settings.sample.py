@@ -629,6 +629,9 @@ videos_schema = {
         },
     },
   },
+  'feed': {
+    'type': 'boolean',
+  },
   'categories': {
     'type': 'list',
     'schema': {
