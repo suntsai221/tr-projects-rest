@@ -680,6 +680,9 @@ videos_schema = {
          },
      }, 
   },
+  'state': {
+    'type': 'string',
+  },
   'tags': {
     'type': 'list',
     'schema': {
@@ -1237,6 +1240,10 @@ audios = {
 
 videos = {
     'resource_methods': ['GET'],
+    'datasource': {
+        'source': 'posts',
+        'filter': {'state': 'published'},
+    },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'embedded_fields': ['categories', 'sections', 'tags', 'relateds'],
