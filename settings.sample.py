@@ -1244,7 +1244,7 @@ audios = {
 videos = {
     'resource_methods': ['GET'],
     'datasource': {
-        'source': 'posts',
+        'source': 'videos',
         'filter': {'state': 'published'},
     },
     'cache_control': 'max-age=1500,must-revalidate',
