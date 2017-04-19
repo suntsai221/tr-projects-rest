@@ -409,6 +409,9 @@ post_schema = {
   'createTime': {
     'type': 'datetime',
   },
+  'updatedAt': {
+    'type': 'datetime',
+  },
   'categories': {
     'type': 'list',
     'schema': {
