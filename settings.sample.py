@@ -495,6 +495,9 @@ post_schema = {
   'isAdvertised': {
     'type': 'boolean',
   },
+  'lockJS': {
+    'type': 'boolean',
+  },
   'og_description': {
     'type': 'string',
   },
