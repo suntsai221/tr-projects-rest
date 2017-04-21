@@ -689,6 +689,9 @@ videos_schema = {
          },
      }, 
   },
+  'updatedAt': {
+    'type': 'datetime',
+  },
   'state': {
     'type': 'string',
   },
