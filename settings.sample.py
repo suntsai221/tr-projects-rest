@@ -910,6 +910,17 @@ topics_schema = {
       'embeddable': True
     },
   },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },  
   'heroImage': {
     'type': 'objectid',
     'data_relation': {
