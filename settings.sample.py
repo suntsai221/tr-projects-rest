@@ -692,6 +692,9 @@ videos_schema = {
   'updatedAt': {
     'type': 'datetime',
   },
+  'publishedDate': {
+    'type': 'datetime',
+  },
   'state': {
     'type': 'string',
   },
