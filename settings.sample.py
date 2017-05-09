@@ -340,7 +340,7 @@ node_schema = {
   'updatedAt': {
     'type': 'datetime',
   },
-  'activities': {
+  'activity': {
     'type': 'list',
     'schema': {
         'type': 'objectid',
@@ -1214,7 +1214,7 @@ nodes = {
         'filter': {'state': 'published'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'heroVideo', 'activities', 'og_image'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'activity', 'og_image'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
