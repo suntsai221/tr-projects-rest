@@ -1197,7 +1197,7 @@ posts = {
     },
     'datasource': {
         'source': 'posts',
-        'filter': {'state': 'published'},
+        'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
