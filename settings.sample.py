@@ -302,6 +302,90 @@ event_schema = {
   },
 }
 
+node_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'subtitle': {
+    'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroCaption': {
+    'type': 'string',
+  },
+  'state': {
+    'type': 'string',
+  },
+  'nodeDate': {
+    'type': 'datetime',
+  },
+  'createTime': {
+    'type': 'datetime',
+  },
+  'updatedAt': {
+    'type': 'datetime',
+  },
+  'activities': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'activities',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'content': {
+    'type': 'dict',
+    'schema': {
+       "html": {
+          "type": "string",
+       },
+     },  
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+}
+
 post_schema = {
   'name': {
     'type': 'string',
@@ -711,14 +795,58 @@ videos_schema = {
   },
 }
 
+activities_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroCaption': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+}
+
 postcategories_schema = {
   'name': {
     'type': 'string',
   },
   'title': {
-    'type': 'string',
-  },
-  'og_title': {
     'type': 'string',
   },
   'isFeatured': {
@@ -748,6 +876,12 @@ postcategories_schema = {
       'embeddable': True
     },
   },
+  'heroCaption': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
   'og_description': {
     'type': 'string',
   },
@@ -763,9 +897,6 @@ postcategories_schema = {
     'type': 'boolean',
   },
   'style': {
-    'type': 'string',
-  },
-  'og_title': {
     'type': 'string',
   },
   'css': {
@@ -1076,6 +1207,20 @@ posts = {
     'schema': post_schema
 }
 
+nodes = {
+    'item_title': 'node',
+    'datasource': {
+        'source': 'nodes',
+        'filter': {'state': 'published'},
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'activities', 'og_image'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': node_schema
+}
+
 slug = {
     'item_title': 'slug',
     'datasource': {
@@ -1234,6 +1379,15 @@ postcategories = {
     'schema': postcategories_schema,
 }
 
+activities = {
+    'item_title': 'activity',
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': activities_schema,
+}
+
 sections = {
     'item_title': 'section',
     'additional_lookup': {
@@ -1286,7 +1440,9 @@ DOMAIN = {
     'choices': choices,
     'contacts': contacts,
     'topics': topics,
+    'nodes': nodes,
     'postcategories': postcategories,
+    'activities': activities,
     'images': images,
     'audios': audios,
     'videos': videos,
