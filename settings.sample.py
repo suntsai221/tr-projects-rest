@@ -1050,6 +1050,12 @@ topics_schema = {
   'source': {
     'type': 'string',
   },
+  'state': {
+    'type': 'string',
+  },
+  'sort': {
+    'type': 'string',
+  },
   'heroVideo': {
     'type': 'objectid',
     'data_relation': {
@@ -1342,6 +1348,7 @@ topics = {
     },
     'datasource': {
         'source': 'topics',
+        'filter': {'state': 'published'},
         'default_sort': [('sortOrder', 1)],
     },
     'resource_methods': ['GET'],
