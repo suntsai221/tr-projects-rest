@@ -826,6 +826,17 @@ activities_schema = {
   'heroCaption': {
     'type': 'string',
   },
+  'topics': {
+    'type': 'list',
+    'schema': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'topics',
+        'field': '_id',
+        'embeddable': True
+      },
+    }, 
+  },
   'og_title': {
     'type': 'string',
   },
@@ -1034,6 +1045,9 @@ topics_schema = {
     'type': 'string',
   },
   'type': {
+    'type': 'string',
+  },
+  'source': {
     'type': 'string',
   },
   'heroVideo': {
