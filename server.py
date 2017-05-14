@@ -46,6 +46,10 @@ def replace_imageurl(obj):
         image_str = json.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['heroImage']['image'] = json.loads(image_str)
+    if 'og_image' in obj and isinstance(obj['heroImage'], dict) and  'image' in obj['og_image']:
+        image_str = json.dumps(obj['og_image']['image'])
+        image_str = image_str.replace(GCS_URL, ASSETS_URL)
+        obj['heroImage']['image'] = json.loads(image_str)
     if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
@@ -144,6 +148,7 @@ def before_returning_listing(response):
         if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
             del item['brief']['draft']
             del item['brief']['apiData']
+        replace_imageurl(item)
     return response
 
 def before_returning_choices(response):
