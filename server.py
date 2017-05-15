@@ -261,6 +261,8 @@ def get_timeline(topicId):
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
         for item in activities_data["_items"]:
+            item = clean_item(item)
+            replace_imageurl(item)
             item_ids.append(item["_id"])
             if "topics" in item:
                 if isinstance(item['topics'], dict):
@@ -273,6 +275,8 @@ def get_timeline(topicId):
         node_data = json.loads(resp.data)
         response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"])
         for node in response["nodes"]:
+            node = clean_item(node)
+            replace_imageurl(node)
             if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
                 node["activity"] = activities[node["activity"]["_id"]]
         return Response(json.dumps(response), headers=resp_header)        
