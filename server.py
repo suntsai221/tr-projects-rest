@@ -272,6 +272,9 @@ def get_timeline(topicId):
         resp = tc.get(featured_nodes, headers=headers)
         node_data = json.loads(resp.data)
         response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"])
+        for node in response["nodes"]:
+            if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
+                node["activity"] = activities[node["activity"]["_id"]]
         return Response(json.dumps(response), headers=resp_header)        
     else:
         return {"error": "Objects not found"}, 404
