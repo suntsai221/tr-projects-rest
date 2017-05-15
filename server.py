@@ -246,6 +246,37 @@ def get_sections_latest():
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
+@app.route("/timeline/<topicId>", methods=['GET'])
+def get_timeline(topicId):
+    if topicId:
+        item_ids = []
+        response = {}
+        response['topic'] = None
+        activities = {}
+        event = {}
+        headers = dict(request.headers)
+        tc = app.test_client()
+        activity_uri = '/activities?where={"topics":"' + topicId + '"}'
+        resp = tc.get(activity_uri, headers=headers)
+        resp_header = dict(resp.headers)
+        activities_data = json.loads(resp.data)
+        for item in activities_data["_items"]:
+            item_ids.append(item["_id"])
+            if "topics" in item:
+                if isinstance(item['topics'], dict):
+                    if response['topic'] is None:
+                        response['topic'] = item['topics']
+                        break
+            activities[item['_id']] = item
+        id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
+        featured_nodes = '/nodes?where={"_id": { "$in": [' + id_string + '] }}&isFeatured=true'
+        resp = tc.get(featured_nodes, headers=headers)
+        node_data = json.loads(resp.data)
+        response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"])
+        return Response(json.dumps(response), headers=resp_header)        
+    else:
+        return {"error": "Objects not found"}, 404
+
 @app.route("/combo", methods=['GET'])
 def handle_combo():
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects"]}}', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\

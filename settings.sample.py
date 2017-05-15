@@ -1403,6 +1403,7 @@ postcategories = {
 activities = {
     'item_title': 'activity',
     'resource_methods': ['GET'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'topics'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
