@@ -49,7 +49,7 @@ def replace_imageurl(obj):
     if 'og_image' in obj and isinstance(obj['og_image'], dict) and  'image' in obj['og_image']:
         image_str = json.dumps(obj['og_image']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
-        obj['heroImage']['image'] = json.loads(image_str)
+        obj['og_image']['image'] = json.loads(image_str)
     if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
