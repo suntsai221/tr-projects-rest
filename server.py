@@ -266,7 +266,6 @@ def get_timeline(topicId):
                 if isinstance(item['topics'], dict):
                     if response['topic'] is None:
                         response['topic'] = item['topics']
-                        break
             activities[item['_id']] = item
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
