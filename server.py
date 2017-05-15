@@ -269,7 +269,7 @@ def get_timeline(topicId):
                         break
             activities[item['_id']] = item
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
-        featured_nodes = '/nodes?where={"_id": { "$in": [' + id_string + '] }}&isFeatured=true'
+        featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
         resp = tc.get(featured_nodes, headers=headers)
         node_data = json.loads(resp.data)
         response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"])
