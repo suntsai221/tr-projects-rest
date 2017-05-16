@@ -287,8 +287,8 @@ def get_timeline(topicId):
         response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
         for node in response["nodes"]:
             node = clean_item(node)
-            if "content" in item and "html" in item["content"]:
-                del item["content"]["html"]
+            if "content" in node and "html" in node["content"]:
+                del node["content"]["html"]
             replace_imageurl(node)
             if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
                 node["activity"] = activities[node["activity"]["_id"]]
