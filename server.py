@@ -272,12 +272,18 @@ def get_timeline(topicId):
                 if isinstance(item['topics'], dict):
                     if response['topic'] is None:
                         response['topic'] = item['topics']
+                # remove the dulplication topic meta
+                del item["topics"]
             activities[item['_id']] = item
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
         resp = tc.get(featured_nodes, headers=headers)
         node_data = json.loads(resp.data)
-        response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"])
+        if "sort" in response["topic"] and response["topic"]["sort"] = 'desc':
+            reverse = True
+        else:
+            reverse = False
+        response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"], reverse = reverse)
         for node in response["nodes"]:
             node = clean_item(node)
             replace_imageurl(node)
