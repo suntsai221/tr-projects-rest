@@ -1,3 +1,4 @@
+from datetime import datetime
 from eve import Eve
 from eve.auth import TokenAuth
 from flask import redirect, request, Response
@@ -279,11 +280,11 @@ def get_timeline(topicId):
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
         resp = tc.get(featured_nodes, headers=headers)
         node_data = json.loads(resp.data)
-        if "sort" in response["topic"] and response["topic"]["sort"] = 'desc':
+        if "sort" in response["topic"] and response["topic"]["sort"] == 'desc':
             reverse = True
         else:
             reverse = False
-        response["nodes"] = sorted(node_data["_items"], key = lambda x: x["nodeDate"], reverse = reverse)
+        response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
         for node in response["nodes"]:
             node = clean_item(node)
             replace_imageurl(node)
