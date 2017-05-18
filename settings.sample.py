@@ -1041,6 +1041,9 @@ topics_schema = {
   'name': {
     'type': 'string',
   },
+  'subtitle': {
+    'type': 'string',
+  },
   'leading': {
     'type': 'string',
   },
