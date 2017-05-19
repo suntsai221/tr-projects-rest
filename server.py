@@ -268,7 +268,7 @@ def get_timeline(topicId):
         tc = app.test_client()
         topic_url = '/topics?where={"_id":"' + topicId + '"}'
         topic_resp = tc.get(topic_url, headers=headers)
-        topic_data = json_loads(topic_resp.data)
+        topic_data = json.loads(topic_resp.data)
         if "_items" in topic_data and len(topic_data["_items"]) > 0:
             response['topic'] = act["_items"][0]
         activity_uri = '/activities?where={"topics":"' + topicId + '"}'
