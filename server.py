@@ -8,7 +8,6 @@ import json
 import random
 import string
 import sys, getopt
-import time
 
 class TokenAuth(TokenAuth):
     def check_auth(self, token, allowed_roles, resource, method):
@@ -270,6 +269,7 @@ def get_timeline(topicId):
         act = json.loads(resp.data)
         if "_items" in act and len(act["_items"]) > 0:
             activities_data = act["_items"][0]
+            replace_imageurl(activities_data)
         if 'activities' in activities_data:
             item_ids = activities_data['activities']
             del activities_data['activities']
