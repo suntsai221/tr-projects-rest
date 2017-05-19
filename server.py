@@ -263,7 +263,7 @@ def get_timeline(topicId):
         ts = time.time()
         headers = dict(request.headers)
         tc = app.test_client()
-        activity_uri = '/topics/' + topicId + '?t=' + str(round(ts,14))
+        activity_uri = '/topics?where={"_id":"' + topicId + '"}'
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
