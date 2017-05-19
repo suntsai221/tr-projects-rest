@@ -8,6 +8,7 @@ import json
 import random
 import string
 import sys, getopt
+import time
 
 class TokenAuth(TokenAuth):
     def check_auth(self, token, allowed_roles, resource, method):
@@ -259,9 +260,10 @@ def get_timeline(topicId):
         response['topic'] = None
         activities = {}
         event = {}
+        ts = time.time()
         headers = dict(request.headers)
         tc = app.test_client()
-        activity_uri = '/topics/' + topicId
+        activity_uri = '/topics/' + topicId + '?t=' + ts
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
