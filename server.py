@@ -256,6 +256,7 @@ def get_sections_latest():
 def get_timeline(topicId):
     if topicId:
         item_ids = []
+        activities_data = []
         response = {}
         response['topic'] = None
         activities = {}
@@ -266,7 +267,9 @@ def get_timeline(topicId):
         activity_uri = '/topics?where={"_id":"' + topicId + '"}'
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
-        activities_data = json.loads(resp.data)
+        act = json.loads(resp.data)
+        if "_items" in act and len(act["_items"]) > 0:
+            activities_data = act["_items"][0]
         if 'activities' in activities_data:
             item_ids = activities_data['activities']
             del activities_data['activities']
