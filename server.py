@@ -260,7 +260,6 @@ def get_timeline(topicId):
         response['topic'] = None
         activities = {}
         event = {}
-        ts = time.time()
         headers = dict(request.headers)
         tc = app.test_client()
         activity_uri = '/topics?where={"_id":"' + topicId + '"}'
