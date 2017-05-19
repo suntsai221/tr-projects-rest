@@ -55,6 +55,10 @@ def replace_imageurl(obj):
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['heroVideo']['video'] = json.loads(video_str)
+    if 'image' in obj and isinstance(obj['image'], dict):
+        video_str = json.dumps(obj['image'])
+        video_str = video_str.replace(GCS_URL, ASSETS_URL)
+        obj['image'] = json.loads(video_str)
     return obj
 
 def clean_item(item):
