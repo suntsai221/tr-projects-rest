@@ -289,7 +289,7 @@ def get_timeline(topicId):
                     del item["topics"]
                 activities[item['_id']] = item
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
-        featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
+        featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}&max_results=40'
         resp = tc.get(featured_nodes, headers=headers)
         node_data = json.loads(resp.data)
         if "sort" in response["topic"] and response["topic"]["sort"] == 'desc':
