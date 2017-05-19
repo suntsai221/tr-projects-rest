@@ -261,21 +261,12 @@ def get_timeline(topicId):
         event = {}
         headers = dict(request.headers)
         tc = app.test_client()
-        activity_uri = '/activities?where={"topics":"' + topicId + '"}'
+        activity_uri = '/topics/' + topicId
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
-        for item in activities_data["_items"]:
-            item = clean_item(item)
-            replace_imageurl(item)
-            item_ids.append(item["_id"])
-            if "topics" in item:
-                if isinstance(item['topics'], dict):
-                    if response['topic'] is None:
-                        response['topic'] = item['topics']
-                # remove the dulplication topic meta
-                del item["topics"]
-            activities[item['_id']] = item
+        response['topic'] = activities_data
+        item_ids = activities_data['activities']
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
         resp = tc.get(featured_nodes, headers=headers)
