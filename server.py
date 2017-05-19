@@ -317,6 +317,8 @@ def handle_combo():
             headers = action_resp.headers
             action_data = json.loads(action_resp.data)
             if "_error" not in action_data and "_items" in action_data and len(action_data["_items"]) > 0:
+                if '_meta' in action_data:
+                    response['_meta'] = action_data['_meta']
                 if action == 'choices':
                     response["_endpoints"][action] = {}
                     response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
