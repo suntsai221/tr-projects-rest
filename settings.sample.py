@@ -1050,6 +1050,9 @@ topics_schema = {
   'type': {
     'type': 'string',
   },
+  'brief': {
+    'type': 'string',
+  },
   'source': {
     'type': 'string',
   },
