@@ -270,6 +270,8 @@ def get_timeline(topicId):
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         act = json.loads(resp.data)
+        if "_meta" in act:
+            response["_meta"] = act["_meta"]
         if "_items" in act and len(act["_items"]) > 0:
             activities_data = act["_items"][0]
             replace_imageurl(activities_data)
