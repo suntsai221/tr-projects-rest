@@ -265,8 +265,13 @@ def get_timeline(topicId):
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
+        if 'activities' in activities_data:
+            item_ids = activities_data['activities']
+            del activities_data['activities']
+        if 'brief' in activities_data:
+            if 'draft' in activities_data['brief']:
+                del activities_data['brief']['draft']
         response['topic'] = activities_data
-        item_ids = activities_data['activities']
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}'
         resp = tc.get(featured_nodes, headers=headers)
