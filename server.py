@@ -275,7 +275,7 @@ def get_timeline(topicId):
                 del topic_data["_items"][0]['brief']['apiData']
             replace_imageurl(topic_data["_items"][0])
             response['topic'] = topic_data["_items"][0]
-        activity_uri = '/activities?where={"topics":"' + topicId + '"}'
+        activity_uri = '/activities?where={"topics":"' + topicId + '"}&max_results=40'
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data)
