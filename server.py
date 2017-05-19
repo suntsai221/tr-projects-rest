@@ -270,7 +270,7 @@ def get_timeline(topicId):
         topic_resp = tc.get(topic_url, headers=headers)
         topic_data = json.loads(topic_resp.data)
         if "_items" in topic_data and len(topic_data["_items"]) > 0:
-            response['topic'] = act["_items"][0]
+            response['topic'] = topic_data["_items"][0]
         activity_uri = '/activities?where={"topics":"' + topicId + '"}'
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
