@@ -1123,6 +1123,20 @@ topics_schema = {
   }
 }
 
+editorchoices_schema = {
+  'choices': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'listing',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'sortOrder': {
+    'typr': 'integer',
+  },
+}
+
 choices_schema = {
   'pickDate': {
     'type': 'string',
@@ -1332,6 +1346,20 @@ drafts = {
     'schema': post_schema
 }
 
+editorchoices = {
+    'item_title': 'editorchoice',
+    'datasource': {
+        'source': 'editorchoices',
+        'default_sort': [('sortOrder', 1)],
+    },
+    'embedded_fields': ['choices'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': editorchoices_schema
+}
+
 choices = {
     'item_title': 'choice',
     'datasource': {
@@ -1466,6 +1494,7 @@ DOMAIN = {
     'slug': slug,
     'tags': tags,
     'choices': choices,
+    'editorchoices': editorchoices,
     'contacts': contacts,
     'topics': topics,
     'nodes': nodes,
