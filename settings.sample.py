@@ -1265,7 +1265,7 @@ slug = {
     'item_title': 'slug',
     'datasource': {
         'source': 'posts',
-        'filter': {'state': 'published'},
+        'filter': { '$and': [ { 'state': 'published' }, { '$nin': [ { 'style': 'campaign' } ] } ] },
     },
     'resource_methods': ['GET'],
     'cache_control': 'max-age=1500,must-revalidate',
@@ -1298,7 +1298,7 @@ listing = {
     },
     'datasource': {
         'source': 'posts',
-        'filter': {'state': 'published'},
+        'filter': { '$and': [ { 'state': 'published' }, { '$nin': [ { 'style': 'campaign' } ] } ] },
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo','categories'],
@@ -1317,7 +1317,7 @@ meta = {
     },
     'datasource': {
         'source': 'posts',
-        'filter': {'state': 'published'},
+        'filter': { '$and': [ { 'state': 'published' }, { '$nin': [ { 'style': 'campaign' } ] } ] },
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo', 'relateds'],
