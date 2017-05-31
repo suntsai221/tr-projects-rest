@@ -708,6 +708,14 @@ videos_schema = {
   'description': {
     'type': 'string',
   },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
   'sections': {
     'type': 'list',
     'schema': {
@@ -1137,6 +1145,26 @@ editorchoices_schema = {
   },
 }
 
+choices_schema = {
+  'pickDate': {
+    'type': 'string',
+  },
+  'isPublished': {
+    'type': 'boolean',
+  },
+  'choices': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
+}
+
 image_schema = {
   'photographer': {
     'type': 'objectid',
@@ -1340,6 +1368,20 @@ editorchoices = {
     'schema': editorchoices_schema
 }
 
+choices = {
+    'item_title': 'choice',
+    'datasource': {
+        'source': 'choices',
+        'filter': {'isPublished': True},
+    },
+    'embedded_fields': ['choices'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': choices_schema
+}
+
 topics = {
     'item_title': 'topic',
     'additional_lookup': {
@@ -1448,7 +1490,7 @@ videos = {
     },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
-    'embedded_fields': ['categories', 'sections', 'tags', 'relateds'],
+    'embedded_fields': ['categories', 'sections', 'tags', 'relateds', 'heroImage'],
     'schema': videos_schema,
 }
 
@@ -1459,6 +1501,7 @@ DOMAIN = {
     'listing': listing,
     'slug': slug,
     'tags': tags,
+    'choices': choices,
     'editorchoices': editorchoices,
     'contacts': contacts,
     'topics': topics,
