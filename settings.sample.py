@@ -708,7 +708,7 @@ videos_schema = {
   'description': {
     'type': 'string',
   },
-  'heroImage': {
+  'coverPhoto': {
     'type': 'objectid',
     'data_relation': {
       'resource': 'images',
