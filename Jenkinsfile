@@ -28,7 +28,7 @@ node {
             slack_user = slackUsers(git_author_mail)
             sh("echo slack target: ${slack_user}")
 
-            sh("git clone git clone https://github.com/mirror-media/twreporter-restful-docker.git")
+            sh("git clone https://github.com/mirror-media/twreporter-restful-docker.git")
 
             sh("gcloud source repos clone default --project=mirrormedia-1470651750304")
             sh("cp default/tr-project-rest/settings.py twreporter-restful-docker/")
@@ -80,7 +80,7 @@ node {
             throw e
         }
         
-        slackSend (color: '#FCE028', message: "@${slack_user}, you've got build. Check out https://dev.mirrormedia.mg")
+        slackSend (color: '#FCE028', message: "@${slack_user}, take a *REST*. Check out new *DEPLOY* at https://dev.mirrormedia.mg")
     }
 }
 
