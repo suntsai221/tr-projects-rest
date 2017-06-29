@@ -74,6 +74,9 @@ listing_schema = {
   'isAdvertised': {
     'type': 'boolean',
   },
+  'isAdult': {
+    'type': 'boolean',
+  },
   'publishedDate': {
     'type': 'datetime',
   },
@@ -194,6 +197,9 @@ meta_schema = {
      }, 
   },
   'isFeatured': {
+    'type': 'boolean',
+  },
+  'isAdult': {
     'type': 'boolean',
   },
   'isAdvertised': {
@@ -580,6 +586,9 @@ post_schema = {
     'type': 'boolean',
   },
   'isAdvertised': {
+    'type': 'boolean',
+  },
+  'isAdult': {
     'type': 'boolean',
   },
   'lockJS': {
