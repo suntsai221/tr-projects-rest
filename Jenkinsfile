@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+
 node {
     def project = 'mirrormedia-1470651750304'
     def appName = 'mirrormedia-rest'
@@ -34,12 +36,28 @@ node {
             sh("cp default/tr-project-rest/settings.py twreporter-restful-docker/")
             
         } catch(e) {
-            slackSend (color: '#FF0000', message: "Huston, we got a *pre-build* problem.")
+            // slackSend (color: '#FF0000', message: "Houston, we have a *pre-build* problem.")
+            notifySlack("",[
+                [
+                    color: "#FF0000",
+                    title: "Pre-build FAILED",
+                    text: "Houston, we have a pre-build problem\n```${e.getMessage()}```",
+        			mrkdwn_in: ["text"]
+    		    ]
+            ])
             currentBuild.result = 'FAILURE'
             throw e
         }
 
-        slackSend (color: '#C5C9CC', message: "*${git_author_name}* gave *${appName}* a little push. Let the build begin!")
+        // slackSend (color: '#C5C9CC', message: "*${git_author_name}* gave *${appName}* a little push. Let the build begin!")
+        notifySlack("",[
+            [
+                color: "#C5C9CC",
+                title: "Pre-build success",
+                text: "*${git_author_name}* gave ${appName} a little push. Let the build begin!",
+                mrkdwn_in: ["text"]
+            ]
+        ])
     }
     
     stage('Build'){
@@ -56,12 +74,27 @@ node {
                 
                 sh("gcloud docker -- push ${imageTag}:${slack_user}_${build_time}")
             } catch(e) {
-                slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
+                // slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
+                notifySlack("",[
+                    [
+                        color: "#FF0000",
+                        title: "Build FAILED",
+                        text: "Houston, we have a build problem\n```${e.getMessage()}```",
+            			mrkdwn_in: ["text"]
+        		    ]
+                ])
                 currentBuild.result = 'FAILURE'
                 throw e
             }
-            
-            slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
+            // slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
+            notifySlack("",[
+                [
+                    color: "#BDFFC3",
+                    title: "Build Success",
+                    text: "Build <https://${imageTag}:${slack_user}_${build_time}|${slack_user}_${build_time}> done.\n Make NEWS great again!",
+        			mrkdwn_in: ["text"]
+    		    ]
+            ])
         }
     }
 
@@ -75,13 +108,45 @@ node {
             sh("sleep 30s")
 
         } catch(e) {
-            slackSend (color: '#FF0000', message: "Huston, we got a *deploy* problem.")
+            // slackSend (color: '#FF0000', message: "Houston, we have a *deploy* problem.")
+            notifySlack("",[
+                [
+                    color: "#FF0000",
+                    title: "Deploy FAILED",
+                    text: "Houston, we have a *deploy* problem\n```${e.getMessage()}```",
+                    mrkdwn_in: ["text"]
+                ]
+            ])
             currentBuild.result = 'FAILURE'
             throw e
         }
         
-        slackSend (color: '#FCE028', message: "@${slack_user}, take a *REST*. Check out new *DEPLOY* at https://dev.mirrormedia.mg")
+        // slackSend (color: '#FCE028', message: "@${slack_user}, take a *REST*. Check out new *DEPLOY* at https://dev.mirrormedia.mg")
+        notifySlack("",[
+            [
+                color: "#3A7BD1",
+                title: "Deploy Success",
+                text: "@${slack_user}, take a *REST*. Check out <https://dev.mirrormedia.mg|dev>",
+        		mrkdwn_in: ["text"]
+    		]
+        ])
     }
+}
+
+def notifySlack(text, attachments) {
+    def slackURL = 'https://hooks.slack.com/services/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'
+    def jenkinsIcon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/240px-Python-logo-notext.svg.png'
+
+    def payload = JsonOutput.toJson([text: text,
+        channel: "#jenkins",
+        username: "mirrormedia-rest",
+        link_names: true,
+        icon_url: jenkinsIcon,
+        attachments: attachments
+    ])
+
+    
+    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
 
 def slackUsers(git_email){

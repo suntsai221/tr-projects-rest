@@ -1243,6 +1243,9 @@ image_schema = {
   'createTime': {
     'type': 'datetime',
   },
+  'keywords':{
+    'type': 'string',
+  },
 }
 
 posts = {
@@ -1485,6 +1488,7 @@ images = {
 
 audios = {
     'resource_methods': ['GET'],
+    'datasource': {'default_sort': [('createTime', -1)]},
     'cache_control': 'max-age=1500,must-revalidate',
     'embedded_fields': ['coverPhoto'],
     'cache_expires': 1500,
