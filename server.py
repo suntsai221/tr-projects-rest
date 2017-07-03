@@ -157,6 +157,15 @@ def before_returning_listing(response):
         if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
             del item['brief']['draft']
             del item['brief']['apiData']
+        if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'coverPhoto' in item['heroVideo'] and item['heroVideo']['coverPhoto']:
+            headers = dict(request.headers)
+            tc = app.test_client()
+            cover_photo = item['heroVideo']['coverPhoto']
+            resp = tc.get('images?where={"_id":{"$in":[' + cover_photo + ']}}', headers=headers)
+            resp_data = json.loads(resp.data)['_items'][0]
+            result = {x: resp_data[x] for x in ('image','_id','description','tags','createTime')}
+            
+            item['heroVideo']['coverPhoto'] = result
         replace_imageurl(item)
     return response
 
