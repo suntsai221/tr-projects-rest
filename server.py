@@ -161,9 +161,9 @@ def before_returning_listing(response):
             headers = dict(request.headers)
             tc = app.test_client()
             cover_photo = str(item['heroVideo']['coverPhoto'])
-            resp = tc.get('images?where={"_id":{"$in":[' + cover_photo + ']}}', headers=headers)
-            resp_data = json.loads(resp.data)['_items'][0]
-            result = {x: resp_data[x] for x in ('image','_id','description','tags','createTime')}
+            resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
+            resp_data = json.loads(resp.data)
+            result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
             
             item['heroVideo']['coverPhoto'] = result
         replace_imageurl(item)
@@ -326,7 +326,7 @@ def handle_combo():
     response = { "_endpoints": {}, 
                  "_links": { 
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
-                            "parent":{ "parend": "/", "title": "Home" } } }
+                            "parent":{ "parent": "/", "title": "Home" } } }
     headers = dict(request.headers)
     tc = app.test_client()
     req = request.args.getlist('endpoint')
