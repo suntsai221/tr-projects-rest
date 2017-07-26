@@ -1356,7 +1356,7 @@ drafts = {
     },
     'datasource': {
         'source': 'posts',
-        'filter': {'state': 'draft'},
+        # 'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
