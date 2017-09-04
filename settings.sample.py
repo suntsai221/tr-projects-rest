@@ -1129,6 +1129,17 @@ topics_schema = {
   'javascript': {
     'type': 'string',
   },
+  'tags': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'tags',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'dfp': {
     'type': 'string',
   },
@@ -1243,9 +1254,6 @@ image_schema = {
   'createTime': {
     'type': 'datetime',
   },
-  'keywords':{
-    'type': 'string',
-  },
 }
 
 posts = {
@@ -1356,7 +1364,7 @@ drafts = {
     },
     'datasource': {
         'source': 'posts',
-        # 'filter': {'state': 'draft'},
+        'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image'],
@@ -1488,7 +1496,6 @@ images = {
 
 audios = {
     'resource_methods': ['GET'],
-    'datasource': {'default_sort': [('createTime', -1)]},
     'cache_control': 'max-age=1500,must-revalidate',
     'embedded_fields': ['coverPhoto'],
     'cache_expires': 1500,
