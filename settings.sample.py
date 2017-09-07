@@ -128,6 +128,17 @@ meta_schema = {
       },
     },
   },
+  'tags': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'tags',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
   'sections': {
     'type': 'objectid',
     'data_relation': {
