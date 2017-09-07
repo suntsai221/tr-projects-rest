@@ -1359,7 +1359,7 @@ meta = {
         'filter': { '$and': [ { 'state': 'published' }, { 'style': { '$nin': ['campaign'] } } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo', 'relateds'],
+    'embedded_fields': ['heroImage','writers', 'topics','sections', 'categories','og_image', 'heroVideo', 'relateds', 'tags'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
