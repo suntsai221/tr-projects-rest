@@ -1265,6 +1265,9 @@ image_schema = {
   'createTime': {
     'type': 'datetime',
   },
+  'keywords': {
+    'type': 'string',
+  },
 }
 
 posts = {
