@@ -1176,6 +1176,74 @@ editorchoices_schema = {
   },
 }
 
+watchbrand_schema = {
+  'name': {
+    'type': 'string',
+  },
+}
+
+watchfunction_schema = {
+  'name': {
+    'type': 'string',
+  },
+}
+watch_schema = {
+  'brand': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'watchbrands',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'watchfunction': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'watchfunctions',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
+  'name': {
+    'type': 'string',
+  },
+  'type': {
+    'type': 'boolean',
+  },
+  'sex': {
+    'type': 'string',
+  },
+  'price': {
+    'type': 'string',
+  },
+  'movement': {
+    'type': 'string',
+  },
+  'power': {
+    'type': 'string',
+  },
+  'material': {
+    'type': 'string',
+  },
+  'waterproof': {
+    'type': 'string',
+  },
+  'watch_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },  
+  'content': {
+    'type': 'string',
+  },
+}
+
 choices_schema = {
   'pickDate': {
     'type': 'string',
@@ -1388,6 +1456,42 @@ drafts = {
     'schema': post_schema
 }
 
+watchbrands = {
+    'item_title': 'watchbrand',
+    'datasource': {
+        'source': 'watchbrands',
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': watchbrand_schema
+}
+watchfunctions = {
+    'item_title': 'watchfunction',
+    'datasource': {
+        'source': 'watchfunctions',
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': watchfunction_schema
+}
+watches = {
+    'item_title': 'watch',
+    'datasource': {
+        'source': 'watches',
+        # 'filter': {'state': 'draft'},
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': watch_schema
+}
+
 editorchoices = {
     'item_title': 'editorchoice',
     'datasource': {
@@ -1547,6 +1651,9 @@ DOMAIN = {
     'videos': videos,
     'event': event,
     'sections': sections,
+    'watches': watches,
+    'watchbrands': watchbrands,
+    'watchfunctions': watchfunctions,
     }
 
 XML = False
