@@ -1482,10 +1482,11 @@ watches = {
     'item_title': 'watch',
     'datasource': {
         'source': 'watches',
+        'default_sort': [('sortOrder', 1)],
         # 'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds'],
+    'embedded_fields': ['brand','watchfunction','watch_image', 'relateds'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
@@ -1574,6 +1575,14 @@ postcategories = {
         'field': 'name'
     },
     'resource_methods': ['GET'],
+    'heroImage': {
+        'type': 'objectid',
+        'data_relation': {
+          'resource': 'images',
+          'field': '_id',
+          'embeddable': True
+        },
+    },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
