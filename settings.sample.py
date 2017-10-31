@@ -1586,6 +1586,7 @@ postcategories = {
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
+    'embedded_fields': ['heroImage'],
     'schema': postcategories_schema,
 }
 
