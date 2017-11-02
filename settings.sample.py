@@ -1231,7 +1231,7 @@ watch_schema = {
   'waterproof': {
     'type': 'string',
   },
-  'watch_image': {
+  'watchImage': {
     'type': 'objectid',
     'data_relation': {
       'resource': 'images',
@@ -1239,6 +1239,17 @@ watch_schema = {
       'embeddable': True
     },
   },  
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'content': {
     'type': 'string',
   },
@@ -1486,7 +1497,7 @@ watches = {
         # 'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['brand','watchfunction','watch_image', 'relateds'],
+    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
