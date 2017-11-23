@@ -104,6 +104,50 @@ listing_schema = {
   }
 }
 
+partner_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'website': {
+    'type': 'string',
+  },
+}
+
+external_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'subtitle': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'string',
+  },
+  'content': {
+    'type': 'string',
+  },
+  'partner': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'partners',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'extend_byline': {
+    'type': 'string',
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
+  'thumb': {
+    'type': 'string',
+  },
+}
+
 meta_schema = {
   'name': {
     'type': 'string',
@@ -1382,6 +1426,32 @@ nodes = {
     'schema': node_schema
 }
 
+externals = {
+    'item_title': 'external',
+    'datasource': {
+        'source': 'externals',
+        'filter': {'state': 'published'},
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['partner'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': external_schema
+}
+
+partners = {
+    'item_title': 'partners',
+    'datasource': {
+        'source': 'partners',
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': partner_schema
+}
+
 slug = {
     'item_title': 'slug',
     'datasource': {
@@ -1675,6 +1745,8 @@ DOMAIN = {
     'watches': watches,
     'watchbrands': watchbrands,
     'watchfunctions': watchfunctions,
+    'partners': partners,
+    'externals': externals,
     }
 
 XML = False
