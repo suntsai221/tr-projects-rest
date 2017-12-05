@@ -350,6 +350,9 @@ event_schema = {
   'isFeatured': {
     'type': 'boolean',
   },
+  'link': {
+    'type': 'string',
+  },
   'sections': {
     'type': 'list',
     'schema': {
