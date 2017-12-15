@@ -108,8 +108,14 @@ partner_schema = {
   'name': {
     'type': 'string',
   },
+  'display': {
+    'type': 'string',
+  },
   'website': {
     'type': 'string',
+  },
+  'public': {
+    'type': 'boolean',
   },
 }
 
@@ -1757,4 +1763,3 @@ IF_MATCH = False
 X_DOMAINS = '*'
 X_HEADERS = ['Content-Type']
 PAGINATION_DEFAULT = 10
-PAGINATION_LIMIT = 200
