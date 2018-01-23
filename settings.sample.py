@@ -152,6 +152,9 @@ external_schema = {
   'thumb': {
     'type': 'string',
   },
+  'source': {
+    'type': 'string',
+  },
 }
 
 meta_schema = {
