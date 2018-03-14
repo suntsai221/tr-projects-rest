@@ -4,7 +4,7 @@ MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
 MONGO_DBNAME = 'keystone-test'
 # The assets url is for production
-ASSETS_URL = 'https://www.mirrormedia.com.tw/'
+ASSETS_URL = 'https://mirrormedia.com.tw/'
 GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
 ENV = 'dev'
 
