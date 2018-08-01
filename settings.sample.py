@@ -1,4 +1,4 @@
-# MONGO DATABASE SETTINGS FOR SAMPLE
+# MONGO DATABASE SETTINGS FOR SAMPLE                                                                                                                          
 DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
@@ -656,6 +656,9 @@ post_schema = {
   'isAdvertised': {
     'type': 'boolean',
   },
+  'hiddenAdvertised': {
+    'type': 'boolean',
+  },
   'isAdult': {
     'type': 'boolean',
   },
@@ -674,6 +677,9 @@ post_schema = {
     },
   },
   'device': {
+    'type': 'string',
+  },
+  'adTrace': {
     'type': 'string',
   },
   'isCampaign': {
