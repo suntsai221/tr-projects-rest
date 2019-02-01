@@ -1,4 +1,4 @@
-# MONGO DATABASE SETTINGS FOR SAMPLE                                                                                                                          
+# MONGO DATABASE SETTINGS FOR SAMPLE                                                                                                                                                                           
 DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
@@ -495,6 +495,17 @@ post_schema = {
   'state': {
     'type': 'string',
   },
+  'albums': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'albums',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'sections': {
     'type': 'list',
     'schema': {
@@ -684,6 +695,106 @@ post_schema = {
   },
   'isCampaign': {
     'type': 'boolean',
+  },
+}
+album_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'leading': {
+    'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'state': {
+    'type': 'string',
+  },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
+  'createTime': {
+    'type': 'datetime',
+  },
+  'updatedAt': {
+    'type': 'datetime',
+  },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'tags': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'tags',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'style': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
   },
 }
 
@@ -942,6 +1053,20 @@ activities_schema = {
       'embeddable': True
     },
   },
+}
+
+audiopromotions_schema = {
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'href': {
+    'type': 'string',
+  }
 }
 
 postcategories_schema = {
@@ -1431,6 +1556,25 @@ posts = {
     'schema': post_schema
 }
 
+albums = {
+    'item_title': 'album',
+    'additional_lookup': {
+        'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
+        'field': 'name'
+    },
+    'datasource': {
+        'source': 'albums',
+        'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'sections', 'categories', 'tags', 'og_image'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': album_schema
+}
+
 nodes = {
     'item_title': 'node',
     'datasource': {
@@ -1668,6 +1812,24 @@ contacts = {
   'schema': contact_schema
 }
 
+audiopromotions = {
+    'item_title': 'audiopromotions',
+    'resource_methods': ['GET'],
+    'heroImage': {
+        'type': 'objectid',
+        'data_relation': {
+          'resource': 'images',
+          'field': '_id',
+          'embeddable': True
+        },
+    },
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'embedded_fields': ['heroImage'],
+    'schema': audiopromotions_schema,
+}
+
 postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
@@ -1744,6 +1906,7 @@ videos = {
 
 DOMAIN = {
     'posts': posts,
+    'albums': albums,
     'drafts': drafts,
     'meta': meta,
     'listing': listing,
@@ -1755,6 +1918,7 @@ DOMAIN = {
     'topics': topics,
     'nodes': nodes,
     'postcategories': postcategories,
+    'audiopromotions': audiopromotions,
     'activities': activities,
     'images': images,
     'audios': audios,
