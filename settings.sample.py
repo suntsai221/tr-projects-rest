@@ -1579,7 +1579,7 @@ albums = {
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'heroVideo', 'sections', 'categories', 'tags', 'og_image'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'sections', 'writers', 'categories', 'tags', 'og_image'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
