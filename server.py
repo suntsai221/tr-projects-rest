@@ -150,7 +150,7 @@ def before_returning_posts(response):
             item = get_full_relateds(item, 'relateds')
     return response
 
-def before_returning_album(response):
+def before_returning_albums(response):
     writer = request.args.get('writers')
     replace = request.args.get('replace')
     items = response['_items']
