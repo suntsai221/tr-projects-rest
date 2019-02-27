@@ -20,6 +20,23 @@ def add_token(documents):
         document["token"] = (''.join(random.choice(string.ascii_uppercase)
                                     for x in range(10)))
 
+def get_full_writers(item, key):
+    if key in item and item[key]:
+        headers = dict(request.headers)
+        tc = app.test_client()
+        all_writers =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+        resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
+        resp_data = json.loads(resp.data)
+        result = []
+        for i in item[key]: 
+            for j in resp_data['_items']:
+                if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                    result.append(j)
+                    continue
+        item[key] = result
+        # item[key] = resp_data['_items']
+    return item
+
 def get_full_relateds(item, key):
     if key in item and item[key]:
         headers = dict(request.headers)
@@ -131,6 +148,21 @@ def before_returning_posts(response):
         replace_imageurl(item)
         if related == 'full' and item['style'] == 'photography':
             item = get_full_relateds(item, 'relateds')
+    return response
+
+def before_returning_album(response):
+    writer = request.args.get('writers')
+    replace = request.args.get('replace')
+    items = response['_items']
+    for item in items:
+        item = clean_item(item)
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+            del item['brief']['draft']
+            del item['brief']['apiData']
+        if replace != 'false':
+            replace_imageurl(item)
+        if related == 'full':
+            item = get_full_writers(item, 'writers')
     return response
 
 def before_returning_meta(response):
