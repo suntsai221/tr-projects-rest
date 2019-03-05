@@ -161,7 +161,7 @@ def before_returning_albums(response):
             del item['brief']['apiData']
         if replace != 'false':
             replace_imageurl(item)
-        if related == 'full':
+        if writer == 'full':
             item = get_full_writers(item, 'writers')
     return response
 
