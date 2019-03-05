@@ -260,6 +260,7 @@ app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
+app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
