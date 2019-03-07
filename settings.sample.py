@@ -1814,7 +1814,7 @@ readrs = {
         'field': 'slug'
     },
     'datasource': {
-        'source': 'posts',
+        'source': 'readrs',
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
