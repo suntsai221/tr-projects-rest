@@ -1,4 +1,4 @@
-# MONGO DATABASE SETTINGS FOR SAMPLE                                                                                                                                                                           
+# MONGO DATABASE SETTINGS FOR SAMPLE
 DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
@@ -697,6 +697,245 @@ post_schema = {
     'type': 'boolean',
   },
 }
+
+readr_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'slug': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'subtitle': {
+    'type': 'string',
+  },
+  'heroVideo': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'videos',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroCaption': {
+    'type': 'string',
+  },
+  'state': {
+    'type': 'string',
+  },
+  'albums': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'albums',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'sections': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'sections',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'writers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'photographers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'camera_man': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'designers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'engineers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
+  'createTime': {
+    'type': 'datetime',
+  },
+  'updatedAt': {
+    'type': 'datetime',
+  },
+  'categories': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'postcategories',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'topics': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'topics',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'topics_ref': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': 'topics',
+            'embeddable': True
+         },
+     },
+  },
+  'tags': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'tags',
+            'field': '_id',
+            'embeddable': True
+         },
+     },
+  },
+  'style': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'content': {
+    'type': 'dict',
+    'schema': {
+       "html": {
+          "type": "string",
+       },
+     },  
+  },
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
+  'extend_byline': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'isFeatured': {
+    'type': 'boolean',
+  },
+  'isAdvertised': {
+    'type': 'boolean',
+  },
+  'hiddenAdvertised': {
+    'type': 'boolean',
+  },
+  'isAdult': {
+    'type': 'boolean',
+  },
+  'lockJS': {
+    'type': 'boolean',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'device': {
+    'type': 'string',
+  },
+  'adTrace': {
+    'type': 'string',
+  },
+  'isCampaign': {
+    'type': 'boolean',
+  },
+}
+
 album_schema = {
   'name': {
     'type': 'string',
@@ -1567,6 +1806,25 @@ posts = {
     'schema': post_schema
 }
 
+readrs = {
+    'item_title': 'readr',
+    'additional_lookup': {
+        'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
+        'field': 'slug'
+    },
+    'datasource': {
+        'source': 'posts',
+        'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': readr_schema
+}
+
 albums = {
     'item_title': 'album',
     'additional_lookup': {
@@ -1917,6 +2175,7 @@ videos = {
 
 DOMAIN = {
     'posts': posts,
+    'readrs': readrs,
     'albums': albums,
     'drafts': drafts,
     'meta': meta,
