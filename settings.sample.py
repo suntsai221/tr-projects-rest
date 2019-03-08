@@ -887,7 +887,7 @@ readr_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'meta',
+            'resource': 'readrs',
             'field': '_id',
             'embeddable': True
          },
