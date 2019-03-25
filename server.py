@@ -84,14 +84,12 @@ def clean_item(item):
     if '_created' in item:
         del item['_created']
     if 'relateds' in item:
+        keep = ["title", "heroImage", "slug", "_id"]
         for r in item['relateds']:
             if isinstance(r, dict):
-                if 'brief' in r:
-                    if 'draft' in r['brief']:
-                        del r['brief']['draft']
-                    if 'apiData' in r['brief']:
-                        del r['brief']['apiData']
-                clean_item(r)
+                for k in r.keys():
+                    if k not in keep:
+                        del r[k]       
     if 'sections' in item:
         for i in item['sections']:
             if isinstance(i, dict):
@@ -130,7 +128,6 @@ def before_returning_posts(response):
     clean = request.args.get('clean')
     items = response['_items']
     for item in items:
-        item = clean_item(item)
         if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
             del item['brief']['draft']
         if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
@@ -148,6 +145,7 @@ def before_returning_posts(response):
         replace_imageurl(item)
         if related == 'full' and item['style'] == 'photography':
             item = get_full_relateds(item, 'relateds')
+        item = clean_item(item)
     return response
 
 def before_returning_albums(response):
