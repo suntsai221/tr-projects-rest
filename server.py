@@ -87,7 +87,7 @@ def clean_item(item):
         keep = ["title", "heroImage", "slug", "_id"]
         for r in item['relateds']:
             if isinstance(r, dict):
-                for k in r.keys():
+                for k in list(r):
                     if k not in keep:
                         del r[k]       
     if 'sections' in item:
