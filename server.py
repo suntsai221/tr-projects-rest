@@ -1,24 +1,28 @@
 from datetime import datetime
 from eve import Eve
-from eve.auth import TokenAuth
 from flask import redirect, request, Response
 from settings import posts, ASSETS_URL, GCS_URL, ENV
-from werkzeug.security import check_password_hash
 import json
 import random
 import string
 import sys, getopt
 
-class TokenAuth(TokenAuth):
-    def check_auth(self, token, allowed_roles, resource, method):
-    # use Eve's own db driver; no additional connections/resources are used
-        accounts = app.data.driver.db['accounts']
-        return accounts.find_one({'token': token})
-
-def add_token(documents):
-    for document in documents:
-        document["token"] = (''.join(random.choice(string.ascii_uppercase)
-                                    for x in range(10)))
+def get_full_writers(item, key):
+    if key in item and item[key]:
+        headers = dict(request.headers)
+        tc = app.test_client()
+        all_writers =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+        resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
+        resp_data = json.loads(resp.data)
+        result = []
+        for i in item[key]: 
+            for j in resp_data['_items']:
+                if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                    result.append(j)
+                    continue
+        item[key] = result
+        # item[key] = resp_data['_items']
+    return item
 
 def get_full_writers(item, key):
     if key in item and item[key]:
@@ -250,13 +254,9 @@ def pre_GET(resource, request, lookup):
 
 #app = Eve(auth=RolesAuth)
 
-if ENV == 'prod':
-    app = Eve(auth=TokenAuth)
-else:
-    app = Eve()
+app = Eve()
 app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
-app.on_insert_accounts += add_token
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
@@ -421,4 +421,4 @@ def get_posts_byname():
     return r
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
+    app.run(host='0.0.0.0', port=8080, threaded=True)
