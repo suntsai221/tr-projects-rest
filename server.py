@@ -18,7 +18,6 @@ def get_full_contacts(item, key):
         for i in item[key]: 
             for j in resp_data['_items']:
                 if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
-                    print j
                     result.append(j)
                     continue
         item[key] = result
