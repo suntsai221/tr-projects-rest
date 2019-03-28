@@ -15,7 +15,7 @@ def get_full_contacts(item, key):
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
         resp_string = str(resp.data, encoding = "utf-8")
         if isinstance(resp_string, str): 
-            resp_data = json.loads(resp.data)
+            resp_data = json.loads(resp_string)
             result = []
             for i in item[key]: 
                 for j in resp_data['_items']:
