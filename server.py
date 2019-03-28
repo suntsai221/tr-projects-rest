@@ -13,15 +13,15 @@ def get_full_contacts(item, key):
         tc = app.test_client()
         all_writers =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
-        print (resp)
-        resp_data = json.loads(resp.data)
-        result = []
-        for i in item[key]: 
-            for j in resp_data['_items']:
-                if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
-                    result.append(j)
-                    continue
-        item[key] = result
+        if isinstance(resp, str): 
+            resp_data = json.loads(resp.data)
+            result = []
+            for i in item[key]: 
+                for j in resp_data['_items']:
+                    if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                        result.append(j)
+                        continue
+            item[key] = result
         # item[key] = resp_data['_items']
     return item
 
