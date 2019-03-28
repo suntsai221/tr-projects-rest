@@ -219,8 +219,8 @@ def before_returning_sections(response):
     return response
 
 def remove_extra_fields(item):
-  accepted_fields = schema.keys()
-  for field in item.keys():
+  accepted_fields = list(schema)
+  for field in list(item):
     if field not in accepted_fields and field != '_id':
       del item[field]
 
