@@ -7,7 +7,7 @@ import random
 import string
 import sys, getopt
 
-def get_full_writers(item, key):
+def get_full_contacts(item, key):
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
@@ -18,6 +18,7 @@ def get_full_writers(item, key):
         for i in item[key]: 
             for j in resp_data['_items']:
                 if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                    print j
                     result.append(j)
                     continue
         item[key] = result
@@ -147,7 +148,7 @@ def before_returning_albums(response):
         if replace != 'false':
             replace_imageurl(item)
         if writer == 'full':
-            item = get_full_writers(item, 'writers')
+            item = get_full_contacts(item, 'vocals')
     return response
 
 def before_returning_meta(response):
@@ -219,10 +220,10 @@ def before_returning_sections(response):
     return response
 
 def remove_extra_fields(item):
-  accepted_fields = list(schema)
-  for field in list(item):
-    if field not in accepted_fields and field != '_id':
-      del item[field]
+    accepted_fields = list(schema)
+    for field in list(item):
+        if field not in accepted_fields and field != '_id':
+            del item[field]
 
 def pre_GET(resource, request, lookup):
     isCampaign = request.args.get('isCampaign')
@@ -404,4 +405,4 @@ def get_posts_byname():
     return r
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, threaded=True)
+    app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
