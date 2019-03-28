@@ -12,6 +12,7 @@ def get_full_contacts(item, key):
         headers = dict(request.headers)
         tc = app.test_client()
         all_writers =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+        print ('contacts?where={"_id":{"$in":[' + all_writers + ']}}')
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
         if isinstance(resp, str): 
             resp_data = json.loads(resp.data)
