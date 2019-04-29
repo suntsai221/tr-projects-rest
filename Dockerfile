@@ -7,9 +7,8 @@ COPY . /usr/src/app/tr-projects-rest
 WORKDIR /usr/src/app/tr-projects-rest
 
 RUN apk update \
-    && apk add gcc libc-dev linux-headers g++ \
+    && apk add gcc libc-dev linux-headers \
     && pip install --upgrade pip \
-	&& pip3 install google-cloud-profiler \
     && pip install -r requirements.txt
 
 EXPOSE 8080
