@@ -2,6 +2,7 @@ from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response
 from settings import posts, ASSETS_URL, GCS_URL, ENV
+import googlecloudprofiler
 import json
 import random
 import string
@@ -406,4 +407,18 @@ def get_posts_byname():
     return r
 
 if __name__ == '__main__':
+    # Profiler initialization. It starts a daemon thread which continuously
+    # collects and uploads profiles. Best done as early as possible.
+    try:
+        googlecloudprofiler.start(
+            service='tr-projects-rest-profiler',
+            service_version='1.0.1',
+            # verbose is the logging level. 0-error, 1-warning, 2-info,
+            # 3-debug. It defaults to 0 (error) if not set.
+            verbose=3,
+            # project_id must be set if not running on GCP.
+            # project_id='my-project-id',
+        )
+    except (ValueError, NotImplementedError) as exc:
+        print(exc)  # Handle errors here
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
