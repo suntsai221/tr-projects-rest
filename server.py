@@ -4,7 +4,6 @@ from flask import redirect, request, Response
 from settings import posts, ASSETS_URL, GCS_URL, ENV
 import json
 import random
-import redis
 import string
 import sys, getopt
 
