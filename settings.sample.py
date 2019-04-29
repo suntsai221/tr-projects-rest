@@ -8,6 +8,12 @@ ASSETS_URL = 'https://www.mirrormedia.com.tw/'
 GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
 ENV = 'dev'
 
+REDIS_WRITE_HOST = '127.0.0.1'
+REDIS_WRITE_PORT = 6379
+REDIS_READ_HOST = '127.0.0.1'
+REDIS_READ_PORT = 6379
+REDIS_AUTH = 'foo'
+
 # ALLOW ACTIONS
 DEBUG = False
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']

@@ -1,9 +1,10 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response
-from settings import posts, ASSETS_URL, GCS_URL, ENV
+from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH
 import json
 import random
+import redis
 import string
 import sys, getopt
 
@@ -345,6 +346,9 @@ def handle_combo():
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
                             "parent":{ "parent": "/", "title": "Home" } } }
     headers = dict(request.headers)
+    cached = redis_read.get(request.url)
+    if cached is not None:
+        return Response(json.dumps(cached), headers=headers)
     tc = app.test_client()
     req = request.args.getlist('endpoint')
     for action in req:
@@ -366,6 +370,7 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json" 
+    redis_write.setex(request.url, 300, response)
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
@@ -406,4 +411,10 @@ def get_posts_byname():
     return r
 
 if __name__ == '__main__':
+    redis_read_port = int(REDIS_READ_PORT)
+    redis_write_port = int(REDIS_WRITE_PORT)
+    redis_readPool = redis.ConnectionPool(host = REDIS_READ_HOST, port = redis_read_port, password = REDIS_AUTH)
+    redis_read = redis.Redis(connection_pool=redis_readPool)
+    redis_writePool = redis.ConnectionPool(host = REDIS_WRITE_HOST, port = redis_write_port, password = REDIS_AUTH)
+    redis_write = redis.Redis(connection_pool=redis_writePool)
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
