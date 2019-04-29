@@ -1,7 +1,7 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response
-from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH
+from settings import posts, ASSETS_URL, GCS_URL, ENV
 import json
 import random
 import redis
