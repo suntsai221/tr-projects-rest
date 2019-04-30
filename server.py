@@ -7,6 +7,7 @@ import random
 import redis
 import string
 import sys, getopt
+import time
 
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
@@ -346,6 +347,7 @@ def get_timeline(topicId):
 
 @app.route("/combo", methods=['GET'])
 def handle_combo():
+    start = time.time()
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
      'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=12', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
@@ -362,7 +364,7 @@ def handle_combo():
     req = request.args.getlist('endpoint')
     for action in req:
         if action in endpoints:
-            action_resp = tc.get(endpoints[action], headers=headers)
+            action_resp = tc.get('http://localhost:8080' + endpoints[action], headers=headers)
             headers = action_resp.headers
             # print(json.loads(str(action_resp.data)))
             action_data = json.loads(action_resp.data.decode("utf-8"))
@@ -380,6 +382,9 @@ def handle_combo():
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json" 
     redis_write.setex(request.url, 3600, json.dumps(response))
+    done = time.time()
+    elapsed = done - start
+    print "[INFO] API " + request.url + " interval " + elapsed
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
