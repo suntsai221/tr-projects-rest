@@ -384,7 +384,7 @@ def handle_combo():
     redis_write.setex(request.url, 3600, json.dumps(response))
     done = time.time()
     elapsed = str(done - start)
-    print("[INFO] API " + request.url + " interval " + elapsed)
+    #print("[INFO] API " + request.url + " interval " + elapsed)
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
