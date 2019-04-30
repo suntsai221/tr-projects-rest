@@ -357,7 +357,7 @@ def handle_combo():
     global redis_write
     cached = redis_read.get(request.url)
     if cached is not None:
-        return Response(json.dumps(cached), headers=headers)
+        return Response(cached, headers=headers)
     tc = app.test_client()
     req = request.args.getlist('endpoint')
     for action in req:
@@ -379,7 +379,7 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json" 
-    redis_write.setex(request.url, 300, response)
+    redis_write.setex(request.url, 3600, json.dumps(response))
     return Response(json.dumps(response), headers=headers)        
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
