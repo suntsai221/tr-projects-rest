@@ -411,10 +411,12 @@ def get_posts_byname():
     return r
 
 if __name__ == '__main__':
+    global redis_read 
+    global redis_write
     redis_read_port = int(REDIS_READ_PORT)
     redis_write_port = int(REDIS_WRITE_PORT)
     redis_readPool = redis.ConnectionPool(host = REDIS_READ_HOST, port = redis_read_port, password = REDIS_AUTH)
-    global redis_read = redis.Redis(connection_pool=redis_readPool)
+    redis_read = redis.Redis(connection_pool=redis_readPool)
     redis_writePool = redis.ConnectionPool(host = REDIS_WRITE_HOST, port = redis_write_port, password = REDIS_AUTH)
-    global redis_write = redis.Redis(connection_pool=redis_writePool)
+    redis_write = redis.Redis(connection_pool=redis_writePool)
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
