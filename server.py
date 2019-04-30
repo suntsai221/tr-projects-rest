@@ -383,7 +383,7 @@ def handle_combo():
        headers['Content-Type'] = "application/json" 
     redis_write.setex(request.url, 3600, json.dumps(response))
     done = time.time()
-    elapsed = done - start
+    elapsed = str(done - start)
     print("[INFO] API " + request.url + " interval " + elapsed)
     return Response(json.dumps(response), headers=headers)        
 
