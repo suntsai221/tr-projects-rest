@@ -1,9 +1,10 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response
-from settings import posts, ASSETS_URL, GCS_URL, ENV
+from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
 import json
 import random
+import redis
 import string
 import sys, getopt
 
