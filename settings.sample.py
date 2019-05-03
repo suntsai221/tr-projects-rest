@@ -3,6 +3,7 @@ DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
 MONGO_DBNAME = 'keystone-test'
+OPTIMIZE_PAGINATION_FOR_SPEED = True
 # The assets url is for production
 ASSETS_URL = 'https://www.mirrormedia.com.tw/'
 GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
