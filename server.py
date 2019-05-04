@@ -286,20 +286,20 @@ def get_sections_latest():
         else:
             section_items = { "_items": [] }
     for item in section_items:
-        #if (item['name'] == 'foodtravel'):
-        if (content == 'meta'):
-            endpoint = 'meta'
-        else:
-            endpoint = 'posts'
-        sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
-        resp_header = dict(sec_resp.headers)
-        sec_items = json.loads(sec_resp.data.decode("utf-8"))
-        if '_error' not in sec_items and "_items" in sec_items:
-            #response[item['name']] = sec_items['_items']
-            for sec_item in sec_items:
-                clean_item(sec_item)
-                replace_imageurl(sec_item)
-            response['_items'][item['name']] = sec_items['_items']
+        if (item['name'] == 'foodtravel'):
+            if (content == 'meta'):
+                endpoint = 'meta'
+            else:
+                endpoint = 'posts'
+            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
+            resp_header = dict(sec_resp.headers)
+            sec_items = json.loads(sec_resp.data.decode("utf-8"))
+            if '_error' not in sec_items and "_items" in sec_items:
+                #response[item['name']] = sec_items['_items']
+                for sec_item in sec_items:
+                    clean_item(sec_item)
+                    replace_imageurl(sec_item)
+                response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
 @app.route("/timeline/<topicId>", methods=['GET'])
