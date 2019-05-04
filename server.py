@@ -268,26 +268,37 @@ def get_sections_latest():
     headers = dict(request.headers)
     content = request.args.get('content') or 'posts'
     tc = app.test_client()
-    resp = tc.get('/sections', headers=headers)
-    resp_header = dict(resp.headers)
-    if "Content-Length" in headers:
-        del headers["Content-Length"]
-    resp_data = json.loads(resp.data.decode("utf-8"))
-    section_items = resp_data["_items"]
-    section_items = sorted(section_items, key = lambda x: x["sortOrder"])
-    if ("_error" not in resp_data and "_items" in resp_data):
-        for item in section_items:
-            if (content == 'meta'):
-                endpoint = 'meta'
-            else:
-                endpoint = 'posts'
-            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
-            sec_items = json.loads(sec_resp.data.decode("utf-8"))
-            if '_error' not in sec_items and "_items" in sec_items:
-                #response[item['name']] = sec_items['_items']
-                for sec_item in sec_items:
-                    replace_imageurl(sec_item)
-                response['_items'][item['name']] = sec_items['_items']
+    global redis_read
+    global redis_write
+    section_cached = redis_read.get("/sections")
+    if section_cached is not None:
+        section_items = json.loads(section_cached)
+    else:
+        resp = tc.get('/sections', headers=headers)
+        resp_header = dict(resp.headers)
+        if "Content-Length" in headers:
+            del headers["Content-Length"]
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        if ("_error" not in resp_data and "_items" in resp_data):
+            section_items = resp_data["_items"]
+            section_items = sorted(section_items, key = lambda x: x["sortOrder"])
+            redis_write.setex("/sections", 3600, json.dumps(section_items))
+        else:
+            section_items = { "_items": [] }
+    for item in section_items:
+        if (content == 'meta'):
+            endpoint = 'meta'
+        else:
+            endpoint = 'posts'
+        sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
+        resp_header = dict(sec_resp.headers)
+        sec_items = json.loads(sec_resp.data.decode("utf-8"))
+        if '_error' not in sec_items and "_items" in sec_items:
+            #response[item['name']] = sec_items['_items']
+            for sec_item in sec_items:
+                clean_item(sec_item)
+                replace_imageurl(sec_item)
+            response['_items'][item['name']] = sec_items['_items']
     return Response(json.dumps(response), headers=resp_header)        
         
 @app.route("/timeline/<topicId>", methods=['GET'])
@@ -359,7 +370,6 @@ def handle_combo():
     global redis_write
     cached = redis_read.get(request.url)
     if cached is not None:
-        print("from redis" + request.url)
         return Response(cached.decode("utf-8"), headers=headers)
     tc = app.test_client()
     req = request.args.getlist('endpoint')
