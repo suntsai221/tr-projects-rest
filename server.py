@@ -265,7 +265,6 @@ def get_list():
     headers = dict(request.headers)
     req = request.url
     req = req.replace('getlist', 'listing')
-    print(req)
     global redis_read
     global redis_write
     listing_cached = redis_read.get(req)
