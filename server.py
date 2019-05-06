@@ -8,6 +8,7 @@ import redis
 import string
 import sys, getopt
 import time
+# -*- coding:utf-8 -*-
 
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
@@ -259,6 +260,30 @@ app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_sections += before_returning_sections
 app.on_pre_GET += pre_GET
 
+@app.route("/getlist", methods=['GET'])
+def get_list():
+    headers = dict(request.headers)
+    req = request.url
+    req = req.replace('getlist', 'listing')
+    print(req)
+    global redis_read
+    global redis_write
+    listing_cached = redis_read.get(req)
+    if listing_cached is not None:
+        cached_resp = json.loads(listing_cached)
+        if "header" in cached_resp:
+            listing_header = cached_resp['header']
+            del cached_resp["header"]
+            return Response(json.dumps(cached_resp), headers=listing_header)
+    tc = app.test_client()
+    resp = tc.get(req, headers=headers)
+    resp_object = json.loads(resp.data)
+    resp_object['header'] = dict(resp.headers)
+    result = json.dumps(resp_object)
+    redis_write.setex(req, 300, result)
+    return Response(result, headers=dict(resp.headers))
+    #return before_returning_listing(resp.data.decode("utf-8"))
+
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
     response = { "_items": {},
@@ -282,7 +307,7 @@ def get_sections_latest():
         if ("_error" not in resp_data and "_items" in resp_data):
             section_items = resp_data["_items"]
             section_items = sorted(section_items, key = lambda x: x["sortOrder"])
-            redis_write.setex("/sections", 3600, json.dumps(section_items))
+            redis_write.setex("/sections", 300, json.dumps(section_items))
         else:
             section_items = { "_items": [] }
     for item in section_items:
@@ -393,7 +418,7 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json" 
-    redis_write.setex(request.url, 60, json.dumps(response).encode("utf-8"))
+    redis_write.setex(request.url, 300, json.dumps(response).encode("utf-8"))
     done = time.time()
     elapsed = str(done - start)
     #print("[INFO] API " + request.url + " interval " + elapsed)
