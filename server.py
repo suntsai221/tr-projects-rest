@@ -312,9 +312,9 @@ def get_sections_latest():
     for item in section_items:
         if (item['name'] == 'foodtravel'):
             if (content == 'meta'):
-                endpoint = 'meta'
+                endpoint = 'getlist'
             else:
-                endpoint = 'posts'
+                endpoint = 'getlist'
             sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
             resp_header = dict(sec_resp.headers)
             sec_items = json.loads(sec_resp.data.decode("utf-8"))
@@ -385,7 +385,7 @@ def get_timeline(topicId):
 def handle_combo():
     start = time.time()
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/meta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=12', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
+     'meta': '/getlist?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=12', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": {
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
@@ -432,9 +432,9 @@ def get_posts_byname():
     name = request.args.get('name')
     content = request.args.get('content')
     if content == 'meta':
-        endpoint = 'meta'
+        endpoint = 'getlist'
     else: 
-        endpoint = 'posts'
+        endpoint = 'getlist'
     if collection in allow_collections:
         if collection == 'categories':
             table = 'postcategories'
