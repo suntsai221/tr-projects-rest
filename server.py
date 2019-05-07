@@ -462,7 +462,7 @@ def get_posts_byname():
     if content == 'meta':
         endpoint = 'getlist'
     else: 
-        endpoint = 'getlist'
+        endpoint = 'posts'
     if collection in allow_collections:
         if collection == 'categories':
             table = 'postcategories'
