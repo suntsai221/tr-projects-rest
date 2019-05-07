@@ -37,12 +37,21 @@ def get_full_contacts(item, key):
     return item
 
 def get_full_relateds(item, key):
+    print("related start")
+    all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+    global redis_read
+    global redis_write
     if key in item and item[key]:
-        headers = dict(request.headers)
-        tc = app.test_client()
-        all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
-        resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
-        resp_data = json.loads(resp.data.decode("utf-8"))
+        fullrelated_cached = redis_read.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}')
+        if fullrelated_cached is not None:
+            resp_data = json.loads(fullrelated_cached)
+            print("reelated from redis")
+        else:
+            headers = dict(request.headers)
+            tc = app.test_client()
+            resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
+            resp_data = json.loads(resp.data.decode("utf-8"))
+            redis_write.setex('posts?where={"_id":{"$in":[' + all_relateds + ']}}', 3600, resp.data.decode("utf-8"))
         result = []
         for i in item[key]: 
             for j in resp_data['_items']:
