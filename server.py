@@ -227,10 +227,28 @@ def before_returning_choices(response):
                 del i['photographers']
             if 'camera_man' in i:
                 del i['camera_man']
-            if 'categories' in i:
-                del i['categories']
+            if 'sections' in i:
+                del i['sections']
+            if 'topics' in i:
+                del i['topics']
+            if 'vocals' in i:
+                del i['vocals']
             if 'tags' in i:
                 del i['tags']
+    return response
+
+def before_returning_topics(response):
+    for item in response['_items']:
+        if 'brief' in item:
+            if 'apiData' in item['brief']:
+                del item['brief']['apiData']
+        if 'brief' in item:
+            if 'draft' in item['brief']:
+                del item['brief']['draft']
+        if 'sections' in item:
+            del item['sections']
+        if 'tags' in item:
+            del item['tags']
     return response
 
 def before_returning_sections(response):
@@ -266,6 +284,7 @@ app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
+app.on_fetched_resource_topics += before_returning_topics
 app.on_fetched_resource_sections += before_returning_sections
 app.on_pre_GET += pre_GET
 
@@ -394,7 +413,7 @@ def get_timeline(topicId):
 def handle_combo():
     start = time.time()
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/getlist?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=12', 'posts-vue': '/listing?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'listing?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
+     'meta': '/getlist?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=10', 'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'getlist?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": {
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
