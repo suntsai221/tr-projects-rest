@@ -311,6 +311,29 @@ def get_list():
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(resp.data.decode("utf-8"))
 
+@app.route("/getposts", methods=['GET'])
+def get_post():
+    headers = dict(request.headers)
+    req = request.url
+    req = req.replace('getposts', 'posts')
+    global redis_read
+    global redis_write
+    listing_cached = redis_read.get(req)
+    if listing_cached is not None:
+        cached_resp = json.loads(listing_cached)
+        if "header" in cached_resp:
+            listing_header = cached_resp['header']
+            del cached_resp["header"]
+            return Response(json.dumps(cached_resp), headers=listing_header)
+    tc = app.test_client()
+    resp = tc.get(req, headers=headers)
+    resp_object = json.loads(resp.data)
+    resp_object['header'] = dict(resp.headers)
+    result = json.dumps(resp_object)
+    redis_write.setex(req, 300, result)
+    return Response(result, headers=dict(resp.headers))
+    #return before_returning_listing(resp.data.decode("utf-8"))
+
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
     response = { "_items": {},
