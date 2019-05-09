@@ -304,6 +304,7 @@ def get_list():
     resp = tc.get(req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
+    result_object = before_returning_listing(result_object)
     result = json.dumps(resp_object)
     redis_write.setex(req, 300, result)
     return Response(result, headers=dict(resp.headers))
@@ -327,10 +328,10 @@ def get_post():
     resp = tc.get(req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
+    resp_object = before_returning_listing(resp_object)
     result = json.dumps(resp_object)
     redis_write.setex(req, 300, result)
     return Response(result, headers=dict(resp.headers))
-    #return before_returning_listing(result)
 
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
