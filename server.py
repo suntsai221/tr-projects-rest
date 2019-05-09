@@ -306,8 +306,8 @@ def get_list():
     resp_object['header'] = dict(resp.headers)
     result = json.dumps(resp_object)
     redis_write.setex(req, 300, result)
-    return Response(result, headers=dict(resp.headers))
-    #return before_returning_listing(resp.data.decode("utf-8"))
+    #return Response(result, headers=dict(resp.headers))
+    return before_returning_listing(result)
 
 @app.route("/getposts", methods=['GET'])
 def get_post():
@@ -329,8 +329,8 @@ def get_post():
     resp_object['header'] = dict(resp.headers)
     result = json.dumps(resp_object)
     redis_write.setex(req, 300, result)
-    return Response(result, headers=dict(resp.headers))
-    #return before_returning_listing(resp.data.decode("utf-8"))
+    #return Response(result, headers=dict(resp.headers))
+    return before_returning_listing(result)
 
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
