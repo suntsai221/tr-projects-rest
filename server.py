@@ -309,7 +309,7 @@ def get_list():
     #return before_returning_listing(result)
 
 @app.route("/getmeta", methods=['GET'])
-def get_list():
+def get_meta():
     headers = dict(request.headers)
     req = request.url
     req = req.replace('getmeta', 'meta')
