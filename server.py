@@ -308,6 +308,30 @@ def get_list():
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(result)
 
+@app.route("/getmeta", methods=['GET'])
+def get_list():
+    headers = dict(request.headers)
+    req = request.url
+    req = req.replace('getmeta', 'meta')
+    global redis_read
+    global redis_write
+    listing_cached = redis_read.get(req)
+    if listing_cached is not None:
+        cached_resp = json.loads(listing_cached)
+        if "header" in cached_resp:
+            listing_header = cached_resp['header']
+            del cached_resp["header"]
+            return Response(json.dumps(cached_resp), headers=listing_header)
+    tc = app.test_client()
+    resp = tc.get(req, headers=headers)
+    resp_object = json.loads(resp.data)
+    resp_object['header'] = dict(resp.headers)
+    resp_object = before_returning_listing(resp_object)
+    result = json.dumps(resp_object)
+    redis_write.setex(req, 300, result)
+    return Response(result, headers=dict(resp.headers))
+    #return before_returning_listing(result)
+
 @app.route("/getposts", methods=['GET'])
 def get_post():
     headers = dict(request.headers)
