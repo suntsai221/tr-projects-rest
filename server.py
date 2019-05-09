@@ -245,8 +245,6 @@ def before_returning_topics(response):
         if 'brief' in item:
             if 'draft' in item['brief']:
                 del item['brief']['draft']
-        if 'sections' in item:
-            del item['sections']
     return response
 
 def before_returning_sections(response):
