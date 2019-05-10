@@ -326,7 +326,7 @@ def get_meta():
     resp = tc.get(req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
-    resp_object = before_returning_listing(resp_object)
+    resp_object = before_returning_meta(resp_object)
     result = json.dumps(resp_object)
     redis_write.setex(req, 300, result)
     return Response(result, headers=dict(resp.headers))
