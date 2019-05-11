@@ -87,8 +87,6 @@ def replace_imageurl(obj):
 def clean_item(item):
     if '_updated' in item:
         del item['_updated']
-    if '_links' in item:
-        del item['_links']
     if '_created' in item:
         del item['_created']
     if 'relateds' in item:
