@@ -201,7 +201,7 @@ def before_returning_listing(response):
             cover_photo = str(item['heroVideo']['coverPhoto'])
             resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
-            if '_items' in resp_data and len(resp_data['_item']) > 0:
+            if '_items' in resp_data and len(resp_data['_items']) > 0:
                 result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
                 item['heroVideo']['coverPhoto'] = result
         replace_imageurl(item)
