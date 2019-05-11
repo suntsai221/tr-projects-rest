@@ -87,6 +87,8 @@ def replace_imageurl(obj):
 def clean_item(item):
     if '_updated' in item:
         del item['_updated']
+    if '_links' in item:
+        del item['_links']
     if '_created' in item:
         del item['_created']
     if 'relateds' in item:
@@ -105,6 +107,8 @@ def clean_item(item):
                     del i['style']
                 if 'og_title' in i:
                     del i['og_title']
+                if 'og_description' in i:
+                    del i['og_description']
                 if 'javascript' in i:
                     del i['javascript']
                 if 'css' in i:
@@ -199,9 +203,9 @@ def before_returning_listing(response):
             cover_photo = str(item['heroVideo']['coverPhoto'])
             resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
-            result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
-            
-            item['heroVideo']['coverPhoto'] = result
+            if '_items' in resp_data and len(resp_data['_item']) > 0:
+                result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
+                item['heroVideo']['coverPhoto'] = result
         replace_imageurl(item)
     return response
 
