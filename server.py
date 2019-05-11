@@ -37,7 +37,6 @@ def get_full_contacts(item, key):
     return item
 
 def get_full_relateds(item, key):
-    print("related start")
     all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
     global redis_read
     global redis_write
@@ -45,7 +44,6 @@ def get_full_relateds(item, key):
         fullrelated_cached = redis_read.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}')
         if fullrelated_cached is not None:
             resp_data = json.loads(fullrelated_cached)
-            print("reelated from redis")
         else:
             headers = dict(request.headers)
             tc = app.test_client()
@@ -201,6 +199,7 @@ def before_returning_listing(response):
             cover_photo = str(item['heroVideo']['coverPhoto'])
             resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
+            print(request.url + "\n" + resp.data.decode("utf-8"))
             result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
             
             item['heroVideo']['coverPhoto'] = result
