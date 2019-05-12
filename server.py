@@ -312,7 +312,6 @@ def get_list():
 def get_meta():
     headers = dict(request.headers)
     req = request.url
-    print("request url: " + req)
     fetch_req = req.replace('getmeta', 'meta')
     global redis_read
     global redis_write
@@ -337,7 +336,6 @@ def get_meta():
 def get_post():
     headers = dict(request.headers)
     req = request.url
-    print("request url: " + req)
     fetch_req = req.replace('getposts', 'posts')
     global redis_read
     global redis_write
