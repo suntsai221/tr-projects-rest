@@ -288,7 +288,7 @@ app.on_pre_GET += pre_GET
 def get_list():
     headers = dict(request.headers)
     req = request.url
-    req = req.replace('getlist', 'listing')
+    fetch_req = req.replace('getlist', 'listing')
     global redis_read
     global redis_write
     listing_cached = redis_read.get(req)
@@ -299,7 +299,7 @@ def get_list():
             del cached_resp["header"]
             return Response(json.dumps(cached_resp), headers=listing_header)
     tc = app.test_client()
-    resp = tc.get(req, headers=headers)
+    resp = tc.get(fetch_req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_listing(resp_object)
@@ -312,7 +312,7 @@ def get_list():
 def get_meta():
     headers = dict(request.headers)
     req = request.url
-    req = req.replace('getmeta', 'meta')
+    fetch_req = req.replace('getmeta', 'meta')
     global redis_read
     global redis_write
     listing_cached = redis_read.get(req)
@@ -323,7 +323,7 @@ def get_meta():
             del cached_resp["header"]
             return Response(json.dumps(cached_resp), headers=listing_header)
     tc = app.test_client()
-    resp = tc.get(req, headers=headers)
+    resp = tc.get(fetch_req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_meta(resp_object)
@@ -336,7 +336,7 @@ def get_meta():
 def get_post():
     headers = dict(request.headers)
     req = request.url
-    req = req.replace('getposts', 'posts')
+    fetch_req = req.replace('getposts', 'posts')
     global redis_read
     global redis_write
     listing_cached = redis_read.get(req)
@@ -347,7 +347,7 @@ def get_post():
             del cached_resp["header"]
             return Response(json.dumps(cached_resp), headers=listing_header)
     tc = app.test_client()
-    resp = tc.get(req, headers=headers)
+    resp = tc.get(fetch_req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_listing(resp_object)
