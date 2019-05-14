@@ -1,7 +1,7 @@
 Cerberus==1.2
 certifi==2018.4.16
 click==6.7
-Eve==0.8
+Eve==0.9
 Events==0.3
 Flask==1.0.2
 Flask-PyMongo==0.4.1
