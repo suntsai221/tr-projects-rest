@@ -457,7 +457,7 @@ def get_timeline(topicId):
 def handle_combo():
     start = time.time()
     endpoints = {'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}', 'sectionfeatured': '/sections-featured?content=meta', 'choices': '/choices?max_results=1&sort=-pickDate',\
-     'meta': '/getlist?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=10', 'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'getlist?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
+     'meta': '/getmeta?sort=-publishedDate&clean=content&related=full', 'sections': '/sections?sort=sortOrder&max_results=20', 'topics':'/topics?sort=sortOrder&max_results=10', 'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false', 'projects': 'getlist?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate'}
     response = { "_endpoints": {}, 
                  "_links": {
                             "self": { "href":"sections-latest", "title": "sections latest"}, 
