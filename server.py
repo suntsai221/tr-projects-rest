@@ -384,7 +384,7 @@ def get_sections_latest():
     for item in section_items:
         if (item['name'] == 'foodtravel'):
             if (content == 'meta'):
-                endpoint = 'getlist'
+                endpoint = 'getmeta'
             else:
                 endpoint = 'getlist'
             sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
@@ -504,7 +504,7 @@ def get_posts_byname():
     name = request.args.get('name')
     content = request.args.get('content')
     if content == 'meta':
-        endpoint = 'getlist'
+        endpoint = 'getmeta'
     else: 
         endpoint = 'posts'
     if collection in allow_collections:
