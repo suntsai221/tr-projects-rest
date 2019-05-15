@@ -1,6 +1,7 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response
+from multiprocessing import Process
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
 import json
 import random
@@ -39,7 +40,7 @@ def get_full_contacts(item, key):
 def get_full_relateds(item, key):
     all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
     global redis_read
-    global redis_write
+    #global redis_write
     if key in item and item[key]:
         fullrelated_cached = redis_read.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}')
         if fullrelated_cached is not None:
@@ -49,7 +50,9 @@ def get_full_relateds(item, key):
             tc = app.test_client()
             resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
-            redis_write.setex('posts?where={"_id":{"$in":[' + all_relateds + ']}}', 3600, resp.data.decode("utf-8"))
+            p = Process(target=_redis_write, args=('posts?where={"_id":{"$in":[' + all_relateds + ']}}', resp.data.decode("utf-8")))
+            p.start()
+            p.join()
         result = []
         for i in item[key]: 
             for j in resp_data['_items']:
@@ -287,10 +290,9 @@ app.on_pre_GET += pre_GET
 @app.route("/getlist", methods=['GET'])
 def get_list():
     headers = dict(request.headers)
-    req = request.url
+    req = request.full_path
     fetch_req = req.replace('getlist', 'listing')
     global redis_read
-    global redis_write
     listing_cached = redis_read.get(req)
     if listing_cached is not None:
         cached_resp = json.loads(listing_cached)
@@ -304,17 +306,18 @@ def get_list():
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_listing(resp_object)
     result = json.dumps(resp_object)
-    redis_write.setex(req, 300, result)
+    p = Process(target=_redis_write, args=(req, result))
+    p.start()
+    p.join()
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(result)
 
 @app.route("/getmeta", methods=['GET'])
 def get_meta():
     headers = dict(request.headers)
-    req = request.url
+    req = request.full_path
     fetch_req = req.replace('getmeta', 'meta')
     global redis_read
-    global redis_write
     listing_cached = redis_read.get(req)
     if listing_cached is not None:
         cached_resp = json.loads(listing_cached)
@@ -328,17 +331,18 @@ def get_meta():
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_meta(resp_object)
     result = json.dumps(resp_object)
-    redis_write.setex(req, 300, result)
+    p = Process(target=_redis_write, args=(req, result))
+    p.start()
+    p.join()
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(result)
 
 @app.route("/getposts", methods=['GET'])
 def get_post():
     headers = dict(request.headers)
-    req = request.url
+    req = request.full_path
     fetch_req = req.replace('getposts', 'posts')
     global redis_read
-    global redis_write
     listing_cached = redis_read.get(req)
     if listing_cached is not None:
         cached_resp = json.loads(listing_cached)
@@ -352,7 +356,9 @@ def get_post():
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_posts(resp_object)
     result = json.dumps(resp_object)
-    redis_write.setex(req, 300, result)
+    p = Process(target=_redis_write, args=(req, result))
+    p.start()
+    p.join()
     return Response(result, headers=dict(resp.headers))
 
 @app.route("/sections-featured", methods=['GET', 'POST'])
@@ -365,7 +371,7 @@ def get_sections_latest():
     content = request.args.get('content') or 'posts'
     tc = app.test_client()
     global redis_read
-    global redis_write
+    #global redis_write
     section_cached = redis_read.get("/sections")
     if section_cached is not None:
         section_items = json.loads(section_cached)
@@ -378,7 +384,9 @@ def get_sections_latest():
         if ("_error" not in resp_data and "_items" in resp_data):
             section_items = resp_data["_items"]
             section_items = sorted(section_items, key = lambda x: x["sortOrder"])
-            redis_write.setex("/sections", 300, json.dumps(section_items))
+            p = Process(target=_redis_write, args=("/sections", json.dumps(section_items)))
+            p.start()
+            p.join()
         else:
             section_items = { "_items": [] }
     for item in section_items:
@@ -464,7 +472,7 @@ def handle_combo():
                             "parent":{ "parent": "/", "title": "Home" } } }
     headers = dict(request.headers)
     global redis_read
-    global redis_write
+    #global redis_write
     cached = redis_read.get(request.url)
     if cached is not None:
         return Response(cached.decode("utf-8"), headers=headers)
@@ -472,7 +480,7 @@ def handle_combo():
     req = request.args.getlist('endpoint')
     for action in req:
         if action in endpoints:
-            action_resp = tc.get('http://localhost:8080' + endpoints[action], headers=headers)
+            action_resp = tc.get(endpoints[action], headers=headers)
             headers = action_resp.headers
             # print(json.loads(str(action_resp.data)))
             action_data = json.loads(action_resp.data.decode("utf-8"))
@@ -489,7 +497,9 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json" 
-    redis_write.setex(request.url, 300, json.dumps(response).encode("utf-8"))
+    p = Process(target=_redis_write, args=(request.full_path, json.dumps(response).encode("utf-8")))
+    p.start()
+    p.join()
     done = time.time()
     elapsed = str(done - start)
     #print("[INFO] API " + request.url + " interval " + elapsed)
@@ -531,6 +541,10 @@ def get_posts_byname():
     else:
         r = tc.get("/posts")
     return r
+
+def _redis_write(key, value):
+    global redis_write
+    redis_write.setex(key, 300, value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
