@@ -356,7 +356,7 @@ def get_post():
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_posts(resp_object)
     result = json.dumps(resp_object)
-    p = Process(target=_redis_write, args=(req, result))
+    p = Process(target=_redis_write, args=(req, result, 604800))
     p.start()
     p.join()
     return Response(result, headers=dict(resp.headers))
@@ -542,9 +542,9 @@ def get_posts_byname():
         r = tc.get("/posts")
     return r
 
-def _redis_write(key, value):
+def _redis_write(key, value, ttl = 300):
     global redis_write
-    redis_write.setex(key, 300, value)
+    redis_write.setex(key, ttl, value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
