@@ -341,6 +341,7 @@ def get_meta():
 def get_post():
     headers = dict(request.headers)
     req = request.full_path
+    print("api request path: " + req)
     fetch_req = req.replace('getposts', 'posts')
     global redis_read
     listing_cached = redis_read.get(req)
