@@ -9,6 +9,7 @@ import redis
 import string
 import sys, getopt
 import time
+import urllib.parse
 # -*- coding:utf-8 -*-
 
 redis_read_port = int(REDIS_READ_PORT)
@@ -340,7 +341,7 @@ def get_meta():
 @app.route("/getposts", methods=['GET'])
 def get_post():
     headers = dict(request.headers)
-    req = request.full_path
+    req = urllib.parse.parse_qs(request.full_path)
     print("api request path: " + req)
     fetch_req = req.replace('getposts', 'posts')
     global redis_read
