@@ -291,7 +291,7 @@ app.on_pre_GET += pre_GET
 @app.route("/getlist", methods=['GET'])
 def get_list():
     headers = dict(request.headers)
-    req = request.full_path
+    req = urllib.parse.unquote(request.full_path)
     fetch_req = req.replace('getlist', 'listing')
     global redis_read
     listing_cached = redis_read.get(req)
@@ -316,7 +316,7 @@ def get_list():
 @app.route("/getmeta", methods=['GET'])
 def get_meta():
     headers = dict(request.headers)
-    req = request.full_path
+    req = urllib.parse.unquote(request.full_path)
     fetch_req = req.replace('getmeta', 'meta')
     global redis_read
     listing_cached = redis_read.get(req)
@@ -341,8 +341,7 @@ def get_meta():
 @app.route("/getposts", methods=['GET'])
 def get_post():
     headers = dict(request.headers)
-    req = urllib.parse.parse_qs(request.full_path)
-    print("api request path: " + req)
+    req = urllib.parse.unquote(request.full_path)
     fetch_req = req.replace('getposts', 'posts')
     global redis_read
     listing_cached = redis_read.get(req)
