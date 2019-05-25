@@ -298,7 +298,7 @@ def get_list():
     #global redis_write
     listing_cached = redis_read.get(req)
     total_time = (time.time() - start)*1000
-    if (total_time > 30):
+    if (total_time > 3):
         print("get list from redis: " + str(total_time))
     if listing_cached is not None:
         cached_resp = json.loads(listing_cached)
@@ -352,7 +352,7 @@ def get_post():
     global redis_read
     listing_cached = redis_read.get(req)
     total_time = (time.time() - start)*1000
-    if (total_time > 30):
+    if (total_time > 3):
         print("getpost from redis: " + str(total_time))
     if listing_cached is not None:
         cached_resp = json.loads(listing_cached)
@@ -486,7 +486,7 @@ def handle_combo():
     #global redis_write
     cached = redis_read.get(request.url)
     total_time = (time.time() - start)*1000
-    if (total_time > 30):
+    if (total_time > 3):
         print("get combo from redis: " + str(total_time))
     if cached is not None:
         return Response(cached.decode("utf-8"), headers=headers)
