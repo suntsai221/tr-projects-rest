@@ -117,6 +117,29 @@ def clean_item(item):
                     del i['css']
                 if 'categories' in i:
                     del i['categories']
+    if 'topics' in item:
+        for i in item['topics']:
+            if isinstance(i, dict):
+                if 'brief' in i and isinstance(i['brief'], dict) and 'draft' in i['brief']:
+                    del i['brief']['draft']
+                if 'dfp' in i:
+                    del i['dfp']
+                if 'mobile_dfp' in i:
+                    del i['mobile_dfp']
+                if 'og_title' in i:
+                    del i['og_title']
+                if 'og_description' in i:
+                    del i['og_description']
+                if 'og_image' in i:
+                    del i['og_image']
+                if 'style' in i:
+                    del i['style']
+                if 'javascript' in i:
+                    del i['javascript']
+                if 'css' in i:
+                    del i['css']
+                if 'categories' in i:
+                    del i['categories']
     if 'heroImage' in item and isinstance(item['heroImage'], dict) and 'image' in item['heroImage']:
         if 'iptc' in item['heroImage']['image']:
             del item['heroImage']['image']['iptc']
@@ -138,26 +161,27 @@ def clean_item(item):
 def before_returning_posts(response):
     related = request.args.get('related')
     clean = request.args.get('clean')
-    items = response['_items']
-    for item in items:
-        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
-            del item['brief']['draft']
-        if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
-            del item['content']['draft']
-        if clean == 'content':
-            if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
-                del item['brief']['html']
-            if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
-                del item['content']['html']
-        if item["style"] == 'script':
-            script_parsing = item['content']['html']
-            scenes = script_parsing.split("<p><code>page</code></p>")
-            page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
-            item['content']['html'] = page_div
-        replace_imageurl(item)
-        if related == 'full' and item['style'] == 'photography':
-            item = get_full_relateds(item, 'relateds')
-        item = clean_item(item)
+    if '_items' in response:
+        items = response['_items']
+        for item in items:
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
+                del item['brief']['draft']
+            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
+                del item['content']['draft']
+            if clean == 'content':
+                if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
+                    del item['brief']['html']
+                if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
+                    del item['content']['html']
+            if item["style"] == 'script':
+                script_parsing = item['content']['html']
+                scenes = script_parsing.split("<p><code>page</code></p>")
+                page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
+                item['content']['html'] = page_div
+            replace_imageurl(item)
+            if related == 'full' and item['style'] == 'photography':
+                item = get_full_relateds(item, 'relateds')
+            item = clean_item(item)
     return response
 
 def before_returning_albums(response):
@@ -486,7 +510,7 @@ def handle_combo():
     #global redis_write
     cached = redis_read.get(request.url)
     total_time = (time.time() - start)*1000
-    if (total_time > 3):
+    if (cached and total_time > 3):
         print("get combo from redis: " + str(total_time))
     if cached is not None:
         return Response(cached.decode("utf-8"), headers=headers)
