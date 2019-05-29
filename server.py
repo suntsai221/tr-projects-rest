@@ -117,29 +117,6 @@ def clean_item(item):
                     del i['css']
                 if 'categories' in i:
                     del i['categories']
-    if 'topics' in item and isinstance(item['topics'], list):
-        for i in item['topics']:
-            if isinstance(i, dict):
-                if 'brief' in i and isinstance(i['brief'], dict) and 'draft' in i['brief']:
-                    del i['brief']['draft']
-                if 'dfp' in i:
-                    del i['dfp']
-                if 'mobile_dfp' in i:
-                    del i['mobile_dfp']
-                if 'og_title' in i:
-                    del i['og_title']
-                if 'og_description' in i:
-                    del i['og_description']
-                if 'og_image' in i:
-                    del i['og_image']
-                if 'style' in i:
-                    del i['style']
-                if 'javascript' in i:
-                    del i['javascript']
-                if 'css' in i:
-                    del i['css']
-                if 'categories' in i:
-                    del i['categories']
     if 'heroImage' in item and isinstance(item['heroImage'], dict) and 'image' in item['heroImage']:
         if 'iptc' in item['heroImage']['image']:
             del item['heroImage']['image']['iptc']
@@ -386,7 +363,10 @@ def get_post():
             return Response(json.dumps(cached_resp), headers=listing_header)
     tc = app.test_client()
     resp = tc.get(fetch_req, headers=headers)
-    resp_object = json.loads(resp.data)
+    try:
+        resp_object = json.loads(resp.data)
+    except:
+        resp_object = {}
     resp_object['header'] = dict(resp.headers)
     resp_object = before_returning_posts(resp_object)
     result = json.dumps(resp_object)
