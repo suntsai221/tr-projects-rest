@@ -117,7 +117,7 @@ def clean_item(item):
                     del i['css']
                 if 'categories' in i:
                     del i['categories']
-    if 'topics' in item:
+    if 'topics' in item and item['topics'] is not None:
         for i in item['topics']:
             if isinstance(i, dict):
                 if 'brief' in i and isinstance(i['brief'], dict) and 'draft' in i['brief']:
