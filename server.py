@@ -138,7 +138,7 @@ def clean_item(item):
 def before_returning_posts(response):
     related = request.args.get('related')
     clean = request.args.get('clean')
-    if '_items' in response:
+    if '_items' in response and isinstance(response['_items'], list):
         items = response['_items']
         for item in items:
             if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
@@ -195,21 +195,24 @@ def before_returning_meta(response):
     return response
 
 def before_returning_listing(response):
-    for item in response['_items']:
-        item = clean_item(item)
-        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
-            del item['brief']['draft']
-            del item['brief']['apiData']
-        if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'coverPhoto' in item['heroVideo'] and item['heroVideo']['coverPhoto']:
-            headers = dict(request.headers)
-            tc = app.test_client()
-            cover_photo = str(item['heroVideo']['coverPhoto'])
-            resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
-            resp_data = json.loads(resp.data.decode("utf-8"))
-            if '_items' in resp_data and len(resp_data['_items']) > 0:
-                result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
-                item['heroVideo']['coverPhoto'] = result
-        replace_imageurl(item)
+    if '_items' in response and isinstance(response['_items'], list):
+        for item in response['_items']:
+            item = clean_item(item)
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+                del item['brief']['draft']
+                del item['brief']['apiData']
+            if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'coverPhoto' in item['heroVideo'] and item['heroVideo']['coverPhoto']:
+                headers = dict(request.headers)
+                tc = app.test_client()
+                cover_photo = str(item['heroVideo']['coverPhoto'])
+                resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
+                resp_data = json.loads(resp.data.decode("utf-8"))
+                if '_items' in resp_data and len(resp_data['_items']) > 0:
+                    result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
+                    item['heroVideo']['coverPhoto'] = result
+            replace_imageurl(item)
+    else:
+        print(response)
     return response
 
 def before_returning_choices(response):
@@ -311,11 +314,15 @@ def get_list():
     resp = tc.get(fetch_req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
-    resp_object = before_returning_listing(resp_object)
-    result = json.dumps(resp_object)
-    p = Process(target=_redis_write, args=(req, result))
-    p.start()
-    p.join()
+    if '_items' in resp_object and isinstance(resp_object['_items'], list):
+        resp_object = before_returning_listing(resp_object)
+        result = json.dumps(resp_object)
+        p = Process(target=_redis_write, args=(req, result))
+        p.start()
+        p.join()
+    else:
+        result = json.dumps(resp_object)
+
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(result)
 
@@ -336,11 +343,15 @@ def get_meta():
     resp = tc.get(fetch_req, headers=headers)
     resp_object = json.loads(resp.data)
     resp_object['header'] = dict(resp.headers)
-    resp_object = before_returning_meta(resp_object)
-    result = json.dumps(resp_object)
-    p = Process(target=_redis_write, args=(req, result))
-    p.start()
-    p.join()
+    if '_items' in resp_object and isinstance(resp_object['_items'], list):
+        resp_object = before_returning_meta(resp_object)
+        result = json.dumps(resp_object)
+        p = Process(target=_redis_write, args=(req, result))
+        p.start()
+        p.join()
+    else:
+        result = json.dumps(resp_object)
+
     return Response(result, headers=dict(resp.headers))
     #return before_returning_listing(result)
 
