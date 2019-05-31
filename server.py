@@ -269,7 +269,7 @@ def remove_extra_fields(item):
 
 def pre_GET(resource, request, lookup):
     max_results = request.args.get('max_results')
-    if int(max_results) > 25:
+    if max_results is not None and int(max_results) > 25:
         abort(404)
     isCampaign = request.args.get('isCampaign')
     if resource == 'posts' or resource == 'meta':
