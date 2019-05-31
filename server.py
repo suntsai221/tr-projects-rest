@@ -1,6 +1,6 @@
 from datetime import datetime
 from eve import Eve
-from flask import redirect, request, Response
+from flask import redirect, request, Response, abort
 from multiprocessing import Process
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
 import json
@@ -268,6 +268,9 @@ def remove_extra_fields(item):
             del item[field]
 
 def pre_GET(resource, request, lookup):
+    max_results = request.args.get('max_results')
+    if int(max_results) > 25:
+        abort(404)
     isCampaign = request.args.get('isCampaign')
     if resource == 'posts' or resource == 'meta':
         if isCampaign:
