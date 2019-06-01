@@ -459,7 +459,7 @@ def get_timeline(topicId):
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data.decode("utf-8"))
         if "_items" not in activities_data:
-             activities_data["_items"] = []
+            return {"error": "Objects not found"}, 404
         for item in activities_data["_items"]:
             item = clean_item(item)
             replace_imageurl(item)
