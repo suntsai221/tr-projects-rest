@@ -481,13 +481,14 @@ def get_timeline(topicId):
             response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
         if "_meta" in node_data:
             response["_meta"] = node_data["_meta"]
-        for node in response["nodes"]:
-            node = clean_item(node)
-            if "content" in node and "html" in node["content"]:
-                del node["content"]["html"]
-            replace_imageurl(node)
-            if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
-                node["activity"] = activities[node["activity"]["_id"]]
+        if "nodes" in response:
+            for node in response["nodes"]:
+                node = clean_item(node)
+                if "content" in node and "html" in node["content"]:
+                    del node["content"]["html"]
+                replace_imageurl(node)
+                if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
+                    node["activity"] = activities[node["activity"]["_id"]]
         return Response(json.dumps(response), headers=resp_header)        
     else:
         abort(404)
