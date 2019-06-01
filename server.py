@@ -459,7 +459,7 @@ def get_timeline(topicId):
         resp_header = dict(resp.headers)
         activities_data = json.loads(resp.data.decode("utf-8"))
         if "_items" not in activities_data:
-            return {"error": "Objects not found"}, 404
+            abort(404)
         for item in activities_data["_items"]:
             item = clean_item(item)
             replace_imageurl(item)
@@ -489,7 +489,7 @@ def get_timeline(topicId):
                 node["activity"] = activities[node["activity"]["_id"]]
         return Response(json.dumps(response), headers=resp_header)        
     else:
-        return {"error": "Objects not found"}, 404
+        abort(404)
 
 @app.route("/combo", methods=['GET'])
 def handle_combo():
