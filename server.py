@@ -477,7 +477,8 @@ def get_timeline(topicId):
             reverse = True
         else:
             reverse = False
-        response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
+        if "_items" in node_data:
+            response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
         if "_meta" in node_data:
             response["_meta"] = node_data["_meta"]
         for node in response["nodes"]:
