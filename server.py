@@ -159,7 +159,9 @@ def before_returning_posts(response):
             if related == 'full' and item['style'] == 'photography':
                 item = get_full_relateds(item, 'relateds')
             item = clean_item(item)
-    return response
+        return response
+    else:
+        abort(404)
 
 def before_returning_albums(response):
     writer = request.args.get('writers')
