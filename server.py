@@ -273,6 +273,15 @@ def pre_GET(resource, request, lookup):
     max_results = request.args.get('max_results')
     if max_results is not None and int(max_results) > 25:
         abort(404)
+    req = urllib.parse.unquote(request.full_path)
+    global redis_read
+    general_cached = redis_read.get(req)
+    if general_cached is not None:
+        cached_resp = json.loads(general_cached)
+        if "header" in cached_resp:
+            cached_header = cached_resp['header']
+            del cached_resp["header"]
+            return Response(json.dumps(cached_resp), headers=cached_header)
     isCampaign = request.args.get('isCampaign')
     if resource == 'posts' or resource == 'meta':
         if isCampaign:
@@ -283,6 +292,21 @@ def pre_GET(resource, request, lookup):
         elif isCampaign is None:
             lookup.update({"isCampaign": False})
 
+def post_get_callback(resource, request, payload):
+    if resource == 'images' or resource == 'albums' or resource == 'partners' or resource == 'externals':
+        if resource == 'images':
+            ttl = 7*24*60*60
+        if resource == 'albums':
+            ttl = 600
+        if resource == 'partners' or resource == 'externals':
+            ttl = 24*60*60
+
+        result = json.dumps(str(payload.get_data()))
+        req = urllib.parse.unquote(request.full_path)
+        p = Process(target=_redis_write, args=(req, result, ttl))
+        p.start()
+        p.join()
+    
 #app = Eve(auth=RolesAuth)
 
 app = Eve()
@@ -296,6 +320,7 @@ app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_topics += before_returning_topics
 app.on_fetched_resource_sections += before_returning_sections
 app.on_pre_GET += pre_GET
+app.on_post_GET += post_get_callback
 
 @app.route("/getlist", methods=['GET'])
 def get_list():
