@@ -293,10 +293,10 @@ def pre_GET(resource, request, lookup):
             lookup.update({"isCampaign": False})
 
 def post_get_callback(resource, request, payload):
-    if resource == 'images' or resource == 'albums' or resource == 'partners' or resource == 'externals':
+    if resource == 'images' or resource == 'albums' or resource == 'partners' or resource == 'externals' or resource == 'event':
         if resource == 'images':
             ttl = 7*24*60*60
-        if resource == 'albums':
+        if resource == 'albums' or resource == 'event':
             ttl = 600
         if resource == 'partners' or resource == 'externals':
             ttl = 24*60*60
