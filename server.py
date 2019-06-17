@@ -293,19 +293,19 @@ def pre_GET(resource, request, lookup):
             lookup.update({"isCampaign": False})
 
 def post_get_callback(resource, request, payload):
-    if resource == 'images' or resource == 'albums' or resource == 'partners' or resource == 'externals' or resource == 'event' or resource == 'topics' or resource == 'contacts':
-        if resource == 'images':
-            ttl = 7*24*60*60
-        if resource == 'albums' or resource == 'event' or resource == 'topics':
-            ttl = 600
-        if resource == 'partners' or resource == 'externals' or resource == 'contacts':
-            ttl = 24*60*60
+    ttl = 24*60*60
+    if resource == 'images' or resource == 'posts':
+        ttl = 7*24*60*60
+    if resource == 'albums' or resource == 'event' or resource == 'topics' or resource == 'lists' or resource == 'meta':
+        ttl = 600
+    if resource == 'partners' or resource == 'externals' or resource == 'contacts':
+        ttl = 24*60*60
 
-        result = json.dumps(str(payload.get_data()))
-        req = urllib.parse.unquote(request.full_path)
-        p = Process(target=_redis_write, args=(req, result, ttl))
-        p.start()
-        p.join()
+    result = json.dumps(str(payload.get_data()))
+    req = urllib.parse.unquote(request.full_path)
+    p = Process(target=_redis_write, args=(req, result, ttl))
+    p.start()
+    p.join()
     
 #app = Eve(auth=RolesAuth)
 
