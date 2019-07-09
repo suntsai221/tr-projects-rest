@@ -356,13 +356,17 @@ def pre_get_callback(resource, request, lookup):
             lookup.update({"isCampaign": False})
 
 def post_get_callback(resource, request, payload):
-    ttl = 900
+    ttl = 600
     if resource == 'images':
         ttl = 7*24*60*60
     if resource == 'partners' or resource == 'externals' or resource == 'contacts':
         ttl = 24*60*60
 
     result = payload.get_data().decode('utf-8')
+    check_resp = json.loads(result)
+    # cache the empty result to avoid the DDoS
+    if ("_items" in check_resp) and len(check_resp["_items"]) > 0:
+        ttl = 30
     req = urllib.parse.unquote(request.full_path)
     p = Process(target=_redis_write, args=(req, result, ttl))
     p.start()
