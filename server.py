@@ -334,7 +334,7 @@ def pre_get_callback(resource, request, lookup):
     add additional lookup in the query
     """
     max_results = request.args.get('max_results')
-    if max_results is not None and int(max_results) > 25:
+    if max_results is not None and int(max_results) > 45:
         abort(404)
     req = urllib.parse.unquote(request.full_path)
     global redis_read
