@@ -19,8 +19,8 @@ pipeline:
     image: gcr.io/mirrormedia-1470651750304/drone-cloud-sdk:latest
     secrets: [google_credentials]
     commands:
-    - gcloud source repos clone default ../default
-    - cp ../default/tr-project-rest/settings.py ./settings.py
+    - gcloud source repos clone configs ../configs
+    - cp ../configs/mirror-media/tr-projects-rest/prod/settings.py ./settings.py
     when:
       event: [push]
       branch: [master, dev]
