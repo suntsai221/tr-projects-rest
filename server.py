@@ -187,7 +187,7 @@ def before_returning_posts(response):
                 if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
                     item['content']['html']= item['content']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
                     item['content']['html'] = item['content']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
-                if tag == 'clean' and isinstance(item['apiData'], dict) and 'apiData' in item['content']:
+                if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
                     for i in range(len(item['content']['apiData'])):
                         if 'content' in item['content']['apiData'][i]:
                             re.sub(r'<.+?>', '')
