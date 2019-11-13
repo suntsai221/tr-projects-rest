@@ -190,7 +190,7 @@ def before_returning_posts(response):
                     item['content']['html'] = item['content']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
                 if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
                     for i in range(len(item['content']['apiData'])):
-                        if 'content' in item['content']['apiData'][i]:
+                        if 'content' in item['content']['apiData'][i] and isinstance(item['content']i['apiData'][i]p'content'][0], str):
                             re.sub(r'<.+?>', r'', item['content']['apiData'][i]['content'][0])
             if clean == 'content':
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
