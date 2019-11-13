@@ -7,6 +7,7 @@ from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WR
 
 import json
 import random
+import re
 import redis
 import string
 import sys, getopt
