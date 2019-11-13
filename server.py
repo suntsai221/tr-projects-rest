@@ -191,7 +191,7 @@ def before_returning_posts(response):
                 if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
                     for i in range(len(item['content']['apiData'])):
                         if 'content' in item['content']['apiData'][i]:
-                            re.sub(r'<.+?>', '', item['content']['apiData'][i]['content'])
+                            re.sub(r'<.+?>', r'', item['content']['apiData'][i]['content'][0])
             if clean == 'content':
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     del item['brief']['html']
