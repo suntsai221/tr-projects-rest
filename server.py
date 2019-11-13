@@ -5,6 +5,8 @@ from flask import redirect, request, Response, abort
 from multiprocessing import Process
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
 
+from middleware import MetricsMiddleware
+
 import json
 import random
 import re
@@ -13,8 +15,6 @@ import string
 import sys, getopt
 import time
 import urllib.parse
-
-from middleware import MetricsMiddleware
 
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
