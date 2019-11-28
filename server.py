@@ -174,6 +174,7 @@ def before_returning_posts(response):
     """
     related = request.args.get('related')
     clean = request.args.get('clean')
+    keep = request.args.get('keep')
     tag = request.args.get('tag')
     if '_items' in response and isinstance(response['_items'], list):
         items = response['_items']
@@ -183,7 +184,7 @@ def before_returning_posts(response):
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     item['brief']['html'] = item['brief']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
                     item['brief']['html'] = item['brief']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
-            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and clean != 'false':
+            if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content'] and keep == 'draft':
                 del item['content']['draft']
                 #if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
                 #    item['content']['html']= item['content']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
