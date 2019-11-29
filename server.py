@@ -105,7 +105,7 @@ def replace_imageurl(obj):
         obj['image'] = json.loads(video_str)
     return obj
 
-def clean_item(item):
+def clean_item(item, keep='draft'):
     """
     delete 
     - _updated, _created
@@ -158,7 +158,7 @@ def clean_item(item):
             del item['heroVideo']['video']['gcsBucket']
     if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
         del item['brief']['draft']
-    if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
+    if keep != 'draft' and 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
         del item['content']['draft']
     return item
 
@@ -207,7 +207,7 @@ def before_returning_posts(response):
             replace_imageurl(item)
             if related == 'full' and item['style'] == 'photography':
                 item = get_full_relateds(item, 'relateds')
-            item = clean_item(item)
+            item = clean_item(item, keep)
         return response
     else:
         abort(404)
