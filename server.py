@@ -105,7 +105,7 @@ def replace_imageurl(obj):
         obj['image'] = json.loads(video_str)
     return obj
 
-def clean_item(item, keep='draft'):
+def clean_item(item, content='draft'):
     """
     delete 
     - _updated, _created
@@ -158,7 +158,7 @@ def clean_item(item, keep='draft'):
             del item['heroVideo']['video']['gcsBucket']
     if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
         del item['brief']['draft']
-    if keep != 'draft' and 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
+    if content != 'draft' and 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
         del item['content']['draft']
     return item
 
