@@ -1659,6 +1659,34 @@ topics_schema = {
   }
 }
 
+audiomasters_schema = {
+  'masters': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'contact',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'sortOrder': {
+    'typr': 'integer',
+  },
+}
+
+audiochoices_schema = {
+  'choices': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'listing',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'sortOrder': {
+    'typr': 'integer',
+  },
+}
+
 editorchoices_schema = {
   'choices': {
     'type': 'objectid',
@@ -2065,6 +2093,34 @@ watches = {
     'schema': watch_schema
 }
 
+audiomasters = {
+    'item_title': 'audiomaster',
+    'datasource': {
+        'source': 'audiomasters',
+        'default_sort': [('sortOrder', 1)],
+    },
+    'embedded_fields': ['masters'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': audiomasters_schema
+}
+
+audiochoices = {
+    'item_title': 'audiochoice',
+    'datasource': {
+        'source': 'audiochoices',
+        'default_sort': [('sortOrder', 1)],
+    },
+    'embedded_fields': ['choices'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': audiochoices_schema
+}
+
 editorchoices = {
     'item_title': 'editorchoice',
     'datasource': {
@@ -2243,6 +2299,8 @@ DOMAIN = {
     'tags': tags,
     'choices': choices,
     'editorchoices': editorchoices,
+    'audiochoices': audiochoices,
+    'audiomasters': audiomasters,
     'contacts': contacts,
     'topics': topics,
     'nodes': nodes,
