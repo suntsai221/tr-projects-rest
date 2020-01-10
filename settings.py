@@ -1663,7 +1663,7 @@ audiomasters_schema = {
   'masters': {
     'type': 'objectid',
     'data_relation': {
-        'resource': 'contact',
+        'resource': 'contacts',
         'field': '_id',
         'embeddable': True
      },
