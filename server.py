@@ -281,6 +281,17 @@ def before_returning_listing(response):
         print(response)
     return response
 
+def before_returning_audiochoices(response):
+    """
+    choices become full_relateds choices, but delete:
+    - content, relateds. writers, photographers, camera_man, sections, topics, vocals, tags
+    - brief/apiData, draft
+    """
+    for item in response['_items']:
+        item = get_full_relateds(item, 'choices')
+    return response
+
+
 def before_returning_choices(response):
     """
     choices become full_relateds choices, but delete:
@@ -400,7 +411,7 @@ app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
-app.on_fetched_resource_audiochoices += before_returning_choices
+app.on_fetched_resource_audiochoices += before_returning_audiochoices
 app.on_fetched_resource_topics += before_returning_topics
 app.on_fetched_resource_sections += before_returning_sections
 
