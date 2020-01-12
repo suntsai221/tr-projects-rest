@@ -290,7 +290,7 @@ def before_returning_audiochoices(response):
     tc = app.test_client()
     for item in response['_items']:
         if 'choices' in item:
-            for cin item['choices']:
+            for c in item['choices']:
                 if 'audio' in item['choices'][c] and isinstance(item['choices'][c]['audio'], str):
                     headers = dict(request.headers)
                     resp = tc.get('audios?where={"_id":{"$in":["' + item['choices'][c]['audio'] + '"]}}', headers=headers)
