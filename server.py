@@ -288,7 +288,13 @@ def before_returning_audiochoices(response):
     - brief/apiData, draft
     """
     for item in response['_items']:
-        item = get_full_relateds(item, 'choices')
+        if 'audio' in item and isinstrance(item['audio'], str):
+            headers = dict(request.headers)
+            tc = app.test_client()
+            resp = tc.get('audios?where={"_id":{"$in":["' + item['audio'] + '"]}}', headers=headers)
+            resp_data = json.loads(resp.data.decode("utf-8"))
+            if '_items' in resp_data and len(resp_data['_items']) > 0:
+                item['audio'] = resp_data['items']
     return response
 
 
