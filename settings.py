@@ -1677,7 +1677,7 @@ audiochoices_schema = {
   'choices': {
     'type': 'objectid',
     'data_relation': {
-        'resource': 'listing',
+        'resource': 'posts',
         'field': '_id',
         'embeddable': True
      },
