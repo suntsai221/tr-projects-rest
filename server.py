@@ -294,7 +294,7 @@ def before_returning_audiochoices(response):
             resp = tc.get('audios?where={"_id":{"$in":["' + item['choices']['audio'] + '"]}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
             if '_items' in resp_data and len(resp_data['_items']) > 0:
-                choice['audio'] = resp_data['items']
+                item['choices']['audio'] = resp_data['items']
     return response
 
 
