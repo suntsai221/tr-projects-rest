@@ -289,6 +289,7 @@ def before_returning_audiochoices(response):
     """
     tc = app.test_client()
     for item in response['_items']:
+        print(item['choices']['audio'])
         if 'audio' in item['choices'] and isinstance(item['choices']['audio'], str):
             print("get the audio")
             headers = dict(request.headers)
