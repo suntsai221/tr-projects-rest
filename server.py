@@ -287,14 +287,16 @@ def before_returning_audiochoices(response):
     - content, relateds. writers, photographers, camera_man, sections, topics, vocals, tags
     - brief/apiData, draft
     """
+    tc = app.test_client()
     for item in response['_items']:
-        if 'audio' in item and isinstrance(item['audio'], str):
-            headers = dict(request.headers)
-            tc = app.test_client()
-            resp = tc.get('audios?where={"_id":{"$in":["' + item['audio'] + '"]}}', headers=headers)
-            resp_data = json.loads(resp.data.decode("utf-8"))
-            if '_items' in resp_data and len(resp_data['_items']) > 0:
-                item['audio'] = resp_data['items']
+        if 'choices' in item:
+            for choice in item['choices']:
+                if 'audio' in choice and isinstrance(choice['audio'], str):
+                    headers = dict(request.headers)
+                    resp = tc.get('audios?where={"_id":{"$in":["' + choice['audio'] + '"]}}', headers=headers)
+                    resp_data = json.loads(resp.data.decode("utf-8"))
+                    if '_items' in resp_data and len(resp_data['_items']) > 0:
+                        choice['audio'] = resp_data['items']
     return response
 
 
