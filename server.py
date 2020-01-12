@@ -289,13 +289,10 @@ def before_returning_audiochoices(response):
     """
     tc = app.test_client()
     for item in response['_items']:
-        print(item['choices'])
-        if 'audio' in item['choices'] and isinstance(item['choices']['audio'], str):
-            print("get the audio")
+        if 'audio' in item['choices']:
             headers = dict(request.headers)
-            resp = tc.get('audios?where={"_id":{"$in":["' + item['choices']['audio'] + '"]}}', headers=headers)
+            resp = tc.get('audios?where={"_id":{"$in":["' + str(item['choices']['audio']) + '"]}}', headers=headers)
             resp_data = json.loads(resp.data.decode("utf-8"))
-            print(resp_data)
             if '_items' in resp_data and len(resp_data['_items']) > 0:
                 item['choices']['audio'] = resp_data['items']
     return response
