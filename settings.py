@@ -15,10 +15,8 @@ REDIS_WRITE_HOST = '127.0.0.1'
 REDIS_WRITE_PORT = 6379
 REDIS_READ_HOST = '127.0.0.1'
 REDIS_READ_PORT = 6379
-REDIS_AUTH = 'foo'
+REDIS_AUTH = ''
 
-# ALLOW ACTIONS
-DEBUG = False
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']
 
 slug_schema = {
@@ -720,10 +718,10 @@ post_schema = {
   },
   'adTrace': {
     'type': 'string',
-  },
-  'isAudioSiteOnly': {
+    },
+  'isAudioSiteOnly': {                                                                                                                                  
     'type': 'boolean',
-  },
+  },    
   'isCampaign': {
     'type': 'boolean',
   },
@@ -1121,9 +1119,9 @@ sections_schema = {
     'isFeatured': {
       'type': 'boolean',
     },
-    'isAudioSiteOnly': {
+    'isAudioSiteOnly': {                                                                                                                                  
       'type': 'boolean',
-    },
+    },    
     'image': {
       'type': 'objectid',
       'data_relation': {
@@ -1374,6 +1372,18 @@ audiopromotions_schema = {
     },
   },
   'href': {
+    'type': 'string',
+  }
+}
+
+voiceconfigs_schema = {
+  'key': {
+    'type': 'string',
+  },
+  'group': {
+    'type': 'string',
+  },
+  'value': {
     'type': 'string',
   }
 }
@@ -2196,6 +2206,15 @@ contacts = {
   'schema': contact_schema
 }
 
+voiceconfigs = {
+  'item_title': 'voiceconfigs',
+  'resource_methods': ['GET'],
+  'cache_control': 'max-age=1500,must-revalidate',
+  'cache_expires': 1500,
+  'allow_unknown': False,
+  'schema': voiceconfigs_schema
+}
+
 audiopromotions = {
     'item_title': 'audiopromotions',
     'resource_methods': ['GET'],
@@ -2306,6 +2325,7 @@ DOMAIN = {
     'nodes': nodes,
     'postcategories': postcategories,
     'audiopromotions': audiopromotions,
+    'voiceconfigs': voiceconfigs,
     'activities': activities,
     'images': images,
     'audios': audios,
@@ -2324,11 +2344,3 @@ IF_MATCH = False
 X_DOMAINS = '*'
 X_HEADERS = ['Content-Type']
 PAGINATION_DEFAULT = 10
-
-# override default settings for different env
-if os.environ.get("CLUSTER_ENV") == "dev":
-  from configs.dev import *
-elif os.environ.get("CLUSTER_ENV") == "prod":
-  from configs.prod import *
-elif os.environ.get("CLUSTER_ENV") == "local":
-  from configs.local import *
