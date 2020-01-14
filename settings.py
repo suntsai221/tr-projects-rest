@@ -15,7 +15,10 @@ REDIS_WRITE_HOST = '127.0.0.1'
 REDIS_WRITE_PORT = 6379
 REDIS_READ_HOST = '127.0.0.1'
 REDIS_READ_PORT = 6379
-REDIS_AUTH = ''
+REDIS_AUTH = 'foo'
+
+# ALLOW ACTIONS
+DEBUG = False
 
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']
 
@@ -2344,3 +2347,11 @@ IF_MATCH = False
 X_DOMAINS = '*'
 X_HEADERS = ['Content-Type']
 PAGINATION_DEFAULT = 10
+
+# override default settings for different env
+if os.environ.get("CLUSTER_ENV") == "dev":
+  from configs.dev import *
+elif os.environ.get("CLUSTER_ENV") == "prod":
+  from configs.prod import *
+elif os.environ.get("CLUSTER_ENV") == "local":
+  from configs.local import *
