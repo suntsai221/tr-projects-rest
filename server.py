@@ -288,14 +288,14 @@ def before_returning_audiochoices(response):
     - brief/apiData, draft
     """
     tc = app.test_client()
-    if 'choices' in item:
         for item in response['_items']:
-            if 'audio' in item['choices']:
-                headers = dict(request.headers)
-                resp = tc.get('audios?where={"_id":{"$in":["' + str(item['choices']['audio']) + '"]}}', headers=headers)
-                resp_data = json.loads(resp.data.decode("utf-8"))
-                if '_items' in resp_data and len(resp_data['_items']) > 0:
-                    item['choices']['audio'] = resp_data['_items'][0]
+            if 'choices' in item:
+                if 'audio' in item['choices']:
+                    headers = dict(request.headers)
+                    resp = tc.get('audios?where={"_id":{"$in":["' + str(item['choices']['audio']) + '"]}}', headers=headers)
+                    resp_data = json.loads(resp.data.decode("utf-8"))
+                    if '_items' in resp_data and len(resp_data['_items']) > 0:
+                        item['choices']['audio'] = resp_data['_items'][0]
     return response
 
 
