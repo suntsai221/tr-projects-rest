@@ -288,20 +288,16 @@ def before_returning_audiochoices(response):
     - brief/apiData, draft
     """
     tc = app.test_client()
+    embed = { "audio": "audios", "heroImage": "images", "vocals": "contacts" }
     for item in response['_items']:
         if 'choices' in item:
-            if 'audio' in item['choices']:
-                headers = dict(request.headers)
-                resp = tc.get('audios?where={"_id":{"$in":["' + str(item['choices']['audio']) + '"]}}', headers=headers)
-                resp_data = json.loads(resp.data.decode("utf-8"))
-                if '_items' in resp_data and len(resp_data['_items']) > 0:
-                    item['choices']['audio'] = resp_data['_items'][0]
-            if 'heroImage' in item['choices']:
-                headers = dict(request.headers)
-                resp = tc.get('images?where={"_id":{"$in":["' + str(item['choices']['heroImage']) + '"]}}', headers=headers)
-                resp_data = json.loads(resp.data.decode("utf-8"))
-                if '_items' in resp_data and len(resp_data['_items']) > 0:
-                    item['choices']['heroImage'] = resp_data['_items'][0]
+            for field in embed.keys():
+                if field in item['choices']:
+                    headers = dict(request.headers)
+                    resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + str(item['choices'][field]) + '"]}}', headers=headers)
+                    resp_data = json.loads(resp.data.decode("utf-8"))
+                    if '_items' in resp_data and len(resp_data['_items']) > 0:
+                        item['choices'][field] = resp_data['_items'][0]
     return response
 
 
