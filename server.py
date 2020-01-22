@@ -294,7 +294,11 @@ def before_returning_audiochoices(response):
             for field in embed.keys():
                 if field in item['choices']:
                     headers = dict(request.headers)
-                    resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + str(item['choices'][field]) + '"]}}', headers=headers)
+                    if isinstance(otem['choices'][field], str):
+                        ids = item['choices'][field]
+                    elif isinstance(item['choices'][field], list):
+                        ids = item['choices'][field].join(',')
+                    resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + ids + '"]}}', headers=headers)
                     resp_data = json.loads(resp.data.decode("utf-8"))
                     if '_items' in resp_data and len(resp_data['_items']) > 0:
                         item['choices'][field] = resp_data['_items'][0]
