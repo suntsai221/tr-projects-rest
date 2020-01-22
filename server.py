@@ -294,7 +294,7 @@ def before_returning_audiochoices(response):
             for field in embed.keys():
                 if field in item['choices']:
                     headers = dict(request.headers)
-                    if isinstance(otem['choices'][field], str):
+                    if isinstance(item['choices'][field], str):
                         ids = item['choices'][field]
                     elif isinstance(item['choices'][field], list):
                         ids = item['choices'][field].join(',')
