@@ -289,6 +289,7 @@ def before_returning_audiochoices(response):
     """
     tc = app.test_client()
     embed = { "audio": "audios", "heroImage": "images", "vocals": "contacts" }
+    ids = ''
     for item in response['_items']:
         if 'choices' in item:
             for field in embed.keys():
