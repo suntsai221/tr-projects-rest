@@ -298,7 +298,7 @@ def before_returning_audiochoices(response):
                     if isinstance(item['choices'][field], str):
                         ids = str(item['choices'][field])
                     elif isinstance(item['choices'][field], list):
-                        ids = ','.join(str(item['choices'][field]))
+                        ids = ','.join(list(map(str, item['choices'][field])))
                     resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + ids + '"]}}', headers=headers)
                     resp_data = json.loads(resp.data.decode("utf-8"))
                     if '_items' in resp_data and len(resp_data['_items']) > 0:
