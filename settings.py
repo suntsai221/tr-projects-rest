@@ -1092,6 +1092,9 @@ album_schema = {
   'isFeatured': {
     'type': 'boolean',
   },
+  'sortOrder': {
+    'type': 'integer',
+  },
   'og_description': {
     'type': 'string',
   },
@@ -1201,7 +1204,7 @@ sections_schema = {
       'type': 'string',
     },
     'sortOrder': {
-      'typr': 'integer',
+      'type': 'integer',
     }
 }
 
@@ -1560,7 +1563,7 @@ tags_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   },
   'sections': {
     'type': 'list',
@@ -1668,7 +1671,7 @@ topics_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   }
 }
 
@@ -1682,7 +1685,7 @@ audiomasters_schema = {
      },
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   },
 }
 
@@ -1696,7 +1699,7 @@ audiochoices_schema = {
      },
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   },
 }
 
@@ -1710,7 +1713,7 @@ editorchoices_schema = {
      },
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   },
 }
 
@@ -1929,7 +1932,7 @@ albums = {
     'item_title': 'album',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
-        'default_sort': [('publishedDate', -1)],
+        'default_sort': [('sortOrder', 1)],
         'field': 'name'
     },
     'datasource': {
