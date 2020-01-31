@@ -1,4 +1,5 @@
 import os
+import copy
 
 # MONGO DATABASE SETTINGS FOR SAMPLE
 MONGO_URI = 'mongodb://localhost:27017/keystone-test'
@@ -16,6 +17,18 @@ REDIS_WRITE_PORT = 6379
 REDIS_READ_HOST = '127.0.0.1'
 REDIS_READ_PORT = 6379
 REDIS_AUTH = 'foo'
+REDIS_TTL = {
+  'default': 600,
+  'error': 600,
+}
+REDIS_EXCEPTIONS = {
+  # cache for 7 days
+  "/images": 604800,
+  # cache for 24 hours
+  "/partners": 86400,
+  "/externals": 86400,
+  "/contacts": 86400,
+}
 
 # ALLOW ACTIONS
 DEBUG = False
@@ -2300,6 +2313,7 @@ audiopromotions = {
     'schema': audiopromotions_schema,
 }
 
+
 postcategories = {
     'item_title': 'postcategory',
     'additional_lookup': {
@@ -2374,6 +2388,16 @@ videos = {
     'schema': videos_schema,
 }
 
+# copy duplicate target and modifed item_title to correct setting
+getlist = copy.deepcopy(listing)
+getlist['item_title'] = 'getlist'
+
+getmeta = copy.deepcopy(meta)
+getmeta['item_title'] = 'getmeta'
+
+getposts = copy.deepcopy(posts)
+getposts['item_title'] = 'getposts'
+
 DOMAIN = {
     'posts': posts,
     'readrs': readrs,
@@ -2404,7 +2428,10 @@ DOMAIN = {
     'watchbrands': watchbrands,
     'watchfunctions': watchfunctions,
     'partners': partners,
-    'externals': externals,
+    'externals': externals, 
+    'getlist': getlist,
+    'getmeta': getmeta,
+    'getposts': getposts,
     }
 
 XML = False
@@ -2418,5 +2445,7 @@ if os.environ.get("CLUSTER_ENV") == "dev":
   from configs.dev import *
 elif os.environ.get("CLUSTER_ENV") == "prod":
   from configs.prod import *
+elif os.environ.get("CLUSTER_ENV") == "test":
+  from configs.test import *
 elif os.environ.get("CLUSTER_ENV") == "local":
   from configs.local import *
