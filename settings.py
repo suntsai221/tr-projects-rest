@@ -1382,6 +1382,24 @@ audiopromotions_schema = {
   }
 }
 
+watchstores_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'address': {
+    'type': 'string',
+  },
+  'phone': {
+    'type': 'string',
+  },
+  'map': {
+    'type': 'string',
+  },
+  'sortOrder': {
+    'type': 'integer',
+  }
+}
+
 voiceconfigs_schema = {
   'key': {
     'type': 'string',
@@ -1751,8 +1769,37 @@ watch_schema = {
   'name': {
     'type': 'string',
   },
+  'watchstore': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'watchstores',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'type': {
     'type': 'boolean',
+  },
+  'popular': {
+    'type': 'boolean',
+  },
+  'treasury': {
+    'type': 'boolean',
+  },
+  'series': {
+    'type': 'string',
+  },
+  'ga': {
+    'type': 'integer',
+  },
+  'limit': {
+    'type': 'interger',
+  },
+  'luminous': {
+    'type': 'string',
   },
   'sex': {
     'type': 'string',
@@ -1937,6 +1984,7 @@ albums = {
     },
     'datasource': {
         'source': 'albums',
+        'default_sort': [('sortOrder', 1)],
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
@@ -2221,6 +2269,19 @@ voiceconfigs = {
   'schema': voiceconfigs_schema
 }
 
+watchstores = {
+  'item_title': 'watchstores',
+  'resource_methods': ['GET'],
+  'datasource': {
+    'source': 'watchstores',
+    'default_sort': [('sortOrder', 1)],
+  },
+  'cache_control': 'max-age=1500,must-revalidate',
+  'cache_expires': 1500,
+  'allow_unknown': False,
+  'schema': watchstores_schema
+}
+
 audiopromotions = {
     'item_title': 'audiopromotions',
     'resource_methods': ['GET'],
@@ -2332,6 +2393,7 @@ DOMAIN = {
     'postcategories': postcategories,
     'audiopromotions': audiopromotions,
     'voiceconfigs': voiceconfigs,
+    'watchstores': watchstores,
     'activities': activities,
     'images': images,
     'audios': audios,
