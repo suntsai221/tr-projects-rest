@@ -1794,7 +1794,10 @@ watch_schema = {
      }, 
   },
   'type': {
-    'type': 'boolean',
+    'type': 'string',
+  },
+  'style': {
+    'type': 'string',
   },
   'popular': {
     'type': 'boolean',
@@ -1812,7 +1815,7 @@ watch_schema = {
     'type': 'interger',
   },
   'luminous': {
-    'type': 'string',
+    'type': 'boolean',
   },
   'sex': {
     'type': 'string',
