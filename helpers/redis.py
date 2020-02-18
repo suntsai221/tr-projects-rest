@@ -62,6 +62,7 @@ class Redisware(object):
         
         self.default_ttl = ttl_config.get('default', 0)
         self.error_ttl = ttl_config.get('error', 0)
+        self.empty_ttl = ttl_config.get('empty', 0)
 
     def __call__(self, environ, start_response):
         '''
@@ -102,7 +103,9 @@ class Redisware(object):
                 ttl = self.default_ttl
                 if '_error' in resp_json:
                     ttl = self.error_ttl
-                if request.path in self._rules:
+                elif '_items' in resp_json and len(resp_json['_items'] == 0):
+                    ttl = self.empty_ttl
+                elif request.path in self._rules:
                     ttl = self._rules[request.path]
                 p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
                 p.start()

@@ -16,10 +16,11 @@ REDIS_WRITE_HOST = '127.0.0.1'
 REDIS_WRITE_PORT = 6379
 REDIS_READ_HOST = '127.0.0.1'
 REDIS_READ_PORT = 6379
-REDIS_AUTH = 'foo'
+REDIS_AUTH = ''
 REDIS_TTL = {
   'default': 600,
-  'error': 600,
+  'error': 300,
+  'empty': 100,
 }
 REDIS_EXCEPTIONS = {
   # cache for 7 days

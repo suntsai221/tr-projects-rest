@@ -2,7 +2,6 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response, abort
-from multiprocessing import Process
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
 
 import json
@@ -53,20 +52,11 @@ def get_full_relateds(item, key):
     query string: /posts?where={"_id": {"$in":[id1, id2, ...]}}
     """
     all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
-    global redis_read
-    #global redis_write
     if key in item and item[key]:
-        fullrelated_cached = redis_read.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}')
-        if fullrelated_cached is not None:
-            resp_data = json.loads(fullrelated_cached)
-        else:
-            headers = dict(request.headers)
-            tc = app.test_client()
-            resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
-            resp_data = json.loads(resp.data.decode("utf-8"))
-            p = Process(target=_redis_write, args=('posts?where={"_id":{"$in":[' + all_relateds + ']}}', resp.data.decode("utf-8")))
-            p.start()
-            p.join()
+        headers = dict(request.headers)
+        tc = app.test_client()
+        resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
+        resp_data = json.loads(resp.data.decode("utf-8"))
         result = []
         for i in item[key]:
             for j in resp_data['_items']:
@@ -427,25 +417,16 @@ def get_sections_latest():
     headers = dict(request.headers)
     content = request.args.get('content') or 'posts'
     tc = app.test_client()
-    global redis_read
-    #global redis_write
-    section_cached = redis_read.get("/sections")
-    if section_cached is not None:
-        section_items = json.loads(section_cached)
+    resp = tc.get('/sections', headers=headers)
+    resp_header = dict(resp.headers)
+    if "Content-Length" in headers:
+        del headers["Content-Length"]
+    resp_data = json.loads(resp.data.decode("utf-8"))
+    if ("_error" not in resp_data and "_items" in resp_data):
+        section_items = resp_data["_items"]
+        section_items = sorted(section_items, key = lambda x: x["sortOrder"])
     else:
-        resp = tc.get('/sections', headers=headers)
-        resp_header = dict(resp.headers)
-        if "Content-Length" in headers:
-            del headers["Content-Length"]
-        resp_data = json.loads(resp.data.decode("utf-8"))
-        if ("_error" not in resp_data and "_items" in resp_data):
-            section_items = resp_data["_items"]
-            section_items = sorted(section_items, key = lambda x: x["sortOrder"])
-            p = Process(target=_redis_write, args=("/sections", json.dumps(section_items)))
-            p.start()
-            p.join()
-        else:
-            section_items = { "_items": [] }
+        section_items = { "_items": [] }
 
     for item in section_items:
         if (item['name'] == 'foodtravel'):
@@ -533,14 +514,6 @@ def handle_combo():
                             "parent":{ "parent": "/", "title": "Home" } } }
     headers = dict(request.headers)
     start = time.time()
-    global redis_read
-    #global redis_write
-    cached = redis_read.get(request.url)
-    total_time = (time.time() - start)*1000
-    if (cached and total_time > 3):
-        print("get combo from redis: " + str(total_time))
-    if cached is not None:
-        return Response(cached.decode("utf-8"), headers=headers)
     tc = app.test_client()
     req = request.args.getlist('endpoint')
     for action in req:
@@ -561,9 +534,6 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json"
-    p = Process(target=_redis_write, args=(request.full_path, json.dumps(response).encode("utf-8")))
-    p.start()
-    p.join()
     return Response(json.dumps(response), headers=headers)
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
@@ -601,10 +571,6 @@ def get_posts_byname():
     else:
         r = tc.get("/posts")
     return r
-
-def _redis_write(key, value, ttl = 300):
-    global redis_write
-    redis_write.setex(key, ttl, value)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
