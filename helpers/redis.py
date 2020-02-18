@@ -105,19 +105,20 @@ class Redisware(object):
                 # Send response to redis unless 'error' exists in it
                 # ttl set to default or conform to exception rules
                 resp_str = raw_resp.decode('utf-8')
-                resp_json = json.loads(resp_str)
-                ttl = self.default_ttl
-                if '_error' in resp_json:
-                    ttl = self.error_ttl
-                elif isinstance(resp_json, dict) and ('_items' in resp_json and len(resp_json['_items']) == 0 and '_id' not in resp_json):
-                    ttl = self.empty_ttl
-                else:
-                    # two cases: "/foo/bar", "/foo?bar=1"
-                    if endpoint in self._rules:
-                        ttl = self._rules[endpoint]
-                logging.warn("redis endpoint = " + endpoint + ", ttl = " + str(ttl))
-                if ttl > 0:
-                    p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
-                    p.start()
-                    p.join()
+                if resp_str is not None:
+                    resp_json = json.loads(resp_str)
+                    ttl = self.default_ttl
+                    if '_error' in resp_json:
+                        ttl = self.error_ttl
+                    elif isinstance(resp_json, dict) and ('_items' in resp_json and len(resp_json['_items']) == 0 and '_id' not in resp_json):
+                        ttl = self.empty_ttl
+                    else:
+                        # two cases: "/foo/bar", "/foo?bar=1"
+                        if endpoint in self._rules:
+                            ttl = self._rules[endpoint]
+                    logging.warn("redis endpoint = " + endpoint + ", ttl = " + str(ttl))
+                    if ttl > 0:
+                        p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
+                        p.start()
+                        p.join()
                 return resp_iter
