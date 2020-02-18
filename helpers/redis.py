@@ -80,6 +80,7 @@ class Redisware(object):
             endpoint = uri[0]
         else:
             endpoint = request.path
+        logging.warn("redis endpoint = " + endpoint)
         if (self.default_ttl == 0) and (self.error_ttl == 0) and (endpoint not in self._rules):
             # Non-cache cases, go on with Flask
             return self.app(environ, start_response)
