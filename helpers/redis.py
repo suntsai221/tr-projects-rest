@@ -105,6 +105,7 @@ class Redisware(object):
                 # Send response to redis unless 'error' exists in it
                 # ttl set to default or conform to exception rules
                 resp_str = raw_resp.decode('utf-8')
+                logging.warn("response: " + resp_str)
                 if resp_str is not None:
                     resp_json = json.loads(resp_str)
                     ttl = self.default_ttl
