@@ -75,7 +75,12 @@ class Redisware(object):
         request = Request(environ)
         cached = None
 
-        if (self.default_ttl == 0) and (self.error_ttl == 0) and (request.path not in self._rules):
+        uri = re.match('(/[\w\d]+).*', request.path)
+        if uri:
+            endpoint = uri[0]
+        else:
+            endpoint = request.path
+        if (self.default_ttl == 0) and (self.error_ttl == 0) and (endpoint not in self._rules):
             # Non-cache cases, go on with Flask
             return self.app(environ, start_response)
         else:
@@ -101,18 +106,14 @@ class Redisware(object):
                 resp_str = raw_resp.decode('utf-8')
                 resp_json = json.loads(resp_str)
                 ttl = self.default_ttl
-                endpoint = ''
                 if '_error' in resp_json:
                     ttl = self.error_ttl
                 elif isinstance(resp_json, dict) and ('_items' in resp_json and len(resp_json['_items']) == 0 and '_id' not in resp_json):
                     ttl = self.empty_ttl
                 else:
                     # two cases: "/foo/bar", "/foo?bar=1"
-                    uri = re.match('(/[\w\d]+).*', request.path)
-                    if uri:
-                        endpoint = uri[0]
-                        if endpoint in self._rules:
-                            ttl = self._rules[endpoint]
+                    if endpoint in self._rules:
+                        ttl = self._rules[endpoint]
                 logging.warn("redis endpoint = " + endpoint + ", ttl = " + str(ttl))
                 if ttl > 0:
                     p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
