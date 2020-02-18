@@ -108,11 +108,12 @@ class Redisware(object):
                     ttl = self.empty_ttl
                 else:
                     # two cases: "/foo/bar", "/foo?bar=1"
-                    uri = re.match('(/[\w\d]+)', request.path)
+                    uri = re.match('(/[\w\d]+).*', request.path)
                     if uri:
                         endpoint = uri[0]
                         if endpoint in self._rules:
                             ttl = self._rules[endpoint]
+                logging.warn("redis endpoint = " + endpoint + ", ttl = " + str(ttl))
                 if ttl > 0:
                     p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
                     p.start()
