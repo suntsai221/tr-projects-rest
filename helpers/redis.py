@@ -102,6 +102,7 @@ class Redisware(object):
                 resp_str = raw_resp.decode('utf-8')
                 resp_json = json.loads(resp_str)
                 ttl = self.default_ttl
+                endpoint = ''
                 if '_error' in resp_json:
                     ttl = self.error_ttl
                 elif isinstance(resp_json, dict) and '_items' in resp_json and len(resp_json['_items']) == 0:
