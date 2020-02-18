@@ -85,7 +85,6 @@ class Redisware(object):
             if cached is not None:
                 # Cache hit, directly respond
                 response = Response(cached, content_type='application/json')
-                print("from cache " + str(response))
                 return response(environ, start_response)
             else:
                 # Cache miss, pass to Eve and save redis
@@ -106,9 +105,12 @@ class Redisware(object):
                     ttl = self.error_ttl
                 elif isinstance(resp_json, dict) and '_items' in resp_json and len(resp_json['_items']) == 0:
                     ttl = self.empty_ttl
-                elif request.path in self._rules:
-                    ttl = self._rules[request.path]
-                p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
-                p.start()
-                p.join()
+                else:
+                    endpoint = request.path[0: request.path.find('?')]
+                    if endpoint in self._rules:
+                        ttl = self._rules[endpoint]
+                if ttl > 0:
+                    p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
+                    p.start()
+                    p.join()
                 return resp_iter
