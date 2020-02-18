@@ -77,7 +77,7 @@ class Redisware(object):
 
         uri = re.match('(/[\w\d]+).*', request.path)
         if uri:
-            endpoint = uri[0]
+            endpoint = uri[1]
         else:
             endpoint = request.path
         logging.warn("redis endpoint = " + endpoint)
