@@ -106,6 +106,7 @@ class Redisware(object):
                 elif isinstance(resp_json, dict) and '_items' in resp_json and len(resp_json['_items']) == 0:
                     ttl = self.empty_ttl
                 else:
+                    # two cases: "/foo/bar", "/foo?bar=1"
                     endpoint = request.path[0: request.path.find('?')]
                     if endpoint in self._rules:
                         ttl = self._rules[endpoint]
