@@ -1,6 +1,7 @@
 from werkzeug.wrappers import Request, Response
 from itertools import tee
 import json
+import logging
 from multiprocessing import Process
 
 class RedisCache:
@@ -110,6 +111,7 @@ class Redisware(object):
                     endpoint = request.path[0: request.path.find('?')]
                     if endpoint in self._rules:
                         ttl = self._rules[endpoint]
+                logging.warn("redis ttl = " + str(ttl))
                 if ttl > 0:
                     p = Process(target=self.cache.set, args=(request.full_path, resp_str, ttl))
                     p.start()
