@@ -104,7 +104,7 @@ class Redisware(object):
                 endpoint = ''
                 if '_error' in resp_json:
                     ttl = self.error_ttl
-                elif isinstance(resp_json, dict) and (('_items' in resp_json and len(resp_json['_items'])) == 0 or ('_id' in resp_json)):
+                elif isinstance(resp_json, dict) and ('_items' in resp_json and len(resp_json['_items']) == 0 and '_id' not in resp_json):
                     ttl = self.empty_ttl
                 else:
                     # two cases: "/foo/bar", "/foo?bar=1"
