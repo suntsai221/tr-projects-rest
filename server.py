@@ -12,7 +12,6 @@ import time
 import urllib.parse
 
 from helpers.metrics import MetricsMiddleware
-
 from helpers.redis import Redisware, RedisCache
 from settings import REDIS_TTL, REDIS_EXCEPTIONS
 
