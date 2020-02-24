@@ -363,7 +363,7 @@ def pre_get_callback(resource, request, lookup):
     add additional lookup in the query
     """
     max_results = request.args.get('max_results')
-    if max_results is not None and int(max_results) > 25:
+    if max_results is not None and int(max_results) > 100:
         abort(404)
     isCampaign = request.args.get('isCampaign')
     if resource == 'posts' or resource == 'meta':
