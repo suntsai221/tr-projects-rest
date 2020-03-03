@@ -145,6 +145,21 @@ partner_schema = {
   },
 }
 
+rss_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'source': {
+    'type': 'string',
+  },
+  'type': {
+    'type': 'string',
+  },
+  'config': {
+    'type': 'string',
+  },
+}
+
 external_schema = {
   'name': {
     'type': 'string',
@@ -2053,6 +2068,18 @@ partners = {
     'schema': partner_schema
 }
 
+rss = {
+    'item_title': 'rss',
+    'datasource': {
+        'source': 'rsses',
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': rss_schema
+}
+
 slug = {
     'item_title': 'slug',
     'datasource': {
@@ -2433,6 +2460,7 @@ DOMAIN = {
     'watchbrands': watchbrands,
     'watchfunctions': watchfunctions,
     'partners': partners,
+    'rss': rss,
     'externals': externals, 
     'getlist': getlist,
     'getmeta': getmeta,
