@@ -1769,6 +1769,9 @@ editorchoices_schema = {
   'sortOrder': {
     'type': 'integer',
   },
+  'state': {
+    'type': 'string',
+  },
 }
 
 watchbrand_schema = {
@@ -2241,6 +2244,7 @@ editorchoices = {
     'datasource': {
         'source': 'editorchoices',
         'default_sort': [('sortOrder', 1)],
+        'filter': {'state': 'published'},
     },
     'embedded_fields': ['choices'],
     'resource_methods': ['GET'],
