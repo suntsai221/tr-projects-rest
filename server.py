@@ -508,7 +508,7 @@ def handle_combo():
     endpoints = {
         'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}',
         'sectionfeatured': '/sections-featured?content=meta',
-        'choices': '/choices?max_results=1&sort=-pickDate',
+        'choices': '/editorchoices',
         'meta': '/getmeta?sort=-publishedDate&clean=content&related=full',
         'sections': '/sections?sort=sortOrder&max_results=20',
         'topics':'/topics?sort=sortOrder&max_results=12',
