@@ -1760,12 +1760,6 @@ editorchoices_schema = {
         'embeddable': True
      },
   },
-  'startDate': {
-    'type': 'datetime',
-  },
-  'endDate': {
-    'type': 'datetime',
-  },
   'sortOrder': {
     'type': 'integer',
   },
