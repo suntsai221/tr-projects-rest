@@ -533,7 +533,10 @@ def handle_combo():
                     response['_meta'] = action_data['_meta']
                 if action == 'choices':
                     response["_endpoints"][action] = {}
-                    response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
+                    response["_endpoints"][action]['_items'] = []
+                    for item in action_data["_items"]:
+                        if "choices"] in item:
+                            response["_endpoints"][action]['_items'].append(item["choices"])
                 else:
                     response["_endpoints"][action] = action_data
                 for item in response["_endpoints"][action]["_items"]:
