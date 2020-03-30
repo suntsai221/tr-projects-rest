@@ -535,7 +535,7 @@ def handle_combo():
                     response["_endpoints"][action] = {}
                     response["_endpoints"][action]['_items'] = []
                     for item in action_data["_items"]:
-                        if "choices"] in item:
+                        if "choices" in item:
                             response["_endpoints"][action]['_items'].append(item["choices"])
                     print(response["_endpoints"][action])
                 else:
