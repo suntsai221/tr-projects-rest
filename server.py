@@ -508,7 +508,7 @@ def handle_combo():
     endpoints = {
         'posts': '/posts?sort=-publishedDate&clean=content&where={"style":{"$nin":["projects", "readr"]}}',
         'sectionfeatured': '/sections-featured?content=meta',
-        'choices': '/choices?max_results=1&sort=-pickDate',
+        'choices': '/editorchoices',
         'meta': '/getmeta?sort=-publishedDate&clean=content&related=full',
         'sections': '/sections?sort=sortOrder&max_results=20',
         'topics':'/topics?sort=sortOrder&max_results=12',
@@ -533,7 +533,11 @@ def handle_combo():
                     response['_meta'] = action_data['_meta']
                 if action == 'choices':
                     response["_endpoints"][action] = {}
-                    response["_endpoints"][action]['_items'] = action_data["_items"][0]["choices"]
+                    response["_endpoints"][action]['_items'] = []
+                    for item in action_data["_items"]:
+                        if "choices" in item:
+                            response["_endpoints"][action]['_items'].append(item["choices"])
+                    print(response["_endpoints"][action])
                 else:
                     response["_endpoints"][action] = action_data
                 for item in response["_endpoints"][action]["_items"]:
