@@ -18,7 +18,7 @@ def get_full_contacts(item, key):
         for i in item[key]: 
             for j in resp_data['_items']:
                 if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
-                    print j
+                    # print j
                     result.append(j)
                     continue
         item[key] = result
@@ -221,7 +221,7 @@ def before_returning_sections(response):
 
 def remove_extra_fields(item):
   accepted_fields = list(schema)
-  for field in list(item)
+  for field in list(item):
     if field not in accepted_fields and field != '_id':
       del item[field]
 
@@ -236,8 +236,48 @@ def pre_GET(resource, request, lookup):
         elif isCampaign is None:
             lookup.update({"isCampaign": False})
 
-#app = Eve(auth=RolesAuth)
+def generate_data(keywords, section, size=100):
+    section_id = {"時事":"57e1e0e5ee85930e00cad4e9",
+    "娛樂":"57e1e11cee85930e00cad4ea",
+    "財經理財":"596441d04bbe120f002a319a",
+    "人物":"596441604bbe120f002a3197",
+    "國際":"5964400d4bbe120f002a3191",
+    "美食旅遊":"57dfe399ee85930e00cad4d6",
+    "瑪法達":"5971aa8ce531830d00e32812",
+    "文化":"5964418a4bbe120f002a3198",
+    "汽車鐘錶":"57dfe3b0ee85930e00cad4d7",
+    "最新":"57e1e153ee85930e00cad4eb"
+    }
+    keywords = keywords.split('%20')
+    # must = []
+    should = []
+    must = [{"multi_match" : {"query":    keyword,
+                              "type":     "phrase",
+                              "fields":   [ "title^2", "content", "writers.name" ]
+                }
+            } for keyword in keywords]
+    must.append({"match" : {"isAudioSiteOnly": False}})
+    if section:
+        must.append({"match" : {"sections._id": section_id[section]}})
+    data = {"from": 0, "size": size,
+    "query": {
+        "bool": {
+        "must": must,
+        "should" : should
+        }
+        
+    },
+    "sort" : [
+        {"publishedDate": {"order": "desc"}},
+        "_score"
+    ]
+    }
+    return data
 
+
+# data = generate_data('蔡英文','最新')
+
+#app = Eve(auth=RolesAuth)
 app = Eve()
 app.on_replace_article += lambda item, original: remove_extra_fields(item)
 app.on_insert_article += lambda items: remove_extra_fields(items[0])
@@ -403,6 +443,21 @@ def get_posts_byname():
     else:
         r = tc.get("/posts")
     return r
+
+@app.route('/search', methods=['GET'])
+def search():
+    import requests
+    ESurl = "http://34.80.69.102:9200/plate.posts/_doc/_search"
+    keywords = request.args.get('keywords')
+    section = request.args.get('section')
+    headers = {'Content-Type': 'application/json'}
+    r = requests.post(ESurl, 
+                      json=generate_data(keywords, section, size=100)
+    )
+    # r = requests.post(ESurl, data=data, headers={'Content-Type': 'application/json'})
+
+    r.encoding = 'utf-8'
+    return r.json()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
