@@ -1,15 +1,40 @@
+import os
+import copy
+
 # MONGO DATABASE SETTINGS FOR SAMPLE
+MONGO_URI = 'mongodb://localhost:27017/keystone-test'
 DATA_FORMAT = "a, %d %b %Y %H:%M:%S GMT+8"
-MONGO_HOST = 'localhost'
-MONGO_PORT = 27017
-MONGO_DBNAME = 'keystone-test'
+
+OPTIMIZE_PAGINATION_FOR_SPEED = True
+
 # The assets url is for production
 ASSETS_URL = 'https://www.mirrormedia.com.tw/'
 GCS_URL = 'https://storage.googleapis.com/mirrormedia-dev/'
 ENV = 'dev'
 
+REDIS_WRITE_HOST = '127.0.0.1'
+REDIS_WRITE_PORT = 6379
+REDIS_READ_HOST = '127.0.0.1'
+REDIS_READ_PORT = 6379
+REDIS_AUTH = ''
+REDIS_TTL = {
+  'default': 600,
+  'error': 300,
+  'empty': 100,
+}
+REDIS_EXCEPTIONS = {
+  "/sections": 1200,
+  # cache for 7 days
+  "/images": 604800,
+  # cache for 24 hours
+  "/partners": 86400,
+  "/externals": 86400,
+  "/contacts": 86400,
+}
+
 # ALLOW ACTIONS
 DEBUG = False
+
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE'] if DEBUG else ['GET']
 
 slug_schema = {
@@ -117,6 +142,21 @@ partner_schema = {
   },
   'public': {
     'type': 'boolean',
+  },
+}
+
+rss_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'source': {
+    'type': 'string',
+  },
+  'type': {
+    'type': 'string',
+  },
+  'config': {
+    'type': 'string',
   },
 }
 
@@ -528,6 +568,17 @@ post_schema = {
         },
     },
   },
+  'vocals': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'photographers': {
     'type': 'list',
     'schema': {
@@ -679,6 +730,14 @@ post_schema = {
   'og_description': {
     'type': 'string',
   },
+  'audio': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'audios',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
   'og_image': {
     'type': 'objectid',
     'data_relation': {
@@ -692,7 +751,10 @@ post_schema = {
   },
   'adTrace': {
     'type': 'string',
-  },
+    },
+  'isAudioSiteOnly': {                                                                                                                                  
+    'type': 'boolean',
+  },    
   'isCampaign': {
     'type': 'boolean',
   },
@@ -954,6 +1016,17 @@ album_schema = {
       'embeddable': True
     },
   },
+  'vocals': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
   'writers': {
     'type': 'list',
     'schema': {
@@ -964,6 +1037,20 @@ album_schema = {
             'embeddable': True
         },
     },
+  },
+  'photographers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'extend_byline': {
+    'type': 'string',
   },
   'heroImage': {
     'type': 'objectid',
@@ -1035,6 +1122,9 @@ album_schema = {
   'isFeatured': {
     'type': 'boolean',
   },
+  'sortOrder': {
+    'type': 'integer',
+  },
   'og_description': {
     'type': 'string',
   },
@@ -1065,6 +1155,9 @@ sections_schema = {
     'isFeatured': {
       'type': 'boolean',
     },
+    'isAudioSiteOnly': {                                                                                                                                  
+      'type': 'boolean',
+    },    
     'image': {
       'type': 'objectid',
       'data_relation': {
@@ -1141,7 +1234,7 @@ sections_schema = {
       'type': 'string',
     },
     'sortOrder': {
-      'typr': 'integer',
+      'type': 'integer',
     }
 }
 
@@ -1319,6 +1412,36 @@ audiopromotions_schema = {
   }
 }
 
+watchstores_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'address': {
+    'type': 'string',
+  },
+  'phone': {
+    'type': 'string',
+  },
+  'map': {
+    'type': 'string',
+  },
+  'sortOrder': {
+    'type': 'integer',
+  }
+}
+
+voiceconfigs_schema = {
+  'key': {
+    'type': 'string',
+  },
+  'group': {
+    'type': 'string',
+  },
+  'value': {
+    'type': 'string',
+  }
+}
+
 postcategories_schema = {
   'name': {
     'type': 'string',
@@ -1488,7 +1611,7 @@ tags_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   },
   'sections': {
     'type': 'list',
@@ -1596,8 +1719,36 @@ topics_schema = {
     'type': 'string',
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
   }
+}
+
+audiomasters_schema = {
+  'masters': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'contacts',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'sortOrder': {
+    'type': 'integer',
+  },
+}
+
+audiochoices_schema = {
+  'choices': {
+    'type': 'objectid',
+    'data_relation': {
+        'resource': 'posts',
+        'field': '_id',
+        'embeddable': True
+     },
+  },
+  'sortOrder': {
+    'type': 'integer',
+  },
 }
 
 editorchoices_schema = {
@@ -1610,7 +1761,10 @@ editorchoices_schema = {
      },
   },
   'sortOrder': {
-    'typr': 'integer',
+    'type': 'integer',
+  },
+  'state': {
+    'type': 'string',
   },
 }
 
@@ -1648,7 +1802,39 @@ watch_schema = {
   'name': {
     'type': 'string',
   },
+  'watchstore': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'watchstores',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'type': {
+    'type': 'string',
+  },
+  'style': {
+    'type': 'string',
+  },
+  'popular': {
+    'type': 'boolean',
+  },
+  'treasury': {
+    'type': 'boolean',
+  },
+  'series': {
+    'type': 'string',
+  },
+  'ga': {
+    'type': 'integer',
+  },
+  'limit': {
+    'type': 'interger',
+  },
+  'luminous': {
     'type': 'boolean',
   },
   'sex': {
@@ -1799,7 +1985,7 @@ posts = {
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
+    'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
@@ -1829,15 +2015,16 @@ albums = {
     'item_title': 'album',
     'additional_lookup': {
         'url': 'regex("[\w-]+")',
-        'default_sort': [('publishedDate', -1)],
+        'default_sort': [('sortOrder', 1)],
         'field': 'name'
     },
     'datasource': {
         'source': 'albums',
+        'default_sort': [('sortOrder', 1)],
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'heroVideo', 'sections', 'writers', 'categories', 'tags', 'og_image'],
+    'embedded_fields': ['heroImage', 'heroVideo', 'sections', 'writers', 'vocals', 'photographers', 'categories', 'tags', 'og_image'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
@@ -1884,6 +2071,18 @@ partners = {
     'schema': partner_schema
 }
 
+rss = {
+    'item_title': 'rss',
+    'datasource': {
+        'source': 'rsses',
+    },
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': rss_schema
+}
+
 slug = {
     'item_title': 'slug',
     'datasource': {
@@ -1924,7 +2123,7 @@ listing = {
         'filter': { '$and': [ { 'state': 'published' }, { 'style': { '$nin': ['campaign' ] } } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo','categories'],
+    'embedded_fields': ['heroImage', 'sections', 'writers', 'og_image', 'heroVideo','categories', 'tags'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
@@ -2006,16 +2205,45 @@ watches = {
     'schema': watch_schema
 }
 
-editorchoices = {
-    'item_title': 'editorchoice',
+audiomasters = {
+    'item_title': 'audiomaster',
     'datasource': {
-        'source': 'editorchoices',
+        'source': 'audiomasters',
+        'default_sort': [('sortOrder', 1)],
+    },
+    'embedded_fields': ['masters'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': audiomasters_schema
+}
+
+audiochoices = {
+    'item_title': 'audiochoice',
+    'datasource': {
+        'source': 'audiochoices',
         'default_sort': [('sortOrder', 1)],
     },
     'embedded_fields': ['choices'],
     'resource_methods': ['GET'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': audiochoices_schema
+}
+
+editorchoices = {
+    'item_title': 'editorchoice',
+    'datasource': {
+        'source': 'editorchoices',
+        'default_sort': [('sortOrder', 1)],
+        'filter': {'state': 'published'},
+    },
+    'embedded_fields': ['choices'],
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 300,
     'allow_unknown': False,
     'schema': editorchoices_schema
 }
@@ -2081,6 +2309,28 @@ contacts = {
   'schema': contact_schema
 }
 
+voiceconfigs = {
+  'item_title': 'voiceconfigs',
+  'resource_methods': ['GET'],
+  'cache_control': 'max-age=1500,must-revalidate',
+  'cache_expires': 1500,
+  'allow_unknown': False,
+  'schema': voiceconfigs_schema
+}
+
+watchstores = {
+  'item_title': 'watchstores',
+  'resource_methods': ['GET'],
+  'datasource': {
+    'source': 'watchstores',
+    'default_sort': [('sortOrder', 1)],
+  },
+  'cache_control': 'max-age=1500,must-revalidate',
+  'cache_expires': 1500,
+  'allow_unknown': False,
+  'schema': watchstores_schema
+}
+
 audiopromotions = {
     'item_title': 'audiopromotions',
     'resource_methods': ['GET'],
@@ -2098,6 +2348,7 @@ audiopromotions = {
     'embedded_fields': ['heroImage'],
     'schema': audiopromotions_schema,
 }
+
 
 postcategories = {
     'item_title': 'postcategory',
@@ -2173,6 +2424,16 @@ videos = {
     'schema': videos_schema,
 }
 
+# copy duplicate target and modifed item_title to correct setting
+getlist = copy.deepcopy(listing)
+getlist['item_title'] = 'getlist'
+
+getmeta = copy.deepcopy(meta)
+getmeta['item_title'] = 'getmeta'
+
+getposts = copy.deepcopy(posts)
+getposts['item_title'] = 'getposts'
+
 DOMAIN = {
     'posts': posts,
     'readrs': readrs,
@@ -2184,11 +2445,15 @@ DOMAIN = {
     'tags': tags,
     'choices': choices,
     'editorchoices': editorchoices,
+    'audiochoices': audiochoices,
+    'audiomasters': audiomasters,
     'contacts': contacts,
     'topics': topics,
     'nodes': nodes,
     'postcategories': postcategories,
     'audiopromotions': audiopromotions,
+    'voiceconfigs': voiceconfigs,
+    'watchstores': watchstores,
     'activities': activities,
     'images': images,
     'audios': audios,
@@ -2199,7 +2464,11 @@ DOMAIN = {
     'watchbrands': watchbrands,
     'watchfunctions': watchfunctions,
     'partners': partners,
-    'externals': externals,
+    'rss': rss,
+    'externals': externals, 
+    'getlist': getlist,
+    'getmeta': getmeta,
+    'getposts': getposts,
     }
 
 XML = False
@@ -2207,3 +2476,13 @@ IF_MATCH = False
 X_DOMAINS = '*'
 X_HEADERS = ['Content-Type']
 PAGINATION_DEFAULT = 10
+
+# override default settings for different env
+if os.environ.get("CLUSTER_ENV") == "dev":
+  from configs.dev import *
+elif os.environ.get("CLUSTER_ENV") == "prod":
+  from configs.prod import *
+elif os.environ.get("CLUSTER_ENV") == "test":
+  from configs.test import *
+elif os.environ.get("CLUSTER_ENV") == "local":
+  from configs.local import *
