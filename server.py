@@ -102,7 +102,7 @@ def replace_imageurl_recursively(d):
     for k, v in d.items():
         if isinstance(v, dict):
             replace_imageurl_recursively(v)
-        else:
+        elif isinstance(v, str):
             d[k] = v.replace(GCS_URL, ASSETS_URL)
 
 def clean_item(item, content='draft'):
