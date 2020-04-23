@@ -345,12 +345,12 @@ def before_returning_topics(response):
     delete brief/apiData, draft
     """
     for item in response['_items']:
+        replace_imageurl(item)
         if 'brief' in item:
             if 'apiData' in item['brief']:
                 del item['brief']['apiData']
             if 'draft' in item['brief']:
                 del item['brief']['draft']
-    replace_imageurl(response['_items'])
     return response
 
 def before_returning_sections(response):
