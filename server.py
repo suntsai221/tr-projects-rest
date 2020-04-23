@@ -72,7 +72,7 @@ def replace_imageurl(obj):
     - brief, content. image
     - non-empty heroImage, og_image, heroVideo
     """
-    for key in [ 'brief', 'content' ]:
+    for key in [ 'brief', 'content', 'style' ]:
         if key in obj:
             obj_str = json.dumps(obj[key])
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
@@ -85,6 +85,8 @@ def replace_imageurl(obj):
         image_str = json.dumps(obj['og_image']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['og_image']['image'] = json.loads(image_str)
+        if isinstance(obj['og_image']['image'], dict):
+            replace_imageurl_recursively(obj['og_image']['image'])
     if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
@@ -94,6 +96,14 @@ def replace_imageurl(obj):
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['image'] = json.loads(video_str)
     return obj
+
+# Beware of using this function, it may cost more processing time if the target dict contains lots of values unrelated to imageurl
+def replace_imageurl_recursively(d):
+    for k, v in d.items():
+        if isinstance(v, dict):
+            replace_imageurl_recursively(v)
+        else:
+            d[k] = v.replace(GCS_URL, ASSETS_URL)
 
 def clean_item(item, content='draft'):
     """
