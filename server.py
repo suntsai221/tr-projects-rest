@@ -350,6 +350,7 @@ def before_returning_topics(response):
                 del item['brief']['apiData']
             if 'draft' in item['brief']:
                 del item['brief']['draft']
+    replace_imageurl(response['_items'])
     return response
 
 def before_returning_sections(response):
