@@ -631,9 +631,10 @@ def search():
     keywords = request.args.get('keywords')
     section = request.args.get('section')
     headers = {'Content-Type': 'application/json'}
-    r = requests.post(ESurl, 
-                      json=generate_data(keywords, section, size=100)
-    )
+    r = requests.post(ESurl, json=generate_data(keywords, section, size=100))
+    r.encoding = 'utf-8'
+    if not r.json()['hits']['hits']:
+        r = requests.post(ESurl, json=generate_data(keywords, section='', size=100))
     r.encoding = 'utf-8'
     return Response(json.dumps(r.text), headers=headers)
 
