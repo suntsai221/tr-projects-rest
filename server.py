@@ -3,6 +3,7 @@ from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response, abort
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
+from bson import json_util
 
 import json
 import re
@@ -78,15 +79,13 @@ def replace_imageurl(obj):
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
             obj[key] = json.loads(obj_str)
     if 'heroImage' in obj and isinstance(obj['heroImage'], dict) and  'image' in obj['heroImage']:
-        image_str = json.dumps(obj['heroImage']['image'])
+        image_str = json_util.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
-        obj['heroImage']['image'] = json.loads(image_str)
+        obj['heroImage']['image'] = json_util.loads(image_str)
     if 'og_image' in obj and isinstance(obj['og_image'], dict) and  'image' in obj['og_image']:
         image_str = json.dumps(obj['og_image']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['og_image']['image'] = json.loads(image_str)
-        if isinstance(obj['og_image']['image'], dict):
-            replace_imageurl_recursively(obj['og_image']['image'])
     if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
         video_str = json.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
@@ -96,14 +95,6 @@ def replace_imageurl(obj):
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['image'] = json.loads(video_str)
     return obj
-
-# Beware of using this function, it may cost more processing time if the target dict contains lots of values unrelated to imageurl
-def replace_imageurl_recursively(d):
-    for k, v in d.items():
-        if isinstance(v, dict):
-            replace_imageurl_recursively(v)
-        elif isinstance(v, str):
-            d[k] = v.replace(GCS_URL, ASSETS_URL)
 
 def clean_item(item, content='draft'):
     """
@@ -345,12 +336,12 @@ def before_returning_topics(response):
     delete brief/apiData, draft
     """
     for item in response['_items']:
-        replace_imageurl(item)
         if 'brief' in item:
             if 'apiData' in item['brief']:
                 del item['brief']['apiData']
             if 'draft' in item['brief']:
                 del item['brief']['draft']
+        replace_imageurl(item)
     return response
 
 def before_returning_sections(response):
