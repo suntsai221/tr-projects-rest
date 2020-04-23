@@ -634,10 +634,8 @@ def search():
     r = requests.post(ESurl, 
                       json=generate_data(keywords, section, size=100)
     )
-    # r = requests.post(ESurl, data=data, headers={'Content-Type': 'application/json'})
-
     r.encoding = 'utf-8'
-    return r.json()
+    return Response(json.dumps(r.text), headers=headers)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
