@@ -35,7 +35,7 @@ def get_full_contacts(item, key):
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
         resp_string = str(resp.data, encoding = "utf-8")
         if isinstance(resp_string, str):
-            resp_data = json.loads(resp_string)
+            resp_data = json_util.loads(resp_string)
             result = []
             for i in item[key]:
                 for j in resp_data['_items']:
@@ -56,7 +56,7 @@ def get_full_relateds(item, key):
         headers = dict(request.headers)
         tc = app.test_client()
         resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
-        resp_data = json.loads(resp.data.decode("utf-8"))
+        resp_data = json_util.loads(resp.data.decode("utf-8"))
         result = []
         for i in item[key]:
             for j in resp_data['_items']:
@@ -75,25 +75,25 @@ def replace_imageurl(obj):
     """
     for key in [ 'brief', 'content', 'style' ]:
         if key in obj:
-            obj_str = json.dumps(obj[key])
+            obj_str = json_util.dumps(obj[key])
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
-            obj[key] = json.loads(obj_str)
+            obj[key] = json_util.loads(obj_str)
     if 'heroImage' in obj and isinstance(obj['heroImage'], dict) and  'image' in obj['heroImage']:
         image_str = json_util.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['heroImage']['image'] = json_util.loads(image_str)
     if 'og_image' in obj and isinstance(obj['og_image'], dict) and  'image' in obj['og_image']:
-        image_str = json.dumps(obj['og_image']['image'])
+        image_str = json_util.dumps(obj['og_image']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
-        obj['og_image']['image'] = json.loads(image_str)
+        obj['og_image']['image'] = json_util.loads(image_str)
     if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
-        video_str = json.dumps(obj['heroVideo']['video'])
+        video_str = json_util.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
-        obj['heroVideo']['video'] = json.loads(video_str)
+        obj['heroVideo']['video'] = json_util.loads(video_str)
     if 'image' in obj and isinstance(obj['image'], dict):
-        video_str = json.dumps(obj['image'])
+        video_str = json_util.dumps(obj['image'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
-        obj['image'] = json.loads(video_str)
+        obj['image'] = json_util.loads(video_str)
     return obj
 
 def clean_item(item, content='draft'):
@@ -263,7 +263,7 @@ def before_returning_listing(response):
                 tc = app.test_client()
                 cover_photo = str(item['heroVideo']['coverPhoto'])
                 resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
-                resp_data = json.loads(resp.data.decode("utf-8"))
+                resp_data = json_util.loads(resp.data.decode("utf-8"))
                 if '_items' in resp_data and len(resp_data['_items']) > 0:
                     result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
                     item['heroVideo']['coverPhoto'] = result
@@ -291,7 +291,7 @@ def before_returning_audiochoices(response):
                     elif isinstance(item['choices'][field], list):
                         ids = ','.join(list(map(str, item['choices'][field])))
                     resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + ids + '"]}}', headers=headers)
-                    resp_data = json.loads(resp.data.decode("utf-8"))
+                    resp_data = json_util.loads(resp.data.decode("utf-8"))
                     if '_items' in resp_data and len(resp_data['_items']) > 0:
                         item['choices'][field] = resp_data['_items'][0]
     return response
@@ -463,7 +463,7 @@ def get_sections_latest():
     resp_header = dict(resp.headers)
     if "Content-Length" in headers:
         del headers["Content-Length"]
-    resp_data = json.loads(resp.data.decode("utf-8"))
+    resp_data = json_util.loads(resp.data.decode("utf-8"))
     if ("_error" not in resp_data and "_items" in resp_data):
         section_items = resp_data["_items"]
         section_items = sorted(section_items, key = lambda x: x["sortOrder"])
@@ -478,14 +478,14 @@ def get_sections_latest():
                 endpoint = 'getlist'
             sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
             resp_header = dict(sec_resp.headers)
-            sec_items = json.loads(sec_resp.data.decode("utf-8"))
+            sec_items = json_util.loads(sec_resp.data.decode("utf-8"))
             if '_error' not in sec_items and "_items" in sec_items:
                 #response[item['name']] = sec_items['_items']
                 for sec_item in sec_items:
                     clean_item(sec_item)
                     replace_imageurl(sec_item)
                 response['_items'][item['name']] = sec_items['_items']
-    return Response(json.dumps(response), headers=resp_header)
+    return Response(json_util.dumps(response), headers=resp_header)
 
 @app.route("/timeline/<topicId>", methods=['GET'])
 def get_timeline(topicId):
@@ -499,7 +499,7 @@ def get_timeline(topicId):
         tc = app.test_client()
         topic_url = '/topics?where={"_id":"' + topicId + '"}'
         topic_resp = tc.get(topic_url, headers=headers)
-        topic_data = json.loads(topic_resp.data.decode("utf-8"))
+        topic_data = json_util.loads(topic_resp.data.decode("utf-8"))
         if "_items" in topic_data and len(topic_data["_items"]) > 0:
             topic_data["_items"][0] = clean_item(topic_data["_items"][0])
             if 'brief' in topic_data["_items"][0] and 'apiData' in topic_data["_items"][0]['brief']:
@@ -509,7 +509,7 @@ def get_timeline(topicId):
         activity_uri = '/activities?where={"topics":"' + topicId + '"}&max_results=40'
         resp = tc.get(activity_uri, headers=headers)
         resp_header = dict(resp.headers)
-        activities_data = json.loads(resp.data.decode("utf-8"))
+        activities_data = json_util.loads(resp.data.decode("utf-8"))
         if "_items" not in activities_data:
             activities_data["_items"] = []
         for item in activities_data["_items"]:
@@ -524,7 +524,7 @@ def get_timeline(topicId):
         id_string = ",".join(map(lambda x: '"' + x + '"', item_ids))
         featured_nodes = '/nodes?where={"activity":{"$in":[' + id_string + ']},"isFeatured":true}&max_results=40'
         resp = tc.get(featured_nodes, headers=headers)
-        node_data = json.loads(resp.data.decode("utf-8"))
+        node_data = json_util.loads(resp.data.decode("utf-8"))
         if "sort" in response["topic"] and response["topic"]["sort"] == 'desc':
             reverse = True
         else:
@@ -541,7 +541,7 @@ def get_timeline(topicId):
                 replace_imageurl(node)
                 if "activity" in node and "_id" in node["activity"] and node["activity"]["_id"] in activities:
                     node["activity"] = activities[node["activity"]["_id"]]
-        return Response(json.dumps(response), headers=resp_header)
+        return Response(json_util.dumps(response), headers=resp_header)
     else:
         abort(404)
 
@@ -570,7 +570,7 @@ def handle_combo():
         if action in endpoints:
             action_resp = tc.get(endpoints[action], headers=headers)
             headers = action_resp.headers
-            action_data = json.loads(action_resp.data.decode("utf-8"))
+            action_data = json_util.loads(action_resp.data.decode("utf-8"))
             if "_error" not in action_data and "_items" in action_data and len(action_data["_items"]) > 0:
                 if '_meta' in action_data:
                     response['_meta'] = action_data['_meta']
@@ -588,7 +588,7 @@ def handle_combo():
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
        headers['Content-Type'] = "application/json"
-    return Response(json.dumps(response), headers=headers)
+    return Response(json_util.dumps(response), headers=headers)
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
 def get_posts_byname():
@@ -608,7 +608,7 @@ def get_posts_byname():
         else:
             table = collection
         r = tc.get("/" + table + "/" + name, headers=headers)
-        rs_data = json.loads(r.data.decode("utf-8"))
+        rs_data = json_util.loads(r.data.decode("utf-8"))
         if "_error" not in rs_data and "_id" in rs_data:
             collection_id = rs_data['_id']
             req = '/'+ endpoint + '?where={"' + collection + '":"' + collection_id + '"}'
@@ -616,10 +616,10 @@ def get_posts_byname():
                 if key != 'collection' and key != 'name':
                     req += '&' + key + '=' + request.args.get(key)
             resp = tc.get(req, headers=headers)
-            resp_data = json.loads(resp.data.decode("utf-8"))
+            resp_data = json_util.loads(resp.data.decode("utf-8"))
             for i in resp_data['_items']:
                 replace_imageurl(i)
-            return Response(json.dumps(resp_data), headers=resp.headers)
+            return Response(json_util.dumps(resp_data), headers=resp.headers)
         else:
             return r
     else:
@@ -638,7 +638,7 @@ def search():
     if not r.json()['hits']['hits']:
         r = requests.post(ESurl, json=generate_data(keywords, section='', size=100))
     r.encoding = 'utf-8'
-    return Response(json.dumps(r.text), headers=headers)
+    return Response(json_util.dumps(r.text), headers=headers)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
