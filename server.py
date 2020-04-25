@@ -55,7 +55,7 @@ def get_full_relateds(item, key):
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
-        resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
+        resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}&clean=content', headers=headers)
         resp_data = json_util.loads(resp.data.decode("utf-8"))
         result = []
         for i in item[key]:
