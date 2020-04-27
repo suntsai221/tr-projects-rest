@@ -35,7 +35,7 @@ def get_full_contacts(item, key):
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
         resp_string = str(resp.data, encoding = "utf-8")
         if isinstance(resp_string, str):
-            resp_data = json_util.loads(resp_string)
+            resp_data = json.loads(resp_string)
             result = []
             for i in item[key]:
                 for j in resp_data['_items']:
@@ -56,7 +56,7 @@ def get_full_relateds(item, key):
         headers = dict(request.headers)
         tc = app.test_client()
         resp = tc.get('posts?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
-        resp_data = json_util.loads(resp.data.decode("utf-8"))
+        resp_data = json.loads(resp.data.decode("utf-8"))
         result = []
         for i in item[key]:
             for j in resp_data['_items']:
@@ -570,7 +570,7 @@ def handle_combo():
         if action in endpoints:
             action_resp = tc.get(endpoints[action], headers=headers)
             headers = action_resp.headers
-            action_data = json_util.loads(action_resp.data.decode("utf-8"))
+            action_data = json.loads(action_resp.data.decode("utf-8"))
             if "_error" not in action_data and "_items" in action_data and len(action_data["_items"]) > 0:
                 if '_meta' in action_data:
                     response['_meta'] = action_data['_meta']
