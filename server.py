@@ -196,7 +196,8 @@ def before_returning_posts(response):
                 page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
                 item['content']['html'] = page_div
             replace_imageurl(item)
-            if related == 'full' and item['style'] == 'photography':
+            #if related == 'full' and item['style'] == 'photography':
+            if related == 'full':
                 item = get_full_relateds(item, 'relateds')
             item = clean_item(item, keep)
         return response
