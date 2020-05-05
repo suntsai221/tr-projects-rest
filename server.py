@@ -666,7 +666,7 @@ def youtube():
         else:
             if "pageInfo" in playlist_items.keys():
                 del playlist_items["pageInfo"]
-            return Response(json_util.dumps(playlist_items))
+            return Response(json_util.dumps(playlist_items), headers={'Content-Type': 'application/json'})
     else:
         abort(404)
 
