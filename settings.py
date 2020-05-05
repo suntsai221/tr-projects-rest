@@ -1802,6 +1802,26 @@ watch_schema = {
   'name': {
     'type': 'string',
   },
+  'size': {
+    'type': 'string',
+  },
+  'color': {
+    'type': 'string',
+  },
+  'youtube': {
+    'type': 'string',
+  },
+  'relatedwatch': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'watch',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'watchstore': {
     'type': 'list',
     'schema': {
