@@ -641,5 +641,34 @@ def search():
     r.encoding = 'utf-8'
     return Response(json_util.dumps(r.text), headers=headers)
 
+@app.route("/youtube", methods=['GET'])
+def youtube():
+    """Youtube api endpoint for app to use, returns 50 video results per page.
+    if "page_token" is supplied, jump to that page.
+
+    Returns:
+        dict -- keys:["kind", "etag", "nextPageToken", "items", "prevPageToken"]
+            etag: A tag that can be used for caching the result
+            nextPageToken, prevPageToken: Place this in page_token
+            items: video items, the video id is in items["snippet"]["resourceId"]["videoId"]
+    """
+    import youtube
+    if request.args.get('page_token'):
+        page_token = request.args.get('page_token')
+        playlist_items = youtube.request_api(page_token)
+        
+    else:
+        playlist_items = youtube.request_api()
+
+    if playlist_items:
+        if "error" in playlist_items.keys():
+            abort(404)
+        else:
+            if "pageInfo" in playlist_items.keys():
+                del playlist_items["pageInfo"]
+            return Response(json_util.dumps(playlist_items))
+    else:
+        abort(404)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
