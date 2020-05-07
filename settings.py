@@ -1816,7 +1816,7 @@ watch_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'watch',
+            'resource': 'watches',
             'field': '_id',
             'embeddable': True
          },
