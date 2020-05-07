@@ -2218,7 +2218,7 @@ watches = {
         # 'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds'],
+    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds', 'relatedwatch'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
