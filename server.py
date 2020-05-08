@@ -258,13 +258,13 @@ def before_returning_watches(response):
     replace = request.args.get('replace')
     items = response['_items']
     for item in items:
-        if replace != 'false':
-            replace_imageurl(item)
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
         else:
             if related == 'false' and 'relateds' in item:
                 del item['relateds']
+        if replace != 'false':
+            replace_imageurl(item)
     return response
 
 def before_returning_listing(response):
