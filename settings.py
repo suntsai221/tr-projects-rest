@@ -1802,6 +1802,26 @@ watch_schema = {
   'name': {
     'type': 'string',
   },
+  'size': {
+    'type': 'string',
+  },
+  'color': {
+    'type': 'string',
+  },
+  'youtube': {
+    'type': 'string',
+  },
+  'relatedwatch': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'watches',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
   'watchstore': {
     'type': 'list',
     'schema': {
@@ -2198,7 +2218,7 @@ watches = {
         # 'filter': {'state': 'draft'},
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds'],
+    'embedded_fields': ['brand','watchfunction','watchImage', 'relateds', 'relatedwatch'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,

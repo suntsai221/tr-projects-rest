@@ -262,6 +262,24 @@ def before_returning_meta(response):
                 del item['relateds']
     return response
 
+def before_returning_watches(response):
+    """
+    - if replace!= false, replace the image url in meta
+    - if related=full, or related=full but there are relateds in response,
+    get all the related for meta
+    """
+    related = request.args.get('related')
+    replace = request.args.get('replace')
+    items = response['_items']
+    for item in items:
+        if related == 'full':
+            item = get_full_relateds(item, 'relateds')
+        else:
+            if related == 'false' and 'relateds' in item:
+                del item['relateds']
+        if replace != 'false':
+            replace_imageurl(item)
+    return response
 
 def before_returning_listing(response):
     """
@@ -455,6 +473,7 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 app.on_fetched_resource_posts += before_returning_posts
 app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
+app.on_fetched_resource_watches += before_returning_watches
 app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
 app.on_fetched_resource_audiochoices += before_returning_audiochoices
