@@ -420,7 +420,7 @@ def pre_get_callback(resource, request, lookup):
             lookup.update({"isCampaign": False})
 
 
-def generate_data(keywords, section, max_result=100, page=1):
+def generate_data(keywords, section, max_results=100, page=1):
 
     section_id = {"時事": "57e1e0e5ee85930e00cad4e9",
                   "娛樂": "57e1e11cee85930e00cad4ea",
@@ -443,8 +443,8 @@ def generate_data(keywords, section, max_result=100, page=1):
     must.append({"match": {"isAudioSiteOnly": False}})
     if section:
         must.append({"match": {"sections._id": section_id[section]}})
-    offset = (page - 1) * max_result
-    data = {"from": 0 + offset, "size": max_result,
+    offset = (page - 1) * max_results
+    data = {"from": 0 + offset, "size": max_results,
             "query": {
                 "bool": {
                     "must": must,
@@ -691,23 +691,23 @@ def search():
     ESurl = "http://34.80.69.102:9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
-    max_result = request.args.get('max_result')
+    max_results = request.args.get('max_results')
     page = request.args.get('page')
     # size = max_result * page
     
-    max_result = int(max_result) if max_result else 100
+    max_results = int(max_results) if max_results else 100
     page = int(page) if page else 1
 
-    print("max_result: ", max_result)
+    print("max_result: ", max_results)
     print("page: ", page)
 
     headers = {'Content-Type': 'application/json'}
     
-    r = requests.post(ESurl, json=generate_data(keywords, section, max_result=max_result, page=page))
+    r = requests.post(ESurl, json=generate_data(keywords, section, max_results=max_results, page=page))
 
     r.encoding = 'utf-8'
     if not r.json()['hits']['hits']:
-        r = requests.post(ESurl, json=generate_data(keywords, section='', size=max_result))
+        r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
     return Response(json_util.dumps(r.text), headers=headers)
 
