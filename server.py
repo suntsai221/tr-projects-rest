@@ -296,7 +296,7 @@ def before_returning_watches(response):
     for item in items:
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
-            item = get_full_watch(item, 'relatedwatch')
+            #item = get_full_watch(item, 'relatedwatch')
         else:
             if related == 'false' and 'relateds' in item:
                 del item['relateds']
