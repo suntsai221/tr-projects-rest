@@ -2,7 +2,8 @@
 from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response, abort
-from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_AUTH
+from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, \
+    REDIS_READ_PORT, REDIS_AUTH
 from bson import json_util
 
 import json
@@ -18,10 +19,11 @@ from settings import REDIS_TTL, REDIS_EXCEPTIONS
 
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
-redis_readPool = redis.ConnectionPool(host = REDIS_READ_HOST, port = redis_read_port, password = REDIS_AUTH)
+redis_readPool = redis.ConnectionPool(host=REDIS_READ_HOST, port=redis_read_port, password=REDIS_AUTH)
 redis_read = redis.Redis(connection_pool=redis_readPool)
-redis_writePool = redis.ConnectionPool(host = REDIS_WRITE_HOST, port = redis_write_port, password = REDIS_AUTH)
+redis_writePool = redis.ConnectionPool(host=REDIS_WRITE_HOST, port=redis_write_port, password=REDIS_AUTH)
 redis_write = redis.Redis(connection_pool=redis_writePool)
+
 
 def get_full_contacts(item, key):
     """
@@ -31,9 +33,10 @@ def get_full_contacts(item, key):
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
-        all_writers =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+        all_writers = ",".join(
+            map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
         resp = tc.get('contacts?where={"_id":{"$in":[' + all_writers + ']}}', headers=headers)
-        resp_string = str(resp.data, encoding = "utf-8")
+        resp_string = str(resp.data, encoding="utf-8")
         if isinstance(resp_string, str):
             resp_data = json.loads(resp_string)
             result = []
@@ -46,12 +49,14 @@ def get_full_contacts(item, key):
         # item[key] = resp_data['_items']
     return item
 
+
 def get_full_relateds(item, key):
     """
     get all relateds and cache result in redis
     query string: /posts?where={"_id": {"$in":[id1, id2, ...]}}
     """
-    all_relateds =  ",".join(map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+    all_relateds = ",".join(
+        map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
@@ -67,26 +72,27 @@ def get_full_relateds(item, key):
         # item[key] = resp_data['_items']
     return item
 
+
 def replace_imageurl(obj):
     """
     replace formal gcs storage url in 
     - brief, content. image
     - non-empty heroImage, og_image, heroVideo
     """
-    for key in [ 'brief', 'content', 'style' ]:
+    for key in ['brief', 'content', 'style']:
         if key in obj:
             obj_str = json_util.dumps(obj[key])
             obj_str = obj_str.replace(GCS_URL, ASSETS_URL)
             obj[key] = json_util.loads(obj_str)
-    if 'heroImage' in obj and isinstance(obj['heroImage'], dict) and  'image' in obj['heroImage']:
+    if 'heroImage' in obj and isinstance(obj['heroImage'], dict) and 'image' in obj['heroImage']:
         image_str = json_util.dumps(obj['heroImage']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['heroImage']['image'] = json_util.loads(image_str)
-    if 'og_image' in obj and isinstance(obj['og_image'], dict) and  'image' in obj['og_image']:
+    if 'og_image' in obj and isinstance(obj['og_image'], dict) and 'image' in obj['og_image']:
         image_str = json_util.dumps(obj['og_image']['image'])
         image_str = image_str.replace(GCS_URL, ASSETS_URL)
         obj['og_image']['image'] = json_util.loads(image_str)
-    if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and  'video' in obj['heroVideo']:
+    if 'heroVideo' in obj and isinstance(obj['heroVideo'], dict) and 'video' in obj['heroVideo']:
         video_str = json_util.dumps(obj['heroVideo']['video'])
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['heroVideo']['video'] = json_util.loads(video_str)
@@ -95,6 +101,7 @@ def replace_imageurl(obj):
         video_str = video_str.replace(GCS_URL, ASSETS_URL)
         obj['image'] = json_util.loads(video_str)
     return obj
+
 
 def clean_item(item, content='draft'):
     """
@@ -153,6 +160,7 @@ def clean_item(item, content='draft'):
         del item['content']['draft']
     return item
 
+
 def before_returning_posts(response):
     """
     For each post data
@@ -173,18 +181,20 @@ def before_returning_posts(response):
             if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
                 del item['brief']['draft']
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
-                    item['brief']['html'] = item['brief']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
-                    item['brief']['html'] = item['brief']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
-            #if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
+                    item['brief']['html'] = item['brief']['html'].replace("鏡週刊",
+                                                                          '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
+                    item['brief']['html'] = item['brief']['html'].replace("本刊",
+                                                                          '<a href="https://www.mirrormedia.mg">本刊</a>')
+            # if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
             #    if keep != 'draft':
             #        del item['content']['draft']
-                #if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
-                #    item['content']['html']= item['content']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
-                #    item['content']['html'] = item['content']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
-                #if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
-                #    for i in range(len(item['content']['apiData'])):
-                #        if 'content' in item['content']['apiData'][i] and isinstance(item['content']['apiData'][i]['content'][0], str):
-                #            item['content']['apiData'][i]['content'][0] = re.sub(r'<.+?>', r'', item['content']['apiData'][i]['content'][0])
+            # if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
+            #    item['content']['html']= item['content']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
+            #    item['content']['html'] = item['content']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
+            # if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
+            #    for i in range(len(item['content']['apiData'])):
+            #        if 'content' in item['content']['apiData'][i] and isinstance(item['content']['apiData'][i]['content'][0], str):
+            #            item['content']['apiData'][i]['content'][0] = re.sub(r'<.+?>', r'', item['content']['apiData'][i]['content'][0])
             if clean == 'content':
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     del item['brief']['html']
@@ -196,13 +206,14 @@ def before_returning_posts(response):
                 page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
                 item['content']['html'] = page_div
             replace_imageurl(item)
-            #if related == 'full' and item['style'] == 'photography':
+            # if related == 'full' and item['style'] == 'photography':
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
             item = clean_item(item, keep)
         return response
     else:
         abort(404)
+
 
 def before_returning_albums(response):
     """
@@ -215,7 +226,8 @@ def before_returning_albums(response):
     items = response['_items']
     for item in items:
         item = clean_item(item)
-        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item[
+            'brief']:
             del item['brief']['draft']
             del item['brief']['apiData']
         if replace != 'false':
@@ -223,6 +235,7 @@ def before_returning_albums(response):
         if writer == 'full':
             item = get_full_contacts(item, 'vocals')
     return response
+
 
 def before_returning_meta(response):
     """
@@ -236,7 +249,8 @@ def before_returning_meta(response):
     items = response['_items']
     for item in items:
         item = clean_item(item)
-        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+        if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item[
+            'brief']:
             del item['brief']['draft']
             del item['brief']['apiData']
         if replace != 'false':
@@ -276,22 +290,26 @@ def before_returning_listing(response):
     if '_items' in response and isinstance(response['_items'], list):
         for item in response['_items']:
             item = clean_item(item)
-            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item['brief']:
+            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief'] and 'apiData' in item[
+                'brief']:
                 del item['brief']['draft']
                 del item['brief']['apiData']
-            if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'coverPhoto' in item['heroVideo'] and item['heroVideo']['coverPhoto']:
+            if 'heroVideo' in item and isinstance(item['heroVideo'], dict) and 'coverPhoto' in item['heroVideo'] and \
+                    item['heroVideo']['coverPhoto']:
                 headers = dict(request.headers)
                 tc = app.test_client()
                 cover_photo = str(item['heroVideo']['coverPhoto'])
                 resp = tc.get('images?where={"_id":{"$in":["' + cover_photo + '"]}}', headers=headers)
                 resp_data = json_util.loads(resp.data.decode("utf-8"))
                 if '_items' in resp_data and len(resp_data['_items']) > 0:
-                    result = {x: resp_data['_items'][0][x] for x in ('image','_id','description','tags','createTime')}
+                    result = {x: resp_data['_items'][0][x] for x in
+                              ('image', '_id', 'description', 'tags', 'createTime')}
                     item['heroVideo']['coverPhoto'] = result
             replace_imageurl(item)
     else:
         print(response)
     return response
+
 
 def before_returning_audiochoices(response):
     """
@@ -300,7 +318,7 @@ def before_returning_audiochoices(response):
     - brief/apiData, draft
     """
     tc = app.test_client()
-    embed = { "audio": "audios", "heroImage": "images", "vocals": "contacts" }
+    embed = {"audio": "audios", "heroImage": "images", "vocals": "contacts"}
     for item in response['_items']:
         if 'choices' in item:
             for field in embed.keys():
@@ -352,6 +370,7 @@ def before_returning_choices(response):
                 del i['tags']
     return response
 
+
 def before_returning_topics(response):
     """
     delete brief/apiData, draft
@@ -365,20 +384,23 @@ def before_returning_topics(response):
         replace_imageurl(item)
     return response
 
+
 def before_returning_sections(response):
     """
     sort section
     """
     items = response['_items']
-    sortedItems = sorted(items, key = lambda x: x["sortOrder"])
+    sortedItems = sorted(items, key=lambda x: x["sortOrder"])
     response['_items'] = sortedItems
     return response
+
 
 def remove_extra_fields(item):
     accepted_fields = list(schema)
     for field in list(item):
         if field not in accepted_fields and field != '_id':
             del item[field]
+
 
 def pre_get_callback(resource, request, lookup):
     """
@@ -398,50 +420,51 @@ def pre_get_callback(resource, request, lookup):
         elif isCampaign is None:
             lookup.update({"isCampaign": False})
 
-def generate_data(keywords, section, size=100):
-    section_id = {"時事":"57e1e0e5ee85930e00cad4e9",
-    "娛樂":"57e1e11cee85930e00cad4ea",
-    "財經理財":"596441d04bbe120f002a319a",
-    "人物":"596441604bbe120f002a3197",
-    "國際":"5964400d4bbe120f002a3191",
-    "美食旅遊":"57dfe399ee85930e00cad4d6",
-    "瑪法達":"5971aa8ce531830d00e32812",
-    "文化":"5964418a4bbe120f002a3198",
-    "汽車鐘錶":"57dfe3b0ee85930e00cad4d7",
-    "最新":"57e1e153ee85930e00cad4eb"
-    }
+
+def generate_data(keywords, section, max_results=100, page=1):
+
+    section_id = {"時事": "57e1e0e5ee85930e00cad4e9",
+                  "娛樂": "57e1e11cee85930e00cad4ea",
+                  "財經理財": "596441d04bbe120f002a319a",
+                  "人物": "596441604bbe120f002a3197",
+                  "國際": "5964400d4bbe120f002a3191",
+                  "美食旅遊": "57dfe399ee85930e00cad4d6",
+                  "瑪法達": "5971aa8ce531830d00e32812",
+                  "文化": "5964418a4bbe120f002a3198",
+                  "汽車鐘錶": "57dfe3b0ee85930e00cad4d7",
+                  "最新": "57e1e153ee85930e00cad4eb"
+                  }
     keywords = keywords.split('%20')
-    # must = []
     should = []
-    must = [{"multi_match" : {"query":    keyword,
-                              "type":     "phrase",
-                              "fields":   [ "title^2", "content", "writers.name" ]
-                }
-            } for keyword in keywords]
-    must.append({"match" : {"isAudioSiteOnly": False}})
+    must = [{"multi_match": {"query": keyword,
+                             "type": "phrase",
+                             "fields": ["title^2", "content", "writers.name"]
+                             }
+             } for keyword in keywords]
+    must.append({"match": {"isAudioSiteOnly": False}})
     if section:
-        must.append({"match" : {"sections._id": section_id[section]}})
-    data = {"from": 0, "size": size,
-    "query": {
-        "bool": {
-        "must": must,
-        "should" : should
-        }
-        
-    },
-    "sort" : [
-        {"publishedDate": {"order": "desc"}},
-        "_score"
-    ]
-    }
+        must.append({"match": {"sections._id": section_id[section]}})
+    offset = (page - 1) * max_results
+    data = {"from": 0 + offset, "size": max_results,
+            "query": {
+                "bool": {
+                    "must": must,
+                    "should": should
+                }
+
+            },
+            "sort": [
+                {"publishedDate": {"order": "desc"}},
+                "_score"
+            ]
+            }
     return data
 
 
 # data = generate_data('蔡英文','最新')
 
-#app = Eve(auth=RolesAuth)
+# app = Eve(auth=RolesAuth)
 app = Eve()
-
 
 # These two event hooks seems deprecated
 app.on_replace_article += lambda item, original: remove_extra_fields(item)
@@ -472,12 +495,13 @@ MetricsMiddleware(app)
 redis_cache = RedisCache(read_target=redis_read, write_target=redis_write)
 app.wsgi_app = Redisware(app.wsgi_app, rules=REDIS_EXCEPTIONS, cache=redis_cache, ttl_config=REDIS_TTL)
 
+
 @app.route("/sections-featured", methods=['GET', 'POST'])
 def get_sections_latest():
-    response = { "_items": {},
-                 "_links": {
-                            "self": { "href":"sections-latest", "title": "sections latest"},
-                            "parent":{ "parent": "/", "title": "Home" } } }
+    response = {"_items": {},
+                "_links": {
+                    "self": {"href": "sections-latest", "title": "sections latest"},
+                    "parent": {"parent": "/", "title": "Home"}}}
     headers = dict(request.headers)
     content = request.args.get('content') or 'posts'
     tc = app.test_client()
@@ -488,9 +512,9 @@ def get_sections_latest():
     resp_data = json_util.loads(resp.data.decode("utf-8"))
     if ("_error" not in resp_data and "_items" in resp_data):
         section_items = resp_data["_items"]
-        section_items = sorted(section_items, key = lambda x: x["sortOrder"])
+        section_items = sorted(section_items, key=lambda x: x["sortOrder"])
     else:
-        section_items = { "_items": [] }
+        section_items = {"_items": []}
 
     for item in section_items:
         if (item['name'] == 'foodtravel'):
@@ -498,16 +522,18 @@ def get_sections_latest():
                 endpoint = 'getmeta'
             else:
                 endpoint = 'getlist'
-            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item['_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
+            sec_resp = tc.get('/' + endpoint + '?where={"sections":"' + item[
+                '_id'] + '","isFeatured":true}&max_results=5&sort=-publishedDate', headers=headers)
             resp_header = dict(sec_resp.headers)
             sec_items = json_util.loads(sec_resp.data.decode("utf-8"))
             if '_error' not in sec_items and "_items" in sec_items:
-                #response[item['name']] = sec_items['_items']
+                # response[item['name']] = sec_items['_items']
                 for sec_item in sec_items:
                     clean_item(sec_item)
                     replace_imageurl(sec_item)
                 response['_items'][item['name']] = sec_items['_items']
     return Response(json_util.dumps(response), headers=resp_header)
+
 
 @app.route("/timeline/<topicId>", methods=['GET'])
 def get_timeline(topicId):
@@ -552,7 +578,8 @@ def get_timeline(topicId):
         else:
             reverse = False
         if "_items" in node_data:
-            response["nodes"] = sorted(node_data["_items"], key = lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'), reverse = reverse)
+            response["nodes"] = sorted(node_data["_items"], key=lambda x: datetime.strptime(x["nodeDate"], '%Y/%m/%d'),
+                                       reverse=reverse)
         if "_meta" in node_data:
             response["_meta"] = node_data["_meta"]
         if "nodes" in response:
@@ -567,6 +594,7 @@ def get_timeline(topicId):
     else:
         abort(404)
 
+
 @app.route("/combo", methods=['GET'])
 def handle_combo():
     start = time.time()
@@ -576,14 +604,14 @@ def handle_combo():
         'choices': '/editorchoices',
         'meta': '/getmeta?sort=-publishedDate&clean=content&related=full',
         'sections': '/sections?sort=sortOrder&max_results=20',
-        'topics':'/topics?sort=sortOrder&max_results=12',
+        'topics': '/topics?sort=sortOrder&max_results=12',
         'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false',
         'projects': 'getlist?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate&related=false'
     }
-    response = { "_endpoints": {},
-                 "_links": {
-                            "self": { "href":"sections-latest", "title": "sections latest"},
-                            "parent":{ "parent": "/", "title": "Home" } } }
+    response = {"_endpoints": {},
+                "_links": {
+                    "self": {"href": "sections-latest", "title": "sections latest"},
+                    "parent": {"parent": "/", "title": "Home"}}}
     headers = dict(request.headers)
     start = time.time()
     tc = app.test_client()
@@ -609,8 +637,9 @@ def handle_combo():
                     replace_imageurl(item)
     # If there is no request args for endpoint, set the header Content-Type to json
     if not ('Content-Type' in headers and headers['Content-Type'] == "application/json"):
-       headers['Content-Type'] = "application/json"
+        headers['Content-Type'] = "application/json"
     return Response(json_util.dumps(response), headers=headers)
+
 
 @app.route("/posts-alias", methods=['GET', 'POST'])
 def get_posts_byname():
@@ -633,7 +662,7 @@ def get_posts_byname():
         rs_data = json_util.loads(r.data.decode("utf-8"))
         if "_error" not in rs_data and "_id" in rs_data:
             collection_id = rs_data['_id']
-            req = '/'+ endpoint + '?where={"' + collection + '":"' + collection_id + '"}'
+            req = '/' + endpoint + '?where={"' + collection + '":"' + collection_id + '"}'
             for key in dict(request.args):
                 if key != 'collection' and key != 'name':
                     req += '&' + key + '=' + request.args.get(key)
@@ -648,17 +677,38 @@ def get_posts_byname():
         r = tc.get("/posts")
     return r
 
+
 @app.route('/search', methods=['GET'])
 def search():
+    """An API endpoint to call mirror search engine
+    keywords: Keywords needs to be searched, sep by blank space
+    section: predefined in website
+    max_result : results shown per page
+
+    Returns:
+        [list] -- List of json
+    """
     import requests
     ESurl = "http://34.80.69.102:9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
+    max_results = request.args.get('max_results')
+    page = request.args.get('page')
+    # size = max_result * page
+    
+    max_results = int(max_results) if max_results else 100
+    page = int(page) if page else 1
+
+    print("max_result: ", max_results)
+    print("page: ", page)
+
     headers = {'Content-Type': 'application/json'}
-    r = requests.post(ESurl, json=generate_data(keywords, section, size=100))
+    
+    r = requests.post(ESurl, json=generate_data(keywords, section, max_results=max_results, page=page))
+
     r.encoding = 'utf-8'
     if not r.json()['hits']['hits']:
-        r = requests.post(ESurl, json=generate_data(keywords, section='', size=100))
+        r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
     return Response(json_util.dumps(r.text), headers=headers)
 
@@ -677,7 +727,7 @@ def youtube():
     if request.args.get('page_token'):
         page_token = request.args.get('page_token')
         playlist_items = youtube.request_api(page_token)
-        
+
     else:
         playlist_items = youtube.request_api()
 
@@ -690,6 +740,7 @@ def youtube():
             return Response(json_util.dumps(playlist_items), headers={'Content-Type': 'application/json'})
     else:
         abort(404)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
