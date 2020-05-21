@@ -49,7 +49,6 @@ def get_full_contacts(item, key):
         # item[key] = resp_data['_items']
     return item
 
-
 def get_full_relateds(item, key):
     """
     get all relateds and cache result in redis
@@ -66,6 +65,29 @@ def get_full_relateds(item, key):
         for i in item[key]:
             for j in resp_data['_items']:
                 if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                    result.append(j)
+                    continue
+        item[key] = result
+        # item[key] = resp_data['_items']
+    return item
+
+
+def get_full_watch(item, key):
+    """
+    get all related watches and cache result in redis
+    query string: /watches?where={"_id": {"$in":[id1, id2, ...]}}
+    """
+    all_relateds = ",".join(
+        map(lambda x: '"' + str(x["href"][8:]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
+    if key in item and item[key]:
+        headers = dict(request.headers)
+        tc = app.test_client()
+        resp = tc.get('watches?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
+        resp_data = json.loads(resp.data.decode("utf-8"))
+        result = []
+        for i in item[key]:
+            for j in resp_data['_items']:
+                if (type(i) is dict and ('watches/' + str(j['_id']) == str(i['href']))) or j['_id'] == str(i):
                     result.append(j)
                     continue
         item[key] = result
@@ -274,7 +296,7 @@ def before_returning_watches(response):
     for item in items:
         if related == 'full':
             item = get_full_relateds(item, 'relateds')
-            item = get_full_relateds(item, 'relatedwatch')
+            item = get_full_watch(item, 'relatedwatch')
         else:
             if related == 'false' and 'relateds' in item:
                 del item['relateds']
