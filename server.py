@@ -3,7 +3,7 @@ from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response, abort
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, \
-    REDIS_READ_PORT, REDIS_AUTH
+    REDIS_READ_PORT, REDIS_AUTH, YT_API_KEY
 from bson import json_util
 
 import json
