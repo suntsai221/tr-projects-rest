@@ -12,6 +12,7 @@ import redis
 import string
 import time
 import urllib.parse
+import requests
 
 from helpers.metrics import MetricsMiddleware
 from helpers.redis import Redisware, RedisCache
@@ -458,6 +459,17 @@ def generate_data(keywords, section, max_results=100, page=1):
             }
     return data
 
+def youtube_endpoint(page_token=''):
+    youtube_api_endpoint = "https://www.googleapis.com/youtube/v3/"
+    return "{}playlistItems?part=snippet&maxResults=50&pageToken={}&playlistId=UUYkldEK001GxR884OZMFnRw&key={}".format(youtube_api_endpoint, page_token, YT_API_KEY)
+
+
+def request_api(page_token=''):
+    r = requests.get(youtube_endpoint(page_token))
+    try:
+        return r.json()
+    except:
+        return []
 
 # data = generate_data('蔡英文','最新')
 
@@ -721,13 +733,14 @@ def youtube():
             nextPageToken, prevPageToken: Place this in page_token
             items: video items, the video id is in items["snippet"]["resourceId"]["videoId"]
     """
-    import youtube
+    # import youtube
+    
     if request.args.get('page_token'):
         page_token = request.args.get('page_token')
-        playlist_items = youtube.request_api(page_token)
+        playlist_items = request_api(page_token)
 
     else:
-        playlist_items = youtube.request_api()
+        playlist_items = request_api()
 
     if playlist_items:
         if "error" in playlist_items.keys():
@@ -735,7 +748,7 @@ def youtube():
         else:
             if "pageInfo" in playlist_items.keys():
                 del playlist_items["pageInfo"]
-            return Response(json_util.dumps(playlist_items), headers={'Content-Type': 'application/json'})
+            return Response(json_util.loads(json_util.dumps(playlist_items)), headers={'Content-Type': 'application/json'})
     else:
         abort(404)
 
