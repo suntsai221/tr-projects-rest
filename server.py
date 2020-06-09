@@ -25,7 +25,6 @@ redis_read = redis.Redis(connection_pool=redis_readPool)
 redis_writePool = redis.ConnectionPool(host=REDIS_WRITE_HOST, port=redis_write_port, password=REDIS_AUTH)
 redis_write = redis.Redis(connection_pool=redis_writePool)
 
-
 def get_full_contacts(item, key):
     """
     get all the contacts
@@ -748,7 +747,7 @@ def youtube():
         else:
             if "pageInfo" in playlist_items.keys():
                 del playlist_items["pageInfo"]
-            return Response(json_util.loads(json_util.dumps(playlist_items)), headers={'Content-Type': 'application/json'})
+            return Response(json_util.dumps(playlist_items), headers={'Content-Type': 'application/json'})
     else:
         abort(404)
 
