@@ -733,13 +733,13 @@ def yt_search():
 
     if search_result_returned:
         if "error" in search_result_returned.keys():
-            abort(404)
+            abort(400)
         else:
             if "pageInfo" in search_result_returned.keys():
                 del search_result_returned["pageInfo"]
             return Response(json_util.dumps(search_result_returned), headers={'Content-Type': 'application/json'})
     else:
-        abort(404)
+        abort(204)
 
 
 @app.route('/youtube/videos', methods=['GET'])
@@ -750,13 +750,13 @@ def yt_videos():
 
     if video_items_returned:
         if "error" in video_items_returned.keys():
-            abort(404)
+            abort(400)
         else:
             if "pageInfo" in video_items_returned.keys():
                 del video_items_returned["pageInfo"]
             return Response(json_util.dumps(video_items_returned), headers={'Content-Type': 'application/json'})
     else:
-        abort(404)
+        abort(204)
 
 
 @app.route('/youtube/channels', methods=['GET'])
@@ -767,38 +767,30 @@ def yt_channels():
 
     if channel_items_returned:
         if "error" in channel_items_returned.keys():
-            abort(404)
+            abort(400)
         else:
             if "pageInfo" in channel_items_returned.keys():
                 del channel_items_returned["pageInfo"]
             return Response(json_util.dumps(channel_items_returned), headers={'Content-Type': 'application/json'})
     else:
-        abort(404)
+        abort(204)
 
 @app.route("/youtube/playlistItems", methods=['GET'])
 def youtube():
-    """Youtube api endpoint for app to use, returns 50 video results per page.
-    if "page_token" is supplied, jump to that page.
-
-    Returns:
-        dict -- keys:["kind", "etag", "nextPageToken", "items", "prevPageToken"]
-            etag: A tag that can be used for caching the result
-            nextPageToken, prevPageToken: Place this in page_token
-            items: video items, the video id is in items["snippet"]["resourceId"]["videoId"]
-    """
+    
     endpoint = 'playlistItems'
     params = request.query_string.decode("utf-8")
     playlist_items_returned = request_api(params, endpoint)
 
     if playlist_items_returned:
         if "error" in playlist_items_returned.keys():
-            abort(500)
+            abort(400)
         else:
             if "pageInfo" in playlist_items_returned.keys():
                 del playlist_items_returned["pageInfo"]
             return Response(json_util.dumps(playlist_items_returned), headers={'Content-Type': 'application/json'})
     else:
-        abort(500)
+        abort(204)
 
 
 if __name__ == '__main__':
