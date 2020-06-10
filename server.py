@@ -6,6 +6,7 @@ from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WR
     REDIS_READ_PORT, REDIS_AUTH, YT_API_KEY
 from bson import json_util
 
+
 import json
 import re
 import redis
@@ -13,6 +14,7 @@ import string
 import time
 import urllib.parse
 import requests
+
 
 from helpers.metrics import MetricsMiddleware
 from helpers.redis import Redisware, RedisCache
@@ -458,13 +460,15 @@ def generate_data(keywords, section, max_results=100, page=1):
             }
     return data
 
-def youtube_endpoint(page_token=''):
+def youtube_endpoint(params, endpoint):
     youtube_api_endpoint = "https://www.googleapis.com/youtube/v3/"
-    return "{}playlistItems?part=snippet&maxResults=50&pageToken={}&playlistId=UUYkldEK001GxR884OZMFnRw&key={}".format(youtube_api_endpoint, page_token, YT_API_KEY)
+    # print("CURRENT URI: ", "{}{}?{}&key={}".format(youtube_api_endpoint, endpoint, params, YT_API_KEY))
+    
+    return "{}{}?{}&key={}".format(youtube_api_endpoint, endpoint, params, YT_API_KEY)
 
 
-def request_api(page_token=''):
-    r = requests.get(youtube_endpoint(page_token))
+def request_api(params, endpoint):
+    r = requests.get(youtube_endpoint(params, endpoint))
     try:
         return r.json()
     except:
@@ -697,7 +701,6 @@ def search():
     Returns:
         [list] -- List of json
     """
-    import requests
     ESurl = "http://34.80.69.102:9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
@@ -721,7 +724,58 @@ def search():
     r.encoding = 'utf-8'
     return Response(json_util.dumps(r.text), headers=headers)
 
-@app.route("/youtube", methods=['GET'])
+
+@app.route('/youtube/search', methods=['GET'])
+def yt_search():
+    endpoint = 'search'
+    params = request.query_string.decode("utf-8")
+    search_result_returned = request_api(params, endpoint)
+
+    if search_result_returned:
+        if "error" in search_result_returned.keys():
+            abort(404)
+        else:
+            if "pageInfo" in search_result_returned.keys():
+                del search_result_returned["pageInfo"]
+            return Response(json_util.dumps(search_result_returned), headers={'Content-Type': 'application/json'})
+    else:
+        abort(404)
+
+
+@app.route('/youtube/videos', methods=['GET'])
+def yt_videos():
+    endpoint = 'videos'
+    params = request.query_string.decode("utf-8")
+    video_items_returned = request_api(params, endpoint)
+
+    if video_items_returned:
+        if "error" in video_items_returned.keys():
+            abort(404)
+        else:
+            if "pageInfo" in video_items_returned.keys():
+                del video_items_returned["pageInfo"]
+            return Response(json_util.dumps(video_items_returned), headers={'Content-Type': 'application/json'})
+    else:
+        abort(404)
+
+
+@app.route('/youtube/channels', methods=['GET'])
+def yt_channels():
+    endpoint = 'channels'
+    params = request.query_string.decode("utf-8")
+    channel_items_returned = request_api(params, endpoint)
+
+    if channel_items_returned:
+        if "error" in channel_items_returned.keys():
+            abort(404)
+        else:
+            if "pageInfo" in channel_items_returned.keys():
+                del channel_items_returned["pageInfo"]
+            return Response(json_util.dumps(channel_items_returned), headers={'Content-Type': 'application/json'})
+    else:
+        abort(404)
+
+@app.route("/youtube/playlistItems", methods=['GET'])
 def youtube():
     """Youtube api endpoint for app to use, returns 50 video results per page.
     if "page_token" is supplied, jump to that page.
@@ -732,24 +786,19 @@ def youtube():
             nextPageToken, prevPageToken: Place this in page_token
             items: video items, the video id is in items["snippet"]["resourceId"]["videoId"]
     """
-    # import youtube
-    
-    if request.args.get('page_token'):
-        page_token = request.args.get('page_token')
-        playlist_items = request_api(page_token)
+    endpoint = 'playlistItems'
+    params = request.query_string.decode("utf-8")
+    playlist_items_returned = request_api(params, endpoint)
 
-    else:
-        playlist_items = request_api()
-
-    if playlist_items:
-        if "error" in playlist_items.keys():
-            abort(404)
+    if playlist_items_returned:
+        if "error" in playlist_items_returned.keys():
+            abort(500)
         else:
-            if "pageInfo" in playlist_items.keys():
-                del playlist_items["pageInfo"]
-            return Response(json_util.dumps(playlist_items), headers={'Content-Type': 'application/json'})
+            if "pageInfo" in playlist_items_returned.keys():
+                del playlist_items_returned["pageInfo"]
+            return Response(json_util.dumps(playlist_items_returned), headers={'Content-Type': 'application/json'})
     else:
-        abort(404)
+        abort(500)
 
 
 if __name__ == '__main__':
