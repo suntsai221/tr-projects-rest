@@ -27,6 +27,7 @@ REDIS_EXCEPTIONS = {
   # cache for 7 days
   "/images": 604800,
   "/sections-featured": 600,
+  "/sections": 600,
   # cache for 24 hours
   "/partners": 86400,
   "/externals": 86400,
