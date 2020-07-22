@@ -132,6 +132,142 @@ listing_schema = {
   }
 }
 
+culturepost_schema = {
+  'name': {
+    'type': 'string',
+  },
+  'slug': {
+    'type': 'string',
+  },
+  'title': {
+    'type': 'string',
+  },
+  'titleColor': {
+    'type': 'string',
+  },
+  'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'mobileImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'heroCaption': {
+    'type': 'string',
+  },
+  'state': {
+    'type': 'string',
+  },
+  'writers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'photographers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'camera_man': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'designers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'engineers': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'contacts',
+            'field': '_id',
+            'embeddable': True
+        },
+    },
+  },
+  'publishedDate': {
+    'type': 'datetime',
+  },
+  'createTime': {
+    'type': 'datetime',
+  },
+  'updatedAt': {
+    'type': 'datetime',
+  },
+  'style': {
+    'type': 'string',
+  },
+  'brief': {
+    'type': 'dict',
+    'schema': {
+      "html": {
+        "type": "string",
+      },
+    },
+  },
+  'content': {
+    'type': 'dict',
+    'schema': {
+       "html": {
+          "type": "string",
+       },
+     },  
+  },
+  'extend_byline': {
+    'type': 'string',
+  },
+  'og_title': {
+    'type': 'string',
+  },
+  'og_description': {
+    'type': 'string',
+  },
+  'og_image': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+}
 partner_schema = {
   'name': {
     'type': 'string',
@@ -2014,6 +2150,26 @@ posts = {
     'schema': post_schema
 }
 
+cultureposts = {
+    'item_title': 'culturepost',
+    'additional_lookup': {
+        'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
+        'field': 'slug'
+    },
+    'datasource': {
+        'source': 'cultureposts',
+        'default_sort': [('publishedDate', -1)],
+        'filter': { { 'state': 'published' } },
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'mobileImage', 'tags', 'og_image'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': culturepost_schema
+}
+
 readrs = {
     'item_title': 'readr',
     'additional_lookup': {
@@ -2458,6 +2614,7 @@ getposts['item_title'] = 'getposts'
 
 DOMAIN = {
     'posts': posts,
+    'cultureposts': cultureposts,
     'readrs': readrs,
     'albums': albums,
     'drafts': drafts,
