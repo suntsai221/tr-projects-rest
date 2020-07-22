@@ -267,6 +267,17 @@ culturepost_schema = {
       'embeddable': True
     },
   },
+  'relateds': {
+    'type': 'list',
+    'schema': {
+        'type': 'objectid',
+        'data_relation': {
+            'resource': 'meta',
+            'field': '_id',
+            'embeddable': True
+         },
+     }, 
+  },
 }
 partner_schema = {
   'name': {
