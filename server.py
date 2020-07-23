@@ -618,7 +618,7 @@ def handle_combo():
         'meta': '/getmeta?sort=-publishedDate&clean=content&related=full',
         'sections': '/sections?sort=sortOrder&max_results=20',
         'topics': '/topics?sort=sortOrder&max_results=12',
-        'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false',
+        'posts-vue': '/getlist?sort=-publishedDate&clean=content&max_results=20&related=false&isAudioSiteOnly=false',
         'projects': 'getlist?where={"style":{"$in":["projects", "readr"]}}&sort=-publishedDate&related=false'
     }
     response = {"_endpoints": {},
