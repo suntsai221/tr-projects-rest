@@ -200,7 +200,7 @@ def before_returning_posts(response):
                     del item['brief']['html']
                 if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
                     del item['content']['html']
-            if item["style"] == 'script':
+            if 'style' in item and item["style"] == 'script':
                 script_parsing = item['content']['html']
                 scenes = script_parsing.split("<p><code>page</code></p>")
                 page_div = "".join(map(lambda x: '<div class="page">' + x + '</div>', scenes))
