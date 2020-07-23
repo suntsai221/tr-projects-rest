@@ -485,6 +485,7 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 
 # Before return json, refining data content for posts, albums, meta, listing, choices, topics, sections
 app.on_fetched_resource_posts += before_returning_posts
+app.on_fetched_resource_cultureposts += before_returning_posts
 app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_watches += before_returning_watches
