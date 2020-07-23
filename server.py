@@ -63,6 +63,7 @@ def get_full_relateds(item, key, endpoint = 'posts'):
         tc = app.test_client()
         resp = tc.get(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data.decode("utf-8"))
+        print(resp_data)
         result = []
         for i in item[key]:
             for j in resp_data['_items']:
