@@ -2174,7 +2174,7 @@ cultureposts = {
         'filter': { 'state': 'published' },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'mobileImage', 'og_image'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'mobileImage', 'og_image', 'relateds'],
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
     'allow_unknown': False,
