@@ -209,6 +209,8 @@ def before_returning_posts(response):
             # if related == 'full' and item['style'] == 'photography':
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
+            if related == 'cultureposts':
+                item = get_full_relateds(item, 'relateds', 'cultureposts')
             item = clean_item(item, keep)
         return response
     else:
