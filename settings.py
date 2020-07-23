@@ -2151,7 +2151,7 @@ posts = {
     },
     'datasource': {
         'source': 'posts',
-        'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
+        'filter': { '$and': [ { 'isAudioSiteOnly': false } , { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] } ] },
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
