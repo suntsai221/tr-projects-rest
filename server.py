@@ -58,14 +58,11 @@ def get_full_relateds(item, key, endpoint = 'posts'):
     """
     all_relateds = ",".join(
         map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
-    print(item[key])
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
-        print(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}')
         resp = tc.get(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data.decode("utf-8"))
-        print(resp_data)
         result = []
         for i in item[key]:
             for j in resp_data['_items']:
@@ -490,7 +487,7 @@ app.on_insert_article += lambda items: remove_extra_fields(items[0])
 
 # Before return json, refining data content for posts, albums, meta, listing, choices, topics, sections
 app.on_fetched_resource_posts += before_returning_posts
-app.on_fetched_resource_cultureposts += before_returning_posts
+#app.on_fetched_resource_cultureposts += before_returning_posts
 app.on_fetched_resource_albums += before_returning_albums
 app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_watches += before_returning_watches
