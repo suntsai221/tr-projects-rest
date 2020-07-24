@@ -61,6 +61,7 @@ def get_full_relateds(item, key, endpoint = 'posts'):
     if key in item and item[key]:
         headers = dict(request.headers)
         tc = app.test_client()
+        print(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}')
         resp = tc.get(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
         resp_data = json.loads(resp.data.decode("utf-8"))
         print(resp_data)
@@ -211,7 +212,6 @@ def before_returning_posts(response):
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
             if related == 'cultureposts':
-                print("getting full relateds")
                 item = get_full_relateds(item, 'relateds', 'cultureposts')
             item = clean_item(item, keep)
         return response
