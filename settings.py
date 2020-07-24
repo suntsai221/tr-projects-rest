@@ -272,7 +272,7 @@ culturepost_schema = {
     'schema': {
         'type': 'objectid',
         'data_relation': {
-            'resource': 'meta',
+            'resource': 'cultureposts',
             'field': '_id',
             'embeddable': True
          },
