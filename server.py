@@ -211,6 +211,7 @@ def before_returning_posts(response):
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
             if related == 'cultureposts':
+                print("getting full relateds")
                 item = get_full_relateds(item, 'relateds', 'cultureposts')
             item = clean_item(item, keep)
         return response
