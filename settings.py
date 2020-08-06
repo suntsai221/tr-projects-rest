@@ -2161,6 +2161,25 @@ posts = {
     'schema': post_schema
 }
 
+culturepreview = {
+    'item_title': 'culturepost',
+    'additional_lookup': {
+        'url': 'regex("[\w-]+")',
+        'default_sort': [('publishedDate', -1)],
+        'field': 'slug'
+    },
+    'datasource': {
+        'source': 'cultureposts',
+        'default_sort': [('publishedDate', -1)],
+    },
+    'resource_methods': ['GET'],
+    'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'mobileImage', 'og_image', 'relateds'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'cache_expires': 1500,
+    'allow_unknown': False,
+    'schema': culturepost_schema
+}
+
 cultureposts = {
     'item_title': 'culturepost',
     'additional_lookup': {
@@ -2171,6 +2190,7 @@ cultureposts = {
     'datasource': {
         'source': 'cultureposts',
         'default_sort': [('publishedDate', -1)],
+        'filter': { 'state': 'published' },
     },
     'resource_methods': ['GET'],
     'embedded_fields': ['writers','photographers','camera_man','designers','engineers','heroImage', 'mobileImage', 'og_image', 'relateds'],
@@ -2625,6 +2645,7 @@ getposts['item_title'] = 'getposts'
 DOMAIN = {
     'posts': posts,
     'cultureposts': cultureposts,
+    'culturepreview': culturepreview,
     'readrs': readrs,
     'albums': albums,
     'drafts': drafts,
