@@ -780,7 +780,6 @@ def yt_channels():
 
 @app.route("/youtube/playlistItems", methods=['GET'])
 def youtube():
-    
     endpoint = 'playlistItems'
     params = request.query_string.decode("utf-8")
     playlist_items_returned = request_api(params, endpoint)
