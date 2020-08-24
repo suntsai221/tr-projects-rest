@@ -23,6 +23,7 @@ REDIS_TTL = {
   'empty': 100,
 }
 REDIS_EXCEPTIONS = {
+  "/youtube": 1800,
   "/sections": 1200,
   # cache for 7 days
   "/images": 604800,
