@@ -660,6 +660,9 @@ post_schema = {
   'title': {
     'type': 'string',
   },
+  'titleColor': {
+    'type': 'string',
+  },
   'subtitle': {
     'type': 'string',
   },
@@ -672,6 +675,14 @@ post_schema = {
     },
   },
   'heroImage': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'mobileImage': {
     'type': 'objectid',
     'data_relation': {
       'resource': 'images',
