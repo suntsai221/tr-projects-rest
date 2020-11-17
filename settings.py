@@ -19,8 +19,8 @@ REDIS_READ_PORT = 6379
 REDIS_AUTH = ''
 REDIS_TTL = {
   'default': 600,
-  'error': 300,
-  'empty': 100,
+  'error': 60,
+  'empty': 30,
 }
 REDIS_EXCEPTIONS = {
   "/youtube": 1800,
@@ -2166,7 +2166,7 @@ posts = {
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers','heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
+    'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers', 'mobileImage', 'heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
     'cache_control': 'max-age=600,must-revalidate',
     'cache_expires': 600,
     'allow_unknown': False,
