@@ -56,7 +56,6 @@ def get_full_relateds(item, key, endpoint = 'posts'):
     get all relateds and cache result in redis
     query string: /posts?where={"_id": {"$in":[id1, id2, ...]}}
     """
-    all_relateds = ""
     if type(item[key]) is list:
         all_relateds = ",".join(
             map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
