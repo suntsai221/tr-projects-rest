@@ -57,6 +57,7 @@ def get_full_relateds(item, key, endpoint = 'posts'):
     query string: /posts?where={"_id": {"$in":[id1, id2, ...]}}
     """
     all_relateds = ""
+    print("VIDEO DEBUG: " + type(item[key]))
     if type(item[key]) is list:
         all_relateds = ",".join(
             map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
