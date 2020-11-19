@@ -59,7 +59,7 @@ def get_full_relateds(item, key, endpoint = 'posts'):
     if type(item[key]) is list:
         all_relateds = ",".join(
             map(lambda x: '"' + str(x["_id"]) + '"' if type(x) is dict else '"' + str(x) + '"', item[key]))
-    else if type(item[key]) is dict and "_id" in item[key]:
+    elif type(item[key]) is dict and "_id" in item[key]:
         all_relateds = item[key]["_id"]
     if key in item and item[key]:
         headers = dict(request.headers)
