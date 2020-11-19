@@ -209,7 +209,7 @@ def before_returning_posts(response):
             # if related == 'full' and item['style'] == 'photography':
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
-                if ('heroViode' in item and coverPhoto in item['heroVideo']):
+                if ('heroVideo' in item and coverPhoto in item['heroVideo']):
                     item = get_full_relateds(item, 'heroVideo', 'videos')
             if related == 'cultureposts':
                 item = get_full_relateds(item, 'relateds', 'cultureposts')
