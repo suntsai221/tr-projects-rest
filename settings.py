@@ -2640,7 +2640,7 @@ videos = {
     },
     'cache_control': 'max-age=1500,must-revalidate',
     'cache_expires': 1500,
-    'embedded_fields': ['categories', 'sections', 'tags', 'relateds', 'heroImage'],
+    'embedded_fields': ['categories', 'sections', 'tags', 'relateds', 'heroImage', 'coverPhoto'],
     'schema': videos_schema,
 }
 
