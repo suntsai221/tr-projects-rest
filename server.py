@@ -62,7 +62,7 @@ def get_full_relateds(item, key, endpoint = 'posts'):
         headers = dict(request.headers)
         tc = app.test_client()
         resp = tc.get(endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}', headers=headers)
-        print("VIDEO DEBUG: " + resp)
+        print("VIDEO DEBUG: " + str(resp))
         resp_data = json.loads(resp.data.decode("utf-8"))
         result = []
         for i in item[key]:
