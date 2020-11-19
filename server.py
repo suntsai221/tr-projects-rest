@@ -65,16 +65,17 @@ def get_full_relateds(item, key, endpoint = 'posts'):
         headers = dict(request.headers)
         tc = app.test_client()
         resp = tc.get(endpoint + '?where={"_id":{"$in":[' + str(all_relateds) + ']}}', headers=headers)
-        print("VIDEO DEBUG: " + endpoint + '?where={"_id":{"$in":[' + all_relateds + ']}}')
         resp_data = json.loads(resp.data.decode("utf-8"))
-        print("VIDEO DEBUG: " + str(resp.data.decode("utf-8")))
-        result = []
-        for i in item[key]:
-            for j in resp_data['_items']:
-                if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
-                    result.append(j)
-                    continue
-        item[key] = result
+        if type(item[key]) is list:
+            result = []
+            for i in item[key]:
+                for j in resp_data['_items']:
+                    if (type(i) is dict and str(j['_id']) == str(i['_id'])) or j['_id'] == str(i):
+                        result.append(j)
+                        continue
+            item[key] = result
+        elif type(item[key]) is dict:
+            item[key] = resp_data['_items'][0]
         # item[key] = resp_data['_items']
     return item
 
