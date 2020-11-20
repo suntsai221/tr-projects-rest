@@ -213,10 +213,10 @@ def before_returning_posts(response):
                 item['content']['html'] = page_div
             replace_imageurl(item)
             # if related == 'full' and item['style'] == 'photography':
+            if 'heroVideo' in item and instance(item['heroVideo'], dict):
+                item = get_full_relateds(item, 'heroVideo', 'videos')
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
-                if ('heroVideo' in item):
-                    item = get_full_relateds(item, 'heroVideo', 'videos')
             if related == 'cultureposts':
                 item = get_full_relateds(item, 'relateds', 'cultureposts')
             item = clean_item(item, keep)
