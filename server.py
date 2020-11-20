@@ -214,7 +214,7 @@ def before_returning_posts(response):
             replace_imageurl(item)
             # if related == 'full' and item['style'] == 'photography':
             if related == 'article':
-                if 'heroVideo' in item and instance(item['heroVideo'], dict):
+                if 'heroVideo' in item and isinstance(item['heroVideo'], dict):
                     item = get_full_relateds(item, 'heroVideo', 'videos')
             if related == 'full':
                 item = get_full_relateds(item, 'relateds')
