@@ -1613,6 +1613,9 @@ postcategories_schema = {
   'isFeatured': {
     'type': 'boolean',
   },
+  'isMemberOnly': {
+    'type': 'boolean',
+  },
   'brief': {
     'type': 'dict',
     'schema': {
