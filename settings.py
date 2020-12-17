@@ -31,7 +31,7 @@ REDIS_EXCEPTIONS = {
   "/sections": 600,
   # cache for 24 hours
   "/partners": 86400,
-  "/externals": 86400,
+  "/externals": 1200,
   "/contacts": 86400,
 }
 
