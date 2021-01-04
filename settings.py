@@ -1671,7 +1671,7 @@ postcategories_schema = {
   }
 }
 
-magazine_schema = {
+magazines_schema = {
   'title': {
     'type': 'string',
   },
@@ -2689,12 +2689,12 @@ audios = {
     'schema': audios_schema,
 }
 
-magazine = {
+magazines = {
     'resource_methods': ['GET'],
     'cache_control': 'max-age=1500,must-revalidate',
     'embedded_fields': ['coverPhoto'],
     'cache_expires': 1500,
-    'schema': magazine_schema,
+    'schema': magazines_schema,
 }
 
 videos = {
@@ -2743,7 +2743,7 @@ DOMAIN = {
     'watchstores': watchstores,
     'activities': activities,
     'images': images,
-    'magazine': magazine,
+    'magazines': magazines,
     'audios': audios,
     'videos': videos,
     'event': event,
