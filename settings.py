@@ -1671,6 +1671,60 @@ postcategories_schema = {
   }
 }
 
+magazine_schema = {
+  'title': {
+    'type': 'string',
+  },
+  'description': {
+    'type': 'string',
+  },
+  'magazine': {
+    'type': 'dict',
+    'schema': {
+        'filetype': {
+          'type': 'string',
+        },
+        'filename': {
+          'type': 'string',
+        },
+        'originalname': {
+          'type': 'string',
+        },
+        'path': {
+          'type': 'string',
+        },
+        'projectId': {
+          'type': 'string',
+        },
+        'size': {
+          'type': 'string',
+        },
+        'url': {
+          'type': 'string',
+        },
+    },
+  },  
+  'coverPhoto': {
+    'type': 'objectid',
+    'data_relation': {
+      'resource': 'images',
+      'field': '_id',
+      'embeddable': True
+    },
+  },
+  'tags': {
+    'type': 'list',
+    'schema': {
+      'type': 'objectid',
+      'data_relation': {
+        'resource': 'tags',
+        'field': '_id',
+        'embeddable': True
+      },
+    },
+  },
+}
+
 audios_schema = {
   'title': {
     'type': 'string',
@@ -2635,6 +2689,14 @@ audios = {
     'schema': audios_schema,
 }
 
+magazine = {
+    'resource_methods': ['GET'],
+    'cache_control': 'max-age=1500,must-revalidate',
+    'embedded_fields': ['coverPhoto'],
+    'cache_expires': 1500,
+    'schema': magazine_schema,
+}
+
 videos = {
     'resource_methods': ['GET'],
     'datasource': {
@@ -2681,6 +2743,7 @@ DOMAIN = {
     'watchstores': watchstores,
     'activities': activities,
     'images': images,
+    'magazine': magazine,
     'audios': audios,
     'videos': videos,
     'event': event,
