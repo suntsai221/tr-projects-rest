@@ -1675,6 +1675,12 @@ magazines_schema = {
   'title': {
     'type': 'string',
   },
+  'issue': {
+    'type': 'string',
+  },
+  'state': {
+    'type': 'string',
+  },
   'description': {
     'type': 'string',
   },
@@ -1712,16 +1718,8 @@ magazines_schema = {
       'embeddable': True
     },
   },
-  'tags': {
-    'type': 'list',
-    'schema': {
-      'type': 'objectid',
-      'data_relation': {
-        'resource': 'tags',
-        'field': '_id',
-        'embeddable': True
-      },
-    },
+  'publishedDate': {
+    'type': 'datetime',
   },
 }
 
@@ -2691,6 +2689,11 @@ audios = {
 
 magazines = {
     'resource_methods': ['GET'],
+    'datasource': {
+        'source': 'magazines',
+        'filter': {'state': 'published'},
+        'default_sort': [('publishedDate', -1)]
+    },
     'cache_control': 'max-age=1500,must-revalidate',
     'embedded_fields': ['coverPhoto'],
     'cache_expires': 1500,
