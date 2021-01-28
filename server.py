@@ -3,7 +3,7 @@ from datetime import datetime
 from eve import Eve
 from flask import redirect, request, Response, abort
 from settings import posts, ASSETS_URL, GCS_URL, ENV, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_READ_HOST, \
-    REDIS_READ_PORT, REDIS_AUTH, YT_API_KEY
+    REDIS_READ_PORT, REDIS_AUTH, YT_API_KEY, ES_HOST
 from bson import json_util
 
 
@@ -714,8 +714,7 @@ def search():
         [list] -- List of json
     """
     #host = "textsearch-elasticsearch-coordinating-only.text-search.svc.cluster.local"
-    host = "35.201.213.94"
-    ESurl = "http://{host}:9200/plate.posts/_doc/_search"
+    ESurl = "http://" + ES_HOST + ":9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
     max_results = request.args.get('max_results')
