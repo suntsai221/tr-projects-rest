@@ -713,7 +713,8 @@ def search():
     Returns:
         [list] -- List of json
     """
-    host = "textsearch-elasticsearch-coordinating-only.text-search.svc.cluster.local"
+    #host = "textsearch-elasticsearch-coordinating-only.text-search.svc.cluster.local"
+    host = "35.201.213.94"
     ESurl = f"http://{host}:9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
