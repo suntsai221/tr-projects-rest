@@ -725,6 +725,7 @@ def search():
     max_results = int(max_results) if max_results else 100
     page = int(page) if page else 1
 
+    print("ESurl: ", ESurl)
     print("max_result: ", max_results)
     print("page: ", page)
 
