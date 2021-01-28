@@ -18,8 +18,9 @@ import requests
 
 from helpers.metrics import MetricsMiddleware
 from helpers.redis import Redisware, RedisCache
-from settings import REDIS_TTL, REDIS_EXCEPTIONS, ES_HOST
+from settings import REDIS_TTL, REDIS_EXCEPTIONS
 
+ES_HOST = '35.201.213.94'
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
 redis_readPool = redis.ConnectionPool(host=REDIS_READ_HOST, port=redis_read_port, password=REDIS_AUTH)
