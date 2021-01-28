@@ -18,7 +18,7 @@ import requests
 
 from helpers.metrics import MetricsMiddleware
 from helpers.redis import Redisware, RedisCache
-from settings import REDIS_TTL, REDIS_EXCEPTIONS, ES_HOST
+from settings import REDIS_TTL, REDIS_EXCEPTIONS
 
 redis_read_port = int(REDIS_READ_PORT)
 redis_write_port = int(REDIS_WRITE_PORT)
@@ -713,7 +713,7 @@ def search():
     Returns:
         [list] -- List of json
     """
-    #host = "textsearch-elasticsearch-coordinating-only.text-search.svc.cluster.local"
+    ES_HOST = "textsearch-elasticsearch-coordinating-only.text-search.svc.cluster.local"
     ESurl = 'http://' + ES_HOST + ":9200/plate.posts/_doc/_search"
     keywords = request.args.get('keywords')
     section = request.args.get('section')
