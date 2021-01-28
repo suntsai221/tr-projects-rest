@@ -724,10 +724,6 @@ def search():
     max_results = int(max_results) if max_results else 100
     page = int(page) if page else 1
 
-    print("ESurl: ", ESurl)
-    print("max_result: ", max_results)
-    print("page: ", page)
-
     headers = {'Content-Type': 'application/json'}
     
     r = requests.post(ESurl, json=generate_data(keywords, section, max_results=max_results, page=page))
@@ -738,7 +734,8 @@ def search():
         r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
     r.close()
-    return Response(json_util.dumps(r.text), headers=headers)
+    #return Response(json_util.dumps(r.text), headers=headers)
+    return Response(json_util.dumps(r.json()), headers=headers)
 
 
 @app.route('/youtube/search', methods=['GET'])
