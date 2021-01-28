@@ -35,6 +35,10 @@ REDIS_EXCEPTIONS = {
   "/contacts": 86400,
 }
 
+RENDERERS = [
+    'eve.render.JSONRenderer',
+]
+
 # ALLOW ACTIONS
 DEBUG = False
 
