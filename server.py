@@ -733,6 +733,7 @@ def search():
     r = requests.post(ESurl, json=generate_data(keywords, section, max_results=max_results, page=page))
 
     r.encoding = 'utf-8'
+    print(r.json())
     if not r.json()['hits']['hits']:
         r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
