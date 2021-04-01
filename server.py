@@ -796,5 +796,22 @@ def youtube():
         abort(204)
 
 
+@app.route("/converthtml", methods=["POST"])
+def convert2draft():
+    """
+    An API endpoint receives json formatted data like {"html": "<html>...</html>"} to convert html into draft format
+    {"draft": {"draft": {}, "html": }}
+    Returns:
+        [json] -- {"draft_": {"draft": dict, "html": str, "apiData": List} }
+    """
+    from convert_html.draft import convert_html_to_draft
+    json_request = request.json
+    html = json_request.get("html","")
+    if html :
+        resp = convert_html_to_draft(html)
+        return Response(json_util.dumps({"draft_":resp}) ,headers={'Content-Type': 'application/json'})
+    else:
+        abort(400)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
