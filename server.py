@@ -802,14 +802,15 @@ def convert2draft():
     An API endpoint receives json formatted data like {"html": "<html>...</html>"} to convert html into draft format
     {"draft": {"draft": {}, "html": }}
     Returns:
-        [json] -- {"draft_": {"draft": dict, "html": str, "apiData": List} }
+        [json] -- {"draft": dict, "html": str, "apiData": List}
     """
     from convert_html.draft import convert_html_to_draft
-    json_request = request.json
-    html = json_request.get("html","")
+
+    json_request = request.data
+    html = str(json_request)
     if html :
         resp = convert_html_to_draft(html)
-        return Response(json_util.dumps({"draft_":resp}) ,headers={'Content-Type': 'application/json'})
+        return resp
     else:
         abort(400)
 
