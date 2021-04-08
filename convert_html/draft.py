@@ -144,7 +144,7 @@ def p(apiData, blocks, item):
     random_key = generateRandomKey()
     blocks.append({
         "key": random_key,
-        "text": item.text,
+        "text": item.text.encode('utf-8'),
         "type": "unstyled",
         "depth": 0,
         # "inlineStyleRanges": [{"offset": 0, "length": len(item.text)}],
