@@ -10,7 +10,7 @@ ENV CLUSTER_ENV=prod
 WORKDIR /usr/src/app/tr-projects-rest
 
 RUN apk update \
-    && apk add gcc libc-dev linux-headers libxml2 libxslt \
+    && apk add gcc libc-dev linux-headers libxslt-dev libxml2 \
     && pip install --upgrade pip \
     && pip install -r requirements.txt
 
