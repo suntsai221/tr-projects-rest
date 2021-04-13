@@ -1361,6 +1361,9 @@ sections_schema = {
          },
        },
     },
+    'isMemberOnly': {
+      'type': 'boolean',
+    },
     'topics': {
       'type': 'list',
       'schema': {
