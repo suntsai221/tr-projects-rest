@@ -3,6 +3,7 @@
 # Editor files
 *.swp
 .vscode/
-
+.idea/
+.DS_Store
 # Confidential settings directory
 /configs

@@ -1,5 +1,5 @@
 from random import random
-
+import re
 import numpy as np
 from lxml import etree
 
@@ -16,7 +16,7 @@ def convert_html_to_draft(html):
     """
     if html:
         if html.startswith('"'):
-            html = html[1:-1]
+            html = str(html[1:-1])
 
         apiData = []
         entityMap = {}
@@ -144,7 +144,7 @@ def p(apiData, blocks, item):
     random_key = generateRandomKey()
     blocks.append({
         "key": random_key,
-        "text": item.text.encode('utf-8'),
+        "text": item.text,
         "type": "unstyled",
         "depth": 0,
         # "inlineStyleRanges": [{"offset": 0, "length": len(item.text)}],
@@ -159,7 +159,7 @@ def p(apiData, blocks, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
@@ -201,7 +201,7 @@ def a(apiData, blocks, entityMap, i, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(parent)
+                etree.tostring(parent, encoding=str)
             ],
             "styles": {
             }
@@ -229,7 +229,7 @@ def h1(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
@@ -257,7 +257,7 @@ def h2(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
@@ -284,7 +284,7 @@ def code(apiData, blocks, item):
             "type": "code-block",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
@@ -311,7 +311,7 @@ def blockquote(apiData, blocks, item):
             "type": "blockquote",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
@@ -340,7 +340,7 @@ def li(apiData, blocks, item):
                 "type": "ordered-list-item",
                 "alignment": "center",
                 "content": [
-                    etree.tostring(item)
+                    etree.tostring(item, encoding=str)
                 ],
                 "styles": {
                 }
@@ -362,9 +362,22 @@ def li(apiData, blocks, item):
             "type": "unordered-list-item",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item, encoding=str)
             ],
             "styles": {
             }
         }
     )
+
+
+def text_to_draft(text: str):
+    pattern = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
+    url_regex = re.compile(pattern)
+    for url in re.findall(url_regex, text):
+        text = text.replace(url[0], '<a href="%(url)s">%(url)s</a>' % {"url": url[0]})
+
+    paragraphs = text.split('\n\n\n')
+    text = ''.join("<p>" + paragraph + "</p>" for paragraph in paragraphs)
+
+    draft = convert_html_to_draft(text)
+    return draft
