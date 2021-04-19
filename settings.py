@@ -1688,6 +1688,9 @@ magazines_schema = {
   'state': {
     'type': 'string',
   },
+  'type': {
+    'type': 'string',
+  },
   'description': {
     'type': 'string',
   },
