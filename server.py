@@ -817,11 +817,24 @@ def convert2draft():
 
     json_request = request.data
     html = str(json_request)
-    if html :
-        resp = convert_html_to_draft(html)
-        return resp
+    if html:
+        draft = convert_html_to_draft(html)
+        return draft
+    else:
+        abort(400)
+
+@app.route("/converttext", methods=["POST"])
+def convert_from_text():
+    from convert_html.draft import text_to_draft
+
+    json_request = request.data
+    text = str(json_request)
+    draft = text_to_draft(text)
+    if draft:
+        return draft
     else:
         abort(400)
 
 if __name__ == '__main__':
+    app.config['JSON_AS_ASCII'] = False
     app.run(host='0.0.0.0', port=8080, threaded=True, debug=True)
