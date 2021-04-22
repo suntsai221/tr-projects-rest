@@ -159,7 +159,7 @@ def p(apiData, blocks, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }
@@ -201,7 +201,7 @@ def a(apiData, blocks, entityMap, i, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(parent, encoding=str)
+                etree.tostring(parent)
             ],
             "styles": {
             }
@@ -229,7 +229,7 @@ def h1(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }
@@ -257,7 +257,7 @@ def h2(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }
@@ -284,7 +284,7 @@ def code(apiData, blocks, item):
             "type": "code-block",
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }
@@ -311,7 +311,7 @@ def blockquote(apiData, blocks, item):
             "type": "blockquote",
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }
@@ -340,7 +340,7 @@ def li(apiData, blocks, item):
                 "type": "ordered-list-item",
                 "alignment": "center",
                 "content": [
-                    etree.tostring(item, encoding=str)
+                    etree.tostring(item)
                 ],
                 "styles": {
                 }
@@ -362,7 +362,7 @@ def li(apiData, blocks, item):
             "type": "unordered-list-item",
             "alignment": "center",
             "content": [
-                etree.tostring(item, encoding=str)
+                etree.tostring(item)
             ],
             "styles": {
             }

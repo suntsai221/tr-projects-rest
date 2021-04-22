@@ -828,7 +828,7 @@ def convert_from_text():
     from convert_html.draft import text_to_draft
 
     json_request = request.data
-    text = str(json_request)
+    text = json_request.decode('utf-8')
     draft = text_to_draft(text)
     if draft:
         return draft
