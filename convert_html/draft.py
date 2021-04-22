@@ -1,3 +1,4 @@
+import json
 from random import random
 import re
 import numpy as np
@@ -58,9 +59,9 @@ def convert_html_to_draft(html):
             else:
                 continue
 
-        data = {"draft": {"blocks": blocks, "entityMap": entityMap},
+        data = {"draft": json.dumps({"blocks": blocks, "entityMap": entityMap}),
                 "html": html,
-                "apiData": apiData
+                "apiData": str(apiData)
                 }
         return data
 
@@ -159,7 +160,7 @@ def p(apiData, blocks, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
@@ -201,7 +202,7 @@ def a(apiData, blocks, entityMap, i, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(parent)
+                etree.tostring(parent).decode('utf-8')
             ],
             "styles": {
             }
@@ -229,7 +230,7 @@ def h1(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
@@ -257,7 +258,7 @@ def h2(apiData, blocks, item):
             "type": _type,
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
@@ -284,7 +285,7 @@ def code(apiData, blocks, item):
             "type": "code-block",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
@@ -311,7 +312,7 @@ def blockquote(apiData, blocks, item):
             "type": "blockquote",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
@@ -340,7 +341,7 @@ def li(apiData, blocks, item):
                 "type": "ordered-list-item",
                 "alignment": "center",
                 "content": [
-                    etree.tostring(item)
+                    etree.tostring(item).decode('utf-8')
                 ],
                 "styles": {
                 }
@@ -362,7 +363,7 @@ def li(apiData, blocks, item):
             "type": "unordered-list-item",
             "alignment": "center",
             "content": [
-                etree.tostring(item)
+                etree.tostring(item).decode('utf-8')
             ],
             "styles": {
             }
