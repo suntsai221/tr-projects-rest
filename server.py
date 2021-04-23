@@ -815,8 +815,8 @@ def convert2draft():
     """
     from convert_html.draft import convert_html_to_draft
 
-    json_request = request.data
-    html = str(json_request)
+    input_text = request.data
+    html = input_text.decode('utf-8')
     if html:
         draft = convert_html_to_draft(html)
         return draft
@@ -827,8 +827,10 @@ def convert2draft():
 def convert_from_text():
     from convert_html.draft import text_to_draft
 
-    json_request = request.data
-    text = json_request.decode('utf-8')
+    input_text = request.data
+    # text = input_text.decode('utf-8')
+    text = bytes(input_text, "utf-8").decode("unicode_escape")
+
     draft = text_to_draft(text)
     if draft:
         return draft
