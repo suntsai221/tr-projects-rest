@@ -826,10 +826,10 @@ def convert2draft():
 @app.route("/converttext", methods=["POST"])
 def convert_from_text():
     from convert_html.draft import text_to_draft
+    import html
 
-    input_text = request.data
-    # text = input_text.decode('utf-8')
-    text = bytes(input_text, "utf-8").decode("unicode_escape")
+    input_text = request.data.decode('utf-8')
+    text = html.escape(input_text)
 
     draft = text_to_draft(text)
     if draft:
