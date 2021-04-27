@@ -61,7 +61,7 @@ def convert_html_to_draft(html):
 
         data = {"draft": json.dumps({"blocks": blocks, "entityMap": entityMap}),
                 "html": html,
-                "apiData": str(apiData)
+                "apiData": json.dumps(apiData)
                 }
         return data
 
