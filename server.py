@@ -730,7 +730,7 @@ def search():
 
     r.encoding = 'utf-8'
     print(r.json())
-    if not r.json()['hits']['hits']:
+    if 'hits' in r.json() and 'hits' in r.json()['hits'] and not r.json()['hits']['hits']:
         r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
     r.close()
