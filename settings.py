@@ -1963,20 +1963,6 @@ audiomasters_schema = {
   },
 }
 
-audiochoices_schema = {
-  'choices': {
-    'type': 'objectid',
-    'data_relation': {
-        'resource': 'posts',
-        'field': '_id',
-        'embeddable': True
-     },
-  },
-  'sortOrder': {
-    'type': 'integer',
-  },
-}
-
 editorchoices_schema = {
   'choices': {
     'type': 'objectid',
@@ -2504,20 +2490,6 @@ audiomasters = {
     'schema': audiomasters_schema
 }
 
-audiochoices = {
-    'item_title': 'audiochoice',
-    'datasource': {
-        'source': 'audiochoices',
-        'default_sort': [('sortOrder', 1)],
-    },
-    'embedded_fields': ['choices'],
-    'resource_methods': ['GET'],
-    'cache_control': 'max-age=1500,must-revalidate',
-    'cache_expires': 1500,
-    'allow_unknown': False,
-    'schema': audiochoices_schema
-}
-
 editorchoices = {
     'item_title': 'editorchoice',
     'datasource': {
@@ -2745,7 +2717,6 @@ DOMAIN = {
     'tags': tags,
     'choices': choices,
     'editorchoices': editorchoices,
-    'audiochoices': audiochoices,
     'audiomasters': audiomasters,
     'contacts': contacts,
     'topics': topics,
