@@ -33,6 +33,7 @@ REDIS_EXCEPTIONS = {
   "/partners": 86400,
   "/externals": 1200,
   "/contacts": 86400,
+  "/search": 150,
 }
 
 RENDERERS = [
