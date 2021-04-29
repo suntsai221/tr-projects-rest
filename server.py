@@ -322,31 +322,6 @@ def before_returning_listing(response):
     return response
 
 
-def before_returning_audiochoices(response):
-    """
-    choices become full_relateds choices, but delete:
-    - content, relateds. writers, photographers, camera_man, sections, topics, vocals, tags
-    - brief/apiData, draft
-    """
-    tc = app.test_client()
-    embed = {"audio": "audios", "heroImage": "images", "vocals": "contacts"}
-    for item in response['_items']:
-        if 'choices' in item:
-            for field in embed.keys():
-                ids = ''
-                if field in item['choices']:
-                    headers = dict(request.headers)
-                    if isinstance(item['choices'][field], str):
-                        ids = str(item['choices'][field])
-                    elif isinstance(item['choices'][field], list):
-                        ids = ','.join(list(map(str, item['choices'][field])))
-                    resp = tc.get(embed[field] + '?where={"_id":{"$in":["' + ids + '"]}}', headers=headers)
-                    resp_data = json_util.loads(resp.data.decode("utf-8"))
-                    if '_items' in resp_data and len(resp_data['_items']) > 0:
-                        item['choices'][field] = resp_data['_items'][0]
-    return response
-
-
 def before_returning_choices(response):
     """
     choices become full_relateds choices, but delete:
@@ -502,7 +477,6 @@ app.on_fetched_resource_meta += before_returning_meta
 app.on_fetched_resource_watches += before_returning_watches
 app.on_fetched_resource_listing += before_returning_listing
 app.on_fetched_resource_choices += before_returning_choices
-app.on_fetched_resource_audiochoices += before_returning_audiochoices
 app.on_fetched_resource_topics += before_returning_topics
 app.on_fetched_resource_sections += before_returning_sections
 
