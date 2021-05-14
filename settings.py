@@ -1707,15 +1707,6 @@ magazines_schema = {
         'originalname': {
           'type': 'string',
         },
-        'path': {
-          'type': 'string',
-        },
-        'projectId': {
-          'type': 'string',
-        },
-        'size': {
-          'type': 'string',
-        },
         'url': {
           'type': 'string',
         },
