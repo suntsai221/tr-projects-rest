@@ -159,14 +159,6 @@ culturepost_schema = {
       'embeddable': True
     },
   },
-  'mobileImage': {
-    'type': 'objectid',
-    'data_relation': {
-      'resource': 'images',
-      'field': '_id',
-      'embeddable': True
-    },
-  },
   'heroCaption': {
     'type': 'string',
   },
@@ -2209,7 +2201,7 @@ posts = {
         'filter': { '$or': [ { 'state': 'published' }, { 'state': 'invisible' } ] },
     },
     'resource_methods': ['GET'],
-    'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers', 'mobileImage', 'heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
+    'embedded_fields': ['vocals','writers','photographers','camera_man','audio', 'designers','engineers', 'heroImage', 'heroVideo', 'topics', 'sections', 'categories', 'tags', 'og_image', 'relateds'],
     'cache_control': 'max-age=600,must-revalidate',
     'cache_expires': 600,
     'allow_unknown': False,
