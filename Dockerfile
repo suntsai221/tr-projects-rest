@@ -1,4 +1,4 @@
-FROM python:3.8.1-alpine3.11
+FROM python:3.8-slim
 
 RUN addgroup user && adduser -h /home/user -D user -G user -s /bin/sh
 
@@ -9,8 +9,8 @@ ENV CLUSTER_ENV=prod
 
 WORKDIR /usr/src/app/tr-projects-rest
 
-RUN apk update \
-	&&  apk add --upgrade --no-cache \
+RUN apt-get update \
+	&&  apt-get add --upgrade --no-cache \
 	python3 libpq uwsgi-python3 \
 	python3-dev py3-pip alpine-sdk postgresql-dev postgresql \
 	bash openssh curl ca-certificates openssl less htop \
