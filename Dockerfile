@@ -16,7 +16,7 @@ RUN apk update \
 	bash openssh curl ca-certificates openssl less htop \
 	g++ make wget rsync \
 	build-base libpng-dev freetype-dev libexecinfo-dev openblas-dev libgomp lapack-dev \
-    libgcc libquadmath musl  \
+    libgcc libquadmath musl libxml2-dev libxslt-dev \
 	libgfortran \
 	lapack-dev \
     # && apt-get install -y gcc libc-dev libxslt-dev libxml2 \
