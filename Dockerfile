@@ -1,4 +1,4 @@
-FROM logiqx/python:3.7-alpine
+FROM python:3.7-alpine
 
 RUN addgroup user && adduser -h /home/user -D user -G user -s /bin/sh
 
