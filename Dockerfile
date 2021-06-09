@@ -10,7 +10,7 @@ ENV CLUSTER_ENV=prod
 WORKDIR /usr/src/app/tr-projects-rest
 
 RUN apt-get update \
-    # && apt-get install -y gcc libc-dev libxslt-dev libxml2 \
+    && apt-get install -y gcc libc-dev libxslt-dev libxml2 \
     && pip install --upgrade pip \
     && pip install -r requirements.txt
 
