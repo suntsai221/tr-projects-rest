@@ -420,7 +420,7 @@ def generate_data(keywords, section, max_results=100, page=1):
                   "汽車鐘錶": "57dfe3b0ee85930e00cad4d7",
                   "最新": "57e1e153ee85930e00cad4eb"
                   }
-    if keywords in not None:
+    if keywords is not None:
         keywords = keywords.split('%20')
     else:
         keywords = []
