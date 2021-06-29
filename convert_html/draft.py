@@ -81,7 +81,7 @@ def img(blocks, entityMap, i, item):
                 "type": "EMBEDDEDCODE",
                 "mutability": "IMMUTABLE",
                 "data":
-                    {"code": f'<img src={imgsrc}>',
+                    {"embeddedCode": f'<img src={imgsrc}>',
                      "alignment": "center"}
             }})
 
@@ -135,7 +135,7 @@ def iframe(blocks, entityMap, i, item):
             "mutability": "IMMUTABLE",
             "data":
                 {
-                    "code": f'<iframe src={iframe_src} frameborder="0" scrolling="no" style="width:100%;height:600px;" allowfullscreen="allowfullscreen"></iframe>',
+                    "embeddedCode": f'<iframe src={iframe_src} frameborder="0" scrolling="no" style="width:100%;height:600px;" allowfullscreen="allowfullscreen"></iframe>',
                     "alignment": "center"}
         }}
     )
