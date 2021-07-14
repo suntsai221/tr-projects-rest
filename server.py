@@ -186,21 +186,11 @@ def before_returning_posts(response):
         for item in items:
             if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
                 del item['brief']['draft']
-                if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
-                    item['brief']['html'] = item['brief']['html'].replace("鏡週刊",
-                                                                          '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
-                    item['brief']['html'] = item['brief']['html'].replace("本刊",
-                                                                          '<a href="https://www.mirrormedia.mg">本刊</a>')
-            # if 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
-            #    if keep != 'draft':
-            #        del item['content']['draft']
-            # if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
-            #    item['content']['html']= item['content']['html'].replace("鏡週刊", '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
-            #    item['content']['html'] = item['content']['html'].replace("本刊", '<a href="https://www.mirrormedia.mg">本刊</a>')
-            # if tag == 'clean' and isinstance(item['content'], dict) and 'apiData' in item['content'] and isinstance(item['content'], dict):
-            #    for i in range(len(item['content']['apiData'])):
-            #        if 'content' in item['content']['apiData'][i] and isinstance(item['content']['apiData'][i]['content'][0], str):
-            #            item['content']['apiData'][i]['content'][0] = re.sub(r'<.+?>', r'', item['content']['apiData'][i]['content'][0])
+                #if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
+                #    item['brief']['html'] = item['brief']['html'].replace("鏡週刊",
+                #                                                          '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
+                #    item['brief']['html'] = item['brief']['html'].replace("本刊",
+                #                                                          '<a href="https://www.mirrormedia.mg">本刊</a>')
             if clean == 'content':
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     del item['brief']['html']
