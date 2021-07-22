@@ -3,27 +3,27 @@ from random import random
 import re
 import numpy as np
 from lxml import etree
-
+import html
 
 def generateRandomKey():
     return np.base_repr(int(np.floor(random() * 2 ** 24)), 32).lower()
 
 
-def convert_html_to_draft(html):
+def convert_html_to_draft(html_content):
     """
 
     :param html: string
     :return: data: dict
     """
-    if html:
-        if html.startswith('"'):
-            html = str(html[1:-1])
+    if html_content:
+        if html_content.startswith('"'):
+            html_content = str(html_content[1:-1])
 
         apiData = []
         entityMap = {}
         blocks = []
 
-        parsed_html = etree.HTML(html)
+        parsed_html = etree.HTML(html_content)
         all_leaf_nodes = parsed_html.xpath('//*[not(*)]')
 
         for i, item in enumerate(all_leaf_nodes):
@@ -59,9 +59,9 @@ def convert_html_to_draft(html):
             else:
                 continue
 
-        data = {"draft": json.dumps({"blocks": blocks, "entityMap": entityMap}),
-                "html": html,
-                "apiData": json.dumps(apiData)
+        data = {"draft": json.dumps({"blocks": blocks, "entityMap": entityMap}, ensure_ascii=False),
+                "html": html_content,
+                "apiData": json.dumps(apiData, ensure_ascii=False)
                 }
         return data
 
@@ -142,13 +142,17 @@ def iframe(blocks, entityMap, i, item):
 
 
 def p(apiData, blocks, item):
+    pattern1_attrib = re.compile(r"<.*?>")
+    s1 = etree.tostring(item).decode('utf-8')
+    s1 = pattern1_attrib.sub('', s1)
+    s1 = html.unescape(s1)
+
     random_key = generateRandomKey()
     blocks.append({
         "key": random_key,
         "text": item.text,
         "type": "unstyled",
         "depth": 0,
-        # "inlineStyleRanges": [{"offset": 0, "length": len(item.text)}],
         "inlineStyleRanges": [],
         "entityRanges": [
         ],
@@ -160,7 +164,7 @@ def p(apiData, blocks, item):
             "type": "unstyled",
             "alignment": "center",
             "content": [
-                etree.tostring(item).decode('utf-8')
+                s1
             ],
             "styles": {
             }
@@ -375,10 +379,11 @@ def text_to_draft(text: str):
     pattern = "((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
     url_regex = re.compile(pattern)
     for url in re.findall(url_regex, text):
-        text = text.replace(url[0], '<a href="%(url)s">%(url)s</a>' % {"url": url[0]})
-
+        text = text.replace(url[0], '<a href="%(url)s">%(url)s</a>' % {"url": url[0]}).encode('utf-8')
     paragraphs = text.split('\n\n\n')
-    text = ''.join("<p>" + paragraph + "</p>" for paragraph in paragraphs)
-
+    text = ''.join([ paragraph for paragraph in paragraphs ])
     draft = convert_html_to_draft(text)
     return draft
+
+txt = '本土疫情嚴峻，隔離衣、防護面罩等防疫物資需求大增，新北地檢署查獲一起仿冒防護衣案件，眾里科技公司涉嫌引進，18萬件中國、越南製的隔離衣，裝入合格藥廠的隔離衣外盒，偽裝成合格商品販賣，而且假貨還賣得比原廠貴，讓原廠公司出面大罵惡劣。醫師表示，不合格的防護衣，可能會造成醫療防護的崩盤。'
+print(text_to_draft(txt))
