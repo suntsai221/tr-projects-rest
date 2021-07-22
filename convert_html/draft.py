@@ -384,6 +384,3 @@ def text_to_draft(text: str):
     text = ''.join([ paragraph for paragraph in paragraphs ])
     draft = convert_html_to_draft(text)
     return draft
-
-txt = '本土疫情嚴峻，隔離衣、防護面罩等防疫物資需求大增，新北地檢署查獲一起仿冒防護衣案件，眾里科技公司涉嫌引進，18萬件中國、越南製的隔離衣，裝入合格藥廠的隔離衣外盒，偽裝成合格商品販賣，而且假貨還賣得比原廠貴，讓原廠公司出面大罵惡劣。醫師表示，不合格的防護衣，可能會造成醫療防護的崩盤。'
-print(text_to_draft(txt))
