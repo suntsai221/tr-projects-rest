@@ -184,6 +184,7 @@ def before_returning_posts(response):
     if '_items' in response and isinstance(response['_items'], list):
         items = response['_items']
         for item in items:
+            item["word_count"] = 0
             if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
                 del item['brief']['draft']
                 #if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
@@ -195,6 +196,7 @@ def before_returning_posts(response):
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     del item['brief']['html']
                 if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
+                    item['word_count'] = len(item['content']['html'])
                     del item['content']['html']
             if 'style' in item and item["style"] == 'script':
                 script_parsing = item['content']['html']
