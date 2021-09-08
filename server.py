@@ -185,6 +185,8 @@ def before_returning_posts(response):
         items = response['_items']
         for item in items:
             item["word_count"] = 0
+            if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
+                item['word_count'] = len(item['content']['html'])
             if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
                 del item['brief']['draft']
                 #if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
