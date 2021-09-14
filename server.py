@@ -125,7 +125,7 @@ def clean_item(item, content='draft'):
     if '_created' in item:
         del item['_created']
     if 'relateds' in item:
-        keep = ["title", "heroImage", "slug", "_id"]
+        keep = ["title", "heroImage", "slug", "_id", "categories"]
         for r in item['relateds']:
             if isinstance(r, dict):
                 for k in list(r):
