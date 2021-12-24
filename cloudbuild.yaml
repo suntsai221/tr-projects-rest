@@ -65,7 +65,7 @@ steps:
     entrypoint: bash
   - name: gcr.io/cloud-builders/kubectl
     env:
-      - CLOUDSDK_COMPUTE_REGION=asia-east1
+      - CLOUDSDK_COMPUTE_REGION=asia-east1-a
       - CLOUDSDK_CONTAINER_CLUSTER=dev
     args:
       - apply
