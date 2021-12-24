@@ -9,7 +9,7 @@ steps:
     args:
       - push
       - gcr.io/$PROJECT_ID/tr-projects-rest
-  - name: launcher.gcr.io/google/ubuntu1604
+  - name: launcher.gcr.io/google/ubuntu1804
     args:
       - '-c'
       - >
@@ -34,7 +34,7 @@ steps:
         # update docker image
 
         /workspace/kustomize edit set image
-        readr-nuxt=gcr.io/${PROJECT_ID}/readr-nuxt:${BRANCH_NAME}_${SHORT_SHA}
+        tr-projects-rest=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
 
 
         # back to kubernetes-configs root
@@ -43,7 +43,7 @@ steps:
 
 
         /workspace/kustomize build
-        "./readr-nuxt/overlays/${BRANCH_NAME}" >>
+        "./tr-projects-rest/overlays/${BRANCH_NAME}" >>
         $_FILE_TO_DEPLOY
 
         # print out configs
