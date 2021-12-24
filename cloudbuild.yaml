@@ -1,4 +1,17 @@
 steps:                                                                                                                                                                  
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - source
+      - repos
+      - clone
+      - github_mirror-media_kubernetes-configs
+      - ./dockerignore/kubernetes-configs
+  - name: bash
+    args:
+      - cp
+      - >-
+        ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
+      - ./dev/dev.py
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -9,7 +22,7 @@ steps:
     args:
       - push
       - gcr.io/$PROJECT_ID/tr-projects-rest
-  - name: launcher.gcr.io/google/ubuntu1804
+  - name: launcher.gcr.io/google/ubuntu1604
     args:
       - '-c'
       - >
