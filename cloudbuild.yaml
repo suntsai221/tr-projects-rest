@@ -47,7 +47,7 @@ steps:
         # update docker image
 
         /workspace/kustomize edit set image
-        tr-projects-rest=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
+        readr-nuxt=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
 
 
         # back to kubernetes-configs root
@@ -62,6 +62,7 @@ steps:
         # print out configs
 
         cat $_FILE_TO_DEPLOY
+    entrypoint: bash
   - name: gcr.io/cloud-builders/kubectl
     env:
       - CLOUDSDK_COMPUTE_REGION=asia-east1
