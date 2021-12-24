@@ -702,6 +702,9 @@ def search():
     r.encoding = 'utf-8'
     print(r.json())
     if 'hits' in r.json() and 'hits' in r.json()['hits'] and not r.json()['hits']['hits']:
+        for h in r.json()['hits']['hits']:
+            if "_source" in h and "content" in h["_source"]:
+                del h["_source"]["content"]
         r = requests.post(ESurl, json=generate_data(keywords, section='', max_results=max_results, page=page))
     r.encoding = 'utf-8'
     r.close()
