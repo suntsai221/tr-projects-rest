@@ -47,7 +47,7 @@ steps:
         # update docker image
 
         /workspace/kustomize edit set image
-        readr-nuxt=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
+        tr-projects-rest=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
 
 
         # back to kubernetes-configs root
