@@ -27,24 +27,37 @@ steps:
       - '-c'
       - >
         # install kustomize
-        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+
+        curl -s
+        "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
+        | bash
+
 
         # mv kubernetes-configs folder
+
         mv ./dockerignore/kubernetes-configs /workspace/kubernetes-configs
+
 
         # cd to (dev|staging) environment kustimzation root
 
-        cd /workspace/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}
+        cd
+        /workspace/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}
+
 
         # update docker image
 
-        /workspace/kustomize edit set image tr-projects-rest=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
+        /workspace/kustomize edit set image
+        tr-projects-rest=gcr.io/${PROJECT_ID}/tr-projects-rest:${BRANCH_NAME}_${SHORT_SHA}
+
 
         # back to kubernetes-configs root
 
         cd /workspace/kubernetes-configs
 
-        /workspace/kustomize build "./tr-projects-rest/overlays/${BRANCH_NAME}" >> $_FILE_TO_DEPLOY
+
+        /workspace/kustomize build
+        "./tr-projects-rest/overlays/${BRANCH_NAME}" >>
+        $_FILE_TO_DEPLOY
 
         # print out configs
 
