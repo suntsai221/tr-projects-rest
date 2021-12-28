@@ -8,6 +8,9 @@ steps:
       - ./dockerignore/kubernetes-configs
   - name: bash
     args:
+      - ls /
+  - name: bash
+    args:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/settings.py
