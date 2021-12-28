@@ -15,13 +15,13 @@ steps:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/settings.py
-      - /usr/src/app/tr-projects-rest/settings.py
+      - /workspace/settings.py
   - name: bash
     args:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
-      - /usr/src/app/tr-projects-rest/configs.dev
+      - /workspace/configs.dev
   - name: bash
     args:
       - cp
