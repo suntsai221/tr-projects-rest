@@ -10,6 +10,12 @@ steps:
     args:
       - cp
       - >-
+        ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/settings.py
+      - /workspace/settings.py
+  - name: bash
+    args:
+      - cp
+      - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
       - /workspace/configs.dev
   - name: bash
