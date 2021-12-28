@@ -11,19 +11,19 @@ steps:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/settings.py
-      - /workspace/settings.py
+      - /usr/src/app/tr-projects-rest/settings.py
   - name: bash
     args:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
-      - /workspace/configs.dev
+      - /usr/src/app/tr-projects-rest/configs.dev
   - name: bash
     args:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
-      - /workspace/configs.py
+      - /usr/src/app/tr-projects-rest/configs.py
   - name: gcr.io/cloud-builders/docker
     args:
       - build
