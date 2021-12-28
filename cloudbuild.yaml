@@ -8,7 +8,8 @@ steps:
       - ./dockerignore/kubernetes-configs
   - name: bash
     args:
-      - ls /
+      - ls 
+      - /workspace/
   - name: bash
     args:
       - cp
