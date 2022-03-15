@@ -737,6 +737,7 @@ def yt_videos():
 
     if video_items_returned:
         if "error" in video_items_returned.keys():
+            print(video_items_returned)
             abort(400)
         else:
             if "pageInfo" in video_items_returned.keys():
