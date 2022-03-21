@@ -720,6 +720,7 @@ def yt_search():
 
     if search_result_returned:
         if "error" in search_result_returned.keys():
+            print(search_result_returned)
             abort(400)
         else:
             if "pageInfo" in search_result_returned.keys():
