@@ -910,6 +910,9 @@ post_schema = {
   'adTrace': {
     'type': 'string',
     },
+  'redirect': {
+    'type': 'string',
+    },
   'isAudioSiteOnly': {                                                                                                                                  
     'type': 'boolean',
   },    
