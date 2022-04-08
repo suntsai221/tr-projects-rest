@@ -27,7 +27,7 @@ steps:
       - cp
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
-      - /workspace/configs.py
+      - /workspace/configs/dev.py
   - name: gcr.io/cloud-builders/docker
     args:
       - build
