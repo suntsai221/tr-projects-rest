@@ -114,6 +114,9 @@ listing_schema = {
   'publishedDate': {
     'type': 'datetime',
   },
+  'redirect': {
+    'type': 'string',
+  },
   'isCampaign': {
     'type': 'boolean',
   },
@@ -461,6 +464,9 @@ meta_schema = {
     'type': 'datetime',
   },
   'og_description': {
+    'type': 'string',
+  },
+  'redirect': {
     'type': 'string',
   },
   'isCampaign': {
@@ -1154,6 +1160,9 @@ readr_schema = {
   'adTrace': {
     'type': 'string',
   },
+  'redirect': {
+    'type': 'string',
+  },
   'isCampaign': {
     'type': 'boolean',
   },
@@ -1659,6 +1668,9 @@ postcategories_schema = {
       'field': '_id',
       'embeddable': True
     },
+  },
+  'redirect': {
+    'type': 'string',
   },
   'isCampaign': {
     'type': 'boolean',
