@@ -20,8 +20,8 @@ steps:
     args:
       - cp
       - >-
-        ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs/dev.py
-      - /workspace/configs.dev
+        ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs
+      - /workspace/
   - name: bash
     args:
       - cp
