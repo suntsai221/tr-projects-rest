@@ -19,6 +19,7 @@ steps:
   - name: bash
     args:
       - cp
+      - "-r"
       - >-
         ./dockerignore/kubernetes-configs/tr-projects-rest/overlays/${BRANCH_NAME}/configs
       - /workspace/
