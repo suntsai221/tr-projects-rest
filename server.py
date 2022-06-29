@@ -626,7 +626,7 @@ def handle_combo():
                     for item in action_data["_items"]:
                         if "choices" in item:
                             response["_endpoints"][action]['_items'].append(item["choices"])
-                    print(response["_endpoints"][action])
+                    #print(response["_endpoints"][action])
                 else:
                     response["_endpoints"][action] = action_data
                 for item in response["_endpoints"][action]["_items"]:
@@ -700,7 +700,7 @@ def search():
     r = requests.post(ESurl, json=generate_data(keywords, section, max_results=max_results, page=page))
 
     r.encoding = 'utf-8'
-    print(r.json())
+    #print(r.json())
     if 'hits' in r.json() and 'hits' in r.json()['hits'] and not r.json()['hits']['hits']:
         for h in r.json()['hits']['hits']:
             if "_source" in h and "content" in h["_source"]:
