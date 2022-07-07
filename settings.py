@@ -843,6 +843,9 @@ post_schema = {
   'style': {
     'type': 'string',
   },
+  'css': {
+    'type': 'string',
+  },
   'brief': {
     'type': 'dict',
     'schema': {
