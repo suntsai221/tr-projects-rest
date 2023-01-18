@@ -160,7 +160,7 @@ def clean_item(item, content='draft'):
             del item['heroVideo']['video']['gcsDir']
         if 'gcsBucket' in item['heroVideo']['video']:
             del item['heroVideo']['video']['gcsBucket']
-    if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
+    if content != 'draft' and 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
         del item['brief']['draft']
     if content != 'draft' and 'content' in item and isinstance(item['content'], dict) and 'draft' in item['content']:
         del item['content']['draft']
