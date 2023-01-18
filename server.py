@@ -187,13 +187,6 @@ def before_returning_posts(response):
             item["word_count"] = 0
             if 'content' in item and isinstance(item['content'], dict) and 'html' in item['content']:
                 item['word_count'] = len(item['content']['html'])
-            if 'brief' in item and isinstance(item['brief'], dict) and 'draft' in item['brief']:
-                del item['brief']['draft']
-                #if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
-                #    item['brief']['html'] = item['brief']['html'].replace("鏡週刊",
-                #                                                          '<a href="https://www.mirrormedia.mg">鏡週刊</a>')
-                #    item['brief']['html'] = item['brief']['html'].replace("本刊",
-                #                                                          '<a href="https://www.mirrormedia.mg">本刊</a>')
             if clean == 'content':
                 if 'brief' in item and isinstance(item['brief'], dict) and 'html' in item['brief']:
                     del item['brief']['html']
