@@ -26,16 +26,16 @@ pipeline:
       event: [push]
       branch: [master, dev]
   
-  builds:
-    image: plugins/gcr
-    repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
-    tag: ${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
-    environment:
-      - DOCKER_LAUNCH_DEBUG=true
-    secrets: [google_credentials]
-    when:
-      event: [push]
-      branch: [master, dev]
+#  builds:
+#    image: plugins/gcr
+#    repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
+#    tag: ${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
+#    environment:
+#      - DOCKER_LAUNCH_DEBUG=true
+#    secrets: [google_credentials]
+#    when:
+#      event: [push]
+#      branch: [master, dev]
   
   deploy_dev:
     image: nytimes/drone-gke
@@ -49,7 +49,8 @@ pipeline:
       - source: google_credentials
         target: token
     vars:
-      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
+#      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
+      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:dev_b68e695
       app: mm-rest
       tier: backend
       serviceName: rest-service
