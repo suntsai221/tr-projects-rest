@@ -11,8 +11,8 @@ WORKDIR /usr/src/app/tr-projects-rest
 
 #RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 
+RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5 
 RUN apt-get update \
-	&& apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5 \
     && apt-get install -y gcc libc-dev libxslt-dev libxml2 \
     && pip install --upgrade pip \
     && pip install -r requirements.txt
