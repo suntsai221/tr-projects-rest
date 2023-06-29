@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 RUN addgroup user && adduser -h /home/user -D user -G user -s /bin/sh
 
@@ -9,10 +9,10 @@ ENV CLUSTER_ENV=prod
 
 WORKDIR /usr/src/app/tr-projects-rest
 
-RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
+#RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 
 RUN apt-get update \
-    && apt-get install -y gnupg gcc libc-dev libxslt-dev libxml2 \
+    && apt-get install -y gcc libc-dev libxslt-dev libxml2 \
     && pip install --upgrade pip \
     && pip install -r requirements.txt
 
