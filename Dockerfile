@@ -9,7 +9,7 @@ ENV CLUSTER_ENV=prod
 
 WORKDIR /usr/src/app/tr-projects-rest
 
-RUN apt-get install -y gnupg2
+RUN apt-get install -y gnupg
 
 RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 8507EFA5
 
